@@ -1,0 +1,158 @@
+body {
+    font-family: 'Ubuntu',Helvetica,Arial,sans-serif;
+    background: #fff;
+    overflow: hidden;
+    outline: none
+}
+
+.clear {
+    clear: both;
+    height: 0;
+    margin: 0;
+    padding: 0
+}
+
+#html,.canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none
+}
+
+.cursor-move {
+    cursor: move
+}
+
+.toolContent {
+    display: none
+}
+
+.open .toolContent {
+    display: block
+}
+
+.htmlItem {
+    position: absolute;
+    -webkit-transform-origin: left top 0;
+    -ms-transform-origin: left top 0;
+    transform-origin: left top 0
+}
+
+#map,#uiWrapper {
+    top: 0;
+    left: 0
+}
+
+#uiWrapper {
+    position: absolute;
+    height: 100%;
+    width: 100%
+}
+
+#langopts {
+    bottom: 3px
+}
+
+#langopts li+li:before {
+    content: "|";
+    padding: 0 1px
+}
+
+.htmlTool {
+    position: fixed;
+    bottom: 1em;
+    left: 50%;
+    z-index: 2
+}
+
+.htmlTool button {
+    background: #fff;
+    border-width: 1px;
+    padding: 5px;
+    border-color: #ddd;
+    border-radius: 3px;
+    margin: .5em
+}
+
+.htmlTool>div {
+    position: relative;
+    left: -50%
+}
+
+#editable {
+    width: 512px;
+    left: 0;
+    top: 0
+}
+
+li,ul {
+    position: relative;
+    display: inline;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+    -webkit-padding-start: 0
+}
+
+.scrollbarStyle1::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    border-radius: 10px;
+    background-color: #fff
+}
+
+.scrollbarStyle1::-webkit-scrollbar {
+    width: 7px;
+    background-color: #e4e4e4;
+    border-radius: 10px
+}
+
+.scrollbarStyle1::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #3d3d3d
+}
+
+.connectionDialog {
+    z-index: 100
+}
+
+.connectionDialog .body {
+    font-family: 'Ubuntu',Helvetica,Arial,sans-serif;
+    padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 1px 0 15px 0 rgba(50,50,50,.5);
+    border: 1px solid #bdbdbd;
+    text-align: center
+}
+
+.connectionDialog .ui-dialog-titlebar-close,.no-pointer-events svg.map.drawingMode,svg.map.drawingMode>rect {
+    display: none
+}
+
+.ui-widget-overlay {
+    z-index: 99;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #aaa;
+    opacity: .3
+}
+
+svg.map.drawingMode {
+    pointer-events: none
+}
+
+svg.map {
+    position: absolute
+}
+
+g.zoom {
+    pointer-events: all
+}

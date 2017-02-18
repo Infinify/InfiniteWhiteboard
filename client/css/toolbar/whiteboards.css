@@ -1,0 +1,159 @@
+.open .whiteboardsIcon,.whiteboardsIcon.iconHover {
+    color: #fff;
+    -webkit-text-stroke: 1px #9b9b9b
+}
+
+.whiteboardList {
+    display: block;
+    color: #000;
+    margin-top: 10px;
+    margin-left: -5px
+}
+
+.whiteboardList li {
+    display: block;
+    margin-left: 10px
+}
+
+.whiteboardList.mod a {
+    font-size: 12px
+}
+
+.whiteboardList i {
+    margin-right: 5px;
+    outline: none
+}
+
+.whiteboardList .listHeader {
+    margin-left: 10px;
+    outline: none
+}
+
+#newWhiteboardButton {
+    padding: 0;
+    margin-right: -50px;
+    font-size: 25px;
+    color: #22d500
+}
+
+#newWhiteboardButton:hover {
+    color: #1eb801
+}
+
+#whiteboards input {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 0;
+    padding-bottom: 0
+}
+
+#whiteboards .accordionContainer input {
+    margin-left: 4px;
+    margin-top: 8px
+}
+
+input#whiteboardName {
+    width: 159px;
+    margin-left: -4px
+}
+
+#newWhiteboards {
+    margin-top: 20px;
+    height: 59px
+}
+
+.whiteboardContainer {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: ltr;
+    margin-top: 7px
+}
+
+.whiteboardContainer ul {
+    direction: ltr
+}
+
+input#newWhiteboardNameField {
+    width: 130px;
+    float: left
+}
+
+#sharingSettingsDialog {
+    padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 1px 0 15px 0 rgba(50,50,50,.5);
+    border: 1px solid #bdbdbd
+}
+
+.aclDialog {
+    z-index: 10;
+    font-family: 'Ubuntu',Helvetica,Arial,sans-serif
+}
+
+.aclDialog h1 {
+    font-size: 20px;
+    margin-bottom: 5px
+}
+
+.aclDialog h2 {
+    font-size: 16px;
+    margin-bottom: 10px
+}
+
+.aclUsername {
+    font-family: helvetica,serif;
+    min-width: 210px;
+    display: inline-block;
+    font-size: 14px
+}
+
+.aclDialog .linkDescription,.whiteboardContainer .role {
+    font-size: 10px
+}
+
+.aclDialog .ui-dialog-titlebar-close {
+    float: right;
+    -moz-box-shadow: inset 0 1px 0 0 #f7c5c0;
+    -webkit-box-shadow: inset 0 1px 0 0 #f7c5c0;
+    box-shadow: inset 0 1px 0 0 #f7c5c0;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(.05,#fc8d83),color-stop(1,#e4685d));
+    background: -moz-linear-gradient(top,#fc8d83 5%,#e4685d 100%);
+    background: -webkit-linear-gradient(top,#fc8d83 5%,#e4685d 100%);
+    background: -o-linear-gradient(top,#fc8d83 5%,#e4685d 100%);
+    background: -ms-linear-gradient(top,#fc8d83 5%,#e4685d 100%);
+    background: linear-gradient(to bottom,#fc8d83 5%,#e4685d 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fc8d83', endColorstr='#e4685d', GradientType=0);
+    background-color: #fc8d83;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #d83526;
+    display: inline-block;
+    cursor: pointer;
+    color: #fff;
+    font-family: arial,sans-serif;
+    font-size: 13px;
+    padding: 3px 9px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #b23e35
+}
+
+.aclDialog .ui-dialog-titlebar-close:hover {
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(.05,#e4685d),color-stop(1,#fc8d83));
+    background: -moz-linear-gradient(top,#e4685d 5%,#fc8d83 100%);
+    background: -webkit-linear-gradient(top,#e4685d 5%,#fc8d83 100%);
+    background: -o-linear-gradient(top,#e4685d 5%,#fc8d83 100%);
+    background: -ms-linear-gradient(top,#e4685d 5%,#fc8d83 100%);
+    background: linear-gradient(to bottom,#e4685d 5%,#fc8d83 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e4685d', endColorstr='#fc8d83', GradientType=0);
+    background-color: #e4685d
+}
+
+.aclDialog .ui-dialog-titlebar-close:active {
+    position: relative;
+    top: 1px
+}

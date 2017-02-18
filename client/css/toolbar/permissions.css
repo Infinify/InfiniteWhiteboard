@@ -1,0 +1,11 @@
+.userPermissionModal {
+    width: 300px;
+    margin: 30px auto;
+    position: relative;
+    font-family: 'Helvetica',Helvetica,Arial,sans-serif
+}
+
+.userPermissionModal td,.userPermissionModal th {
+    margin: 3px;
+    padding: 3px
+}

@@ -1,0 +1,15 @@
+<div style="line-height:40px; border:0 solid red; text-align:center; vertical-align: middle;">
+    <input type="text" id="currentStrokeColor"/>
+    <input type="text" id="currentFillColor"/>
+    <br/>
+    <label for="miterSelector">Cap</label>
+    <select id="miterSelector" name="miterSelector">
+        <option value="Round" selected>Round</option>
+        <option value="Butt">Butt</option>
+    </select>
+</div>
+<div id="pencilStrokeWidth"><span style="float:left; font-size:12px; margin-top:15px;">Width</span></div>
+<a onclick="window.colorPickerTool.activate()">Picker</a>
+<a onclick="window.drawTool.activate()">Draw</a>
+<a onclick="$('.palette').fadeToggle()">Palette</a>
+<ul class="palette" style="display: none;"></ul>

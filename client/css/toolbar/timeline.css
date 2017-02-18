@@ -1,0 +1,67 @@
+.open .timemachineIcon,.timemachineIcon.iconHover {
+    color: #c660e5;
+    -webkit-text-stroke: 1px #3d3d3d
+}
+
+.timemachineButton1 {
+    padding: 12px 12px 8px
+}
+
+.timelineButton,.timemachineButton1,.timemachineButton2 {
+    border: none;
+    background: 0 0;
+    font-size: 20px;
+    color: #3d3d3d
+}
+
+.timemachineButton2 {
+    padding: 12px 12px 10px
+}
+
+.timelineButton:hover,.timemachineButton1:hover,.timemachineButton2:hover {
+    color: #000
+}
+
+#controlButtons {
+    display: block;
+    padding-bottom: 5px;
+    text-align: center
+}
+
+#timelineslide,#timerange {
+    top: 10px
+}
+
+#rtspeed,#timeLine {
+    float: left;
+    font-size: 12px;
+    margin-top: 5px
+}
+
+#maxspeed,#now {
+    font-size: 12px;
+    float: right
+}
+
+#maxspeed {
+    margin-top: 5px
+}
+
+#now {
+    padding-bottom: 5px
+}
+
+.timelineButton {
+    display: block;
+    margin: 0 0 2px 9px
+}
+
+#firstkeyButton {
+    margin-top: 2px
+}
+
+.keyframetext {
+    font-size: 12px;
+    color: #666;
+    margin-top: -2px
+}

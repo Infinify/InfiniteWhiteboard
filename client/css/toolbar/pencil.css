@@ -1,0 +1,31 @@
+.drawIcon,.drawIcon.iconHover,.open .drawIcon {
+    color: #000;
+    border: #000;
+    -webkit-text-stroke: 1px #3d3d3d
+}
+
+.open .icon-brush1 {
+    color: #000
+}
+
+.farbtastic {
+    height: 100px;
+    width: 100px;
+    left: 0
+}
+
+#pencilStrokeWidth {
+    margin-top: 30px
+}
+
+.palette,.palette li {
+    display: block
+}
+
+.palette div {
+    width: 1em;
+    height: 1em;
+    margin: .5em;
+    border: 1px solid;
+    display: inline-block
+}

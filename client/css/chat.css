@@ -1,0 +1,214 @@
+#chat {
+    z-index: 2;
+    display: block;
+    position: absolute;
+    right: 0;
+    padding: 2px;
+    width: 240px;
+    height: 100%;
+    background: #fff;
+    margin: 0;
+    -webkit-box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
+    -moz-box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
+    box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
+    border: 1px solid #ccc;
+    font-family: 'Helvetica',Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    color: #666;
+    text-decoration: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d3d3d', endColorstr='#212121', GradientType=0)
+}
+
+.chatlogHeader {
+    padding: 10px
+}
+
+.chatlogName,.whiteboardOwner {
+    margin: 0 0 10px;
+    font-size: 18px
+}
+
+#sharingSettingsButton {
+    margin-top: 20px;
+    margin-bottom: 10px
+}
+
+.messageContainer {
+    right: 0;
+    top: 124px;
+    bottom: 49px;
+    width: 240px;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #c8c8c8;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 10px 0 0;
+    border-radius: 3px
+}
+
+.onlineUsers {
+    position: relative
+}
+
+.userList {
+    position: absolute;
+    z-index: 2;
+    background: #fff;
+    margin: .5em;
+    border: 1px solid gray;
+    padding: .5em
+}
+
+.userItem {
+    margin: .2em
+}
+
+.sharedChatContainer {
+    top: 170px
+}
+
+#chat .messageElement {
+    clear: both;
+    padding: 0 3px 0 0;
+    width: 200px
+}
+
+.messageElement a,.submitMessageButton:hover {
+    color: #000
+}
+
+.messageElement a:link,.messageElement a:visited {
+    text-decoration: none
+}
+
+.messageElement a:active,.messageElement a:hover {
+    text-decoration: underline
+}
+
+#chat .recieved {
+    padding-left: 10px
+}
+
+#chat .sent .user {
+    color: green
+}
+
+#chatlogs .sent {
+    padding-right: 10px;
+    display: inline-block;
+    float: right
+}
+
+.messageField {
+    bottom: 6px;
+    position: absolute;
+    height: 40px;
+    width: 203px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    resize: none;
+    margin-top: 3px;
+    word-wrap: break-word;
+    border: 1px solid #d3d3d3
+}
+
+.messageElement {
+    margin: 0 0 10px;
+    border: 0 solid red
+}
+
+#chat .time {
+    cursor: pointer;
+    font-size: 10px
+}
+
+#chat .user {
+    color: #000;
+    font-weight: 700;
+    cursor: pointer
+}
+
+#chat .message {
+    font-size: 12px;
+    font-weight: 400;
+    margin: 5px 0 5px 5px;
+    word-wrap: break-word
+}
+
+#chat .target {
+    color: #3d3d3d;
+    display: inline-block
+}
+
+#chat .target:hover {
+    color: red
+}
+
+.submitMessageButton,.whiteButton {
+    display: inline-block;
+    text-decoration: none
+}
+
+.submitMessageButton {
+    position: absolute;
+    bottom: 12px;
+    right: 2px;
+    color: #3d3d3d;
+    font-size: 25px
+}
+
+#showChatButton {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    font-size: 40px;
+    color: #3d3d3d
+}
+
+#hideChatButton {
+    float: right;
+    font-size: 25px;
+    margin-top: 6px
+}
+
+.whiteButton {
+    -moz-box-shadow: inset 0 1px 0 0 #fff;
+    -webkit-box-shadow: inset 0 1px 0 0 #fff;
+    box-shadow: inset 0 1px 0 0 #fff;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(.05,#fff),color-stop(1,#f6f6f6));
+    background: -moz-linear-gradient(top,#fff 5%,#f6f6f6 100%);
+    background: -webkit-linear-gradient(top,#fff 5%,#f6f6f6 100%);
+    background: -o-linear-gradient(top,#fff 5%,#f6f6f6 100%);
+    background: -ms-linear-gradient(top,#fff 5%,#f6f6f6 100%);
+    background: linear-gradient(to bottom,#fff 5%,#f6f6f6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0);
+    background-color: #fff;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
+    color: #666;
+    font-family: arial,sans-serif;
+    font-size: 15px;
+    padding: 6px 37px;
+    text-shadow: 0 1px 0 #fff
+}
+
+.whiteButton:hover {
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(.05,#f6f6f6),color-stop(1,#fff));
+    background: -moz-linear-gradient(top,#f6f6f6 5%,#fff 100%);
+    background: -webkit-linear-gradient(top,#f6f6f6 5%,#fff 100%);
+    background: -o-linear-gradient(top,#f6f6f6 5%,#fff 100%);
+    background: -ms-linear-gradient(top,#f6f6f6 5%,#fff 100%);
+    background: linear-gradient(to bottom,#f6f6f6 5%,#fff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff',GradientType=0);
+    background-color: #f6f6f6
+}
+
+.whiteButton:active {
+    position: relative;
+    top: 1px
+}

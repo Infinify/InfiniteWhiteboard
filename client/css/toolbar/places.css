@@ -1,0 +1,25 @@
+.open .placesIcon,.placesIcon.iconHover {
+    color: #f23a37;
+    border: #000;
+    -webkit-text-stroke: 1px #3d3d3d
+}
+
+#places button {
+    font-size: 17px;
+    display: block;
+    margin: 5px 0 0 5px;
+    padding: 0
+}
+
+#places button:before {
+    padding: 0 10px 0 0
+}
+
+#places button:hover {
+    color: #000
+}
+
+#places .toolContent {
+    margin: 0;
+    padding: 0 0 10px
+}

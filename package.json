@@ -1,0 +1,26 @@
+{
+  "name": "infinitewhiteboard",
+  "description": "InfiniteWhiteboard by Infinify",
+  "version": "1.0.0",
+  "author": "IWB <InfiniteWhiteboard@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Infinify/InfiniteWhiteboard.git"
+  },
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "bcrypt": "*",
+    "chokidar": "*",
+    "connect": "*",
+    "hiredis": "*",
+    "log-buffer": "*",
+    "mongodb": "^2.2.22",
+    "redis": "^2.6.5",
+    "socketstream": "github:msand/socketstream#fix-transport-bundling",
+    "ss-hogan": "*",
+    "ss-stylus": "*"
+  }
+}

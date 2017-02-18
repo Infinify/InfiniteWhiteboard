@@ -1,0 +1,106 @@
+#login {
+    max-height: 220px
+}
+
+#login.open {
+    height: 190px;
+    border-bottom: 1px solid #e6e6e6
+}
+
+#loginSpinner .spinnerText,.button25px .buttonText {
+    color: #949494;
+    font-weight: lighter;
+    text-shadow: 1px 1px 1px #fff
+}
+
+#loginSpinner .spinnerText {
+    text-align: center;
+    position: relative;
+    top: 79px;
+    font-size: 15px
+}
+
+.loginIcon.iconHover,.open .loginIcon {
+    color: #07f;
+    -webkit-text-stroke: 1px #9b9b9b
+}
+
+#loginDiv,.clearButton {
+    margin: 0;
+    padding: 0
+}
+
+#loginButton {
+    color: #22d500;
+    float: none;
+    font-size: 25px
+}
+
+.clearButton {
+    background: 0 0;
+    border: none
+}
+
+.button25px {
+    text-align: center;
+    padding-right: 10px;
+    height: 40px
+}
+
+.button25px .buttonText {
+    display: block;
+    font-size: 10px;
+    -webkit-text-stroke: unset;
+    line-height: 10px
+}
+
+#loginButton:hover {
+    color: #1eb801
+}
+
+#registerButton {
+    color: rgba(0,163,255,.5)
+}
+
+#registerButton:hover {
+    color: rgba(0,163,255,.9)
+}
+
+#logoutDiv {
+    padding: 0;
+    clear: both;
+    display: none
+}
+
+.iconButton#logoutButton {
+    display: none;
+    padding: 0;
+    top: 4px;
+    color: #3d3d3d;
+    float: right;
+    font-size: 25px;
+    margin: 0 -17px 0 0
+}
+
+.iconButton#logoutButton:before {
+    padding: 0 20px 0 0
+}
+
+.iconButton#logoutButton:hover {
+    color: #8b0000
+}
+
+#displayName {
+    font-size: 18px;
+    position: relative;
+    margin-left: 9px;
+    top: 4px;
+    color: #cacaca
+}
+
+.loggedIn #displayName {
+    position: relative;
+    margin-left: 9px;
+    top: 3px;
+    color: #000
+}

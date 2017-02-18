@@ -1,0 +1,10 @@
+<div class="aclRule" id="aclUser-{{userName}}">
+    <div class="aclUsername">{{userName}}</div>
+    <select class="aclSelect" data-username="{{userName}}">
+        <option value="admin" {{admin}}>admin (can invite)</option>
+        <option value="edit" {{edit}}>can edit and chat</option>
+        <option value="chat" {{chat}}>can view and chat</option>
+        <option value="view" {{view}}>can view</option>
+    </select>
+    <button class="removeUserButton" data-userid="{{userId}}" data-username="{{userName}}"> &ndash; </button>
+</div>

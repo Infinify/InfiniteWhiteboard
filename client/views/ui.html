@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta property="og:title" content="Infinite Whiteboard"/>
+    <meta property="og:site_name" content="Infinite Whiteboard"/>
+    <meta property="og:description" content="Infinite Whiteboard"/>
+    <meta property="fb:app_id" content="388710587926740"/>
+    <meta name="viewport" content="user-scalable=yes, initial-scale=0.75, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Infinite Whiteboard</title>
+    <link rel="shortcut icon" sizes="196x196" href="/images/icon.png">
+    <link rel="shortcut icon" sizes="128x128" href="/images/icon-lores.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/touch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="/images/icon-lores.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/touch-icon-ipad-retina.png">
+    <link rel="apple-touch-icon" sizes="196x196" href="/images/icon.png">
+    <SocketStream/>
+</head>
+<body>
+<div id="uiWrapper">
+    <i id="showChatButton" class="icon-group-circled" tabindex="-1" title="Show Chat"></i>
+    <i id="showToolbarButton" class="icon-infinity" tabindex="-1" title="Show Tools"></i>
+    <div style="overflow:hidden;">
+        <canvas id="timeMachineCanvas" class="canvas" data-paper-resize="true"></canvas>
+        <canvas id="canvas" class="canvas" data-paper-resize="true"></canvas>
+        <div id="html">
+            <div id="htmlContainer" style="position: relative;"></div>
+        </div>
+    </div>
+    <div id="chat">
+        <i id="hideChatButton" class="icon-right-circle" tabindex="-1" title="(H) Hide Chat"></i>
+    </div>
+    <div id="map" tabindex="3" class="map"></div>
+    <div class="toolBar" id="toolbarWrapper">
+        <div id="toolbarHeader">
+            <button id="hideToolbarButton" class="iconButton icon-left-circle" tabindex="-1" title="(H) Hide Tools"></button>
+            <span id="displayName"></span>
+            <button id="logoutButton" class="icon-off-1 iconButton" tabindex="-1"></button>
+        </div>
+        <div id="toolContainer" class="toolContainer" style="z-index: 10;"></div>
+        <div id="interact" class="tool ui-accordion ui-widget ui-helper-reset toolContainer">
+            <h3 class="toolHeader">
+                <svg class="toolIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30px" style="margin-left: 2px;margin-right: 5px;top: inherit;transform: translateY(8px);">
+                    <title>HTML5 Logo Badge</title>
+                    <path fill="#E34F26" d="M71,460 L30,0 481,0 440,460 255,512"></path>
+                    <path fill="#EF652A" d="M256,472 L405,431 440,37 256,37"></path>
+                    <path fill="#EBEBEB" d="M256,208 L181,208 176,150 256,150 256,94 255,94 114,94 115,109 129,265 256,265zM256,355 L255,355 192,338 188,293 158,293 132,293 139,382 255,414 256,414z"></path>
+                    <path fill="#FFF" d="M255,208 L255,265 325,265 318,338 255,355 255,414 371,382 372,372 385,223 387,208 371,208zM255,94 L255,129 255,150 255,150 392,150 392,150 392,150 393,138 396,109 397,94z"></path>
+                </svg>
+                <a href="#" class="toolHeaderText" tabindex="-1">Interact</a>
+            </h3>
+
+            <div class="toolContent ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content" role="tabpanel">
+                Interactive HTML
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="elementWrapper" id="betaFlag">BETA</div>
+        <button id="mfsb">mfsb</button>
+        <button id="compassToggle" class="iconButton icon-compass-circled" tabindex="-1" title="Show / Hide Compass"></button>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="mainSpinner"></div>
+<div id="connectionDialog" class="connectionDialog" style="visibility: hidden;">
+    <div class="body">
+        <div id="connectionDialogSpinner"></div>
+        <p style="font-size:15px; margin-top:100px;margin-bottom:20px;">Connection with the server is down!</p>
+        <p style="font-size:12px; margin-bottom:20px;" id="reconnectTimeoutDisplay"></p>
+        <p style="font-size:12px; margin-bottom:20px;" id="reconnectAttemptsDisplay"></p>
+        <p style="font-size:12px; margin-bottom:20px; color:lightcoral">Repeatedly reloading the browser might slow down your experience.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+body {
+    overflow: hidden
+}
+
+#chat,#toolbarWrapper,.canvas {
+    position: absolute
+}
+
+#mfsb {
+    margin: 5px 0
+}
+
+#now {
+    display: inline-block
+}
+
+#toolbarWrapper {
+    bottom: 0
+}
+
+#map,.canvas {
+    left: 0;
+    top: 0
+}
+
+#html,#map,.canvas,.map,body,html {
+    height: 100%;
+    width: 100%
+}
+
+.compass .back {
+    fill: #fff;
+    fill-opacity: .8
+}
+
+.compass .fore {
+    stroke: #999;
+    stroke-width: 1px
+}
+
+.compass rect.back.fore {
+    fill: #999;
+    fill-opacity: .3;
+    stroke: #eee;
+    stroke-width: 1px;
+    shape-rendering: crispEdges
+}
+
+.compass .direction {
+    fill: none
+}
+
+.compass .chevron {
+    fill: none;
+    stroke: #999;
+    stroke-width: 5px
+}
+
+.compass .zoom .chevron {
+    stroke-width: 4px
+}
+
+.compass .active .chevron,.compass .chevron.active {
+    stroke: #333
+}
+
+.compass.active .active .direction {
+    fill: #999
+}
+
+:focus {
+    outline: 0
+}

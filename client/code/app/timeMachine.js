@@ -267,8 +267,9 @@ window.drawObject = function(iwb, reRender) {
 
   paperItem.timestamp = +new Date(iwb.timestamp);
 
-  x = d.c0.column * tileSize;
-  y = d.c0.row * tileSize;
+  var c0 = d.c0;
+  x = c0.column * tileSize;
+  y = c0.row * tileSize;
   zoomFraction = zoom - zoomRound;
   zoomFactor = Math.pow(2, zoomFraction);
   offset = new Point(x * zoomFactor, y * zoomFactor);

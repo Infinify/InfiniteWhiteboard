@@ -16,24 +16,11 @@ document.getElementById("compassToggle").onclick = function() {
 };
 
 function iwbData() {
-  var mapZoom = map.zoom(),
-    mapSize = map.size(),
-    tileCenter = map.locationCoordinate(map.center());
-
   return {
-    version: 2,
     whiteboard: window.whiteboard,
     data: {
-      mapZoom: mapZoom,
-      mapZoomFraction: mapZoom - Math.round(mapZoom),
-      mapSize: mapSize,
-      mapAngle: map.angle(),
-      tileSize: map.tileSize(),
-      tileCenter: tileCenter,
-      c0: map.pointCoordinate(tileCenter, { x: 0, y: 0 }),
-      c1: map.pointCoordinate(tileCenter, { x: mapSize.x, y: 0 }),
-      c2: map.pointCoordinate(tileCenter, mapSize),
-      c3: map.pointCoordinate(tileCenter, { x: 0, y: mapSize.y })
+      mapZoom: map.zoom(),
+      c0: map.pointCoordinate(map.locationCoordinate(map.center()), { x: 0, y: 0 })
     },
     sid: getId()
   };

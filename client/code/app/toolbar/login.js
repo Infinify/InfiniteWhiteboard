@@ -54,7 +54,7 @@ function loginSuccessHandler() {
   window.updateWhiteboardLists(function() {
     $("#privateBoards").show();
     $("#sharedBoards").show();
-    $("#chat").html("");
+    $(".chatlog").remove();
 
     initChat(window.whiteboard);
     populateAcl();
@@ -202,7 +202,7 @@ $logoutButton.click(function() {
         anyone.indexOf(current) === -1 && publicBoards.indexOf(current) === -1
       ) {
         // subscribe to global chat and pubsub
-        $("#chat").html("");
+        $(".chatlog").remove();
         changeWhiteboard("_global");
       }
     });

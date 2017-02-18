@@ -38,18 +38,7 @@ if (Modernizr.pointerevents) {
   };
 } else {
   document.body.classList.add("no-pointer-events");
-  canvas0.style.display = "none";
-  canvas1.style.display = "none";
-  drawToolHandler = function() {
-    var drawMode = prepDrawMode();
-    if (drawMode) {
-      canvas0.style.display = "block";
-      canvas1.style.display = "block";
-    } else {
-      canvas0.style.display = "none";
-      canvas1.style.display = "none";
-    }
-  };
+  drawToolHandler = prepDrawMode
 }
 
 module.exports = drawToolHandler;

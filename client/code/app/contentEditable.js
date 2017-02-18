@@ -5,8 +5,6 @@ var html = $(htmlE);
 
 function initCE(htmlElem, edit) {
   var domElem = document.getElementById(htmlElem.elemId);
-  var elem = $(domElem);
-  var builder = elem.data("contentbuilder");
   htmlr.css("pointer-events", "all");
   html.css("z-index", "1");
   var save = $("<button>Save</button>");
@@ -37,7 +35,6 @@ function initCE(htmlElem, edit) {
     save.off("click", onSave);
     cancelButton.off("click", cancel);
     controls.remove();
-    builder = null;
   };
   save.on("click", onSave);
   cancelButton.on("click", cancel);

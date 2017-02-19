@@ -5,7 +5,7 @@ paper.setup(canvas);
 var changePos = function(pos) {
   var size = project.view.getViewSize();
   var x = pos.x - size.width / 2;
-  var y = pos.y -= size.height / 2;
+  var y = pos.y - size.height / 2;
   window.changePosition({ x: x, y: y });
 };
 
@@ -130,7 +130,7 @@ window.nopTool = new Tool();
 
   window.simplification = 1;
   window.smoothing = 0;
-  
+
   var onMouseUps = window.onMouseUps = function(event, mfs) {
     if (!path) {
       return;

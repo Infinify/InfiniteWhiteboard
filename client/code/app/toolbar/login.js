@@ -60,8 +60,8 @@ function loginSuccessHandler() {
     populateAcl();
   });
 
-  $("#publicBoards").accordion("option", "active", false);
-  $("#privateBoards").accordion("option", "active", 0);
+  $("#privateBoards").accordion("option", "active", false);
+  $("#sharedBoards").accordion("option", "active", false);
   $("#newWhiteboardFieldText").html("Create new personal whiteboard");
 
   $("#loginSpinner")
@@ -180,12 +180,11 @@ $logoutButton.click(function() {
     $login.removeClass("open").removeClass("loggedIn").show();
     $loginDiv.show("bounce");
     $logoutButton.hide();
-    $displayName.html(window.userObject.anonymous);
+    $displayName.html(userObject.anonymous);
     $toolbarHeader.removeClass("loggedIn");
 
     $("#privateBoards").hide();
     $("#sharedBoards").hide();
-    $("#publicBoards").accordion("option", "active", 0);
     $("#newWhiteboardFieldText").html("Create new public whiteboard");
 
     userObject.hash = userObject.id = userObject.username = null;

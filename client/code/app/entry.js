@@ -68,4 +68,5 @@ require("/contentEditable");
 require("/timeMachine");
 require("/thinPaper");
 require("/mfs");
+require("/loadWhiteboard");
 require("/toolBar");

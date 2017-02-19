@@ -21,7 +21,7 @@ require("/toolbar/text");
 require("/toolbar/whiteboards");
 require("/toolbar/timeline");
 require("/toolbar/places");
-var drawToolHandler = require("/toolbar/drawToolHandler");
+var drawToolHandler = require("/drawToolHandler");
 var tools = [
   "login",
   "pencil",

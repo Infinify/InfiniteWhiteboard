@@ -38,7 +38,7 @@ if (Modernizr.pointerevents) {
   };
 } else {
   document.body.classList.add("no-pointer-events");
-  drawToolHandler = prepDrawMode
+  drawToolHandler = prepDrawMode;
 }
 
 module.exports = drawToolHandler;

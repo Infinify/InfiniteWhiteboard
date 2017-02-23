@@ -174,7 +174,7 @@ whiteboardData.aclUsers = [];
 window.populateAcl = function populateAcl() {
   $("#aclWrapper").html("");
 
-  $("#shareLinkURL").val("http://www.iws.nu/" + window.whiteboard);
+  $("#shareLinkURL").val(location.origin + "/" + window.whiteboard);
 
   ss.rpc("acl.getUsersAndPermissions", whiteboard, function(err, res) {
     if (err || !res) {
@@ -411,8 +411,7 @@ sharingSettingsDialog.dialog({
     dialog.on("click", ".removeUserButton", function() {
       var userId = $(this).attr("data-userId"),
         userName = $(this).attr("data-username"),
-        i,
-        l;
+        i;
 
       ss.rpc("acl.removeUserRoles", whiteboard, userName, function(err, res) {
         if (err) {
@@ -428,7 +427,7 @@ sharingSettingsDialog.dialog({
     });
 
     dialog.on("click", "#addUserButton", function() {
-      var candidateUser = $("#aclUsernameField").val(), i, l;
+      var candidateUser = $("#aclUsernameField").val();
 
       // can't set roles for owner
       if (candidateUser === window.userObject.username) {

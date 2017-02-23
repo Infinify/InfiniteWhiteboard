@@ -20,7 +20,10 @@ function iwbData() {
     whiteboard: window.whiteboard,
     data: {
       mapZoom: map.zoom(),
-      c0: map.pointCoordinate(map.locationCoordinate(map.center()), { x: 0, y: 0 })
+      c0: map.pointCoordinate(map.locationCoordinate(map.center()), {
+        x: 0,
+        y: 0
+      })
     },
     sid: getId()
   };
@@ -50,7 +53,7 @@ window.updateObject = function(paperItem) {
   var tmp = iwbData(), tmpSelected = paperItem.selected, r = Math.random();
 
   paperItem.selected = false;
-  
+
   tmp.r = paperItem.r = r;
   tmp.paper = paperItem.toJSON();
   tmp._id = paperItem.iwb._id;

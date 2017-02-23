@@ -351,21 +351,13 @@ window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
   $(window).trigger("clearCanvas");
 };
 
-$(".whiteboardList").accordion({
-  header: "h4",
-  collapsible: true,
-  active: false,
-  heightStyle: "content"
-});
-
 $(".whiteboardList h4").on("click", function() {
+  $(this.nextElementSibling).fadeToggle();
   $(this)
     .find("i")
     .toggleClass("icon-plus-circled")
     .toggleClass("icon-minus-circled");
 });
-
-$("h4", publicBoards).trigger("click");
 
 sharingSettingsDialog.dialog({
   dialogClass: "aclDialog",

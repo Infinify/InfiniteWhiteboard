@@ -13,7 +13,7 @@ connectionDialog.dialog({
   minWidth: 300,
   draggable: false,
   create: function() {
-    var connectionDialogSpinner = $("#connectionDialogSpinner").spin({
+    $("#connectionDialogSpinner").spin({
       color: "#CFCFCF",
       radius: 30,
       speed: 0.8,

@@ -1,47 +1,55 @@
-var htmlR = document.getElementById("html");
-var htmlE = document.getElementById("htmlContainer");
-var htmlr = $(htmlR);
-var html = $(htmlE);
+var htmlRoot = document.getElementById("html");
 
-function initCE(htmlElem, edit) {
-  var domElem = document.getElementById(htmlElem.elemId);
-  htmlr.css("pointer-events", "all");
-  html.css("z-index", "1");
-  var save = $("<button>Save</button>");
-  var cancelButton = $("<button>Cancel</button>");
-  var wrap = $('<div class="htmlTool"></div>');
-  var controls = $("<div></div>");
-  var body = $("body");
-  wrap.append(controls);
-  body.append(wrap);
-  controls.append(cancelButton);
-  controls.append(save);
-  function cancel() {
-    wrap.remove();
-    htmlElem.visible = false;
-    htmlElem.remove();
-    htmlr.css("pointer-events", "none");
-    html.css("z-index", "");
+function initializeContentEditableUI(event) {
+  var cancelButton = document.createElement("button");
+  var saveButton = document.createElement("button");
+  var wrap = document.createElement("div");
+
+  cancelButton.textContent = "Cancel";
+  saveButton.textContent = "Save";
+  wrap.appendChild(cancelButton);
+  wrap.appendChild(saveButton);
+  wrap.className = "htmlTool";
+
+  document.body.appendChild(wrap);
+
+  htmlRoot.classList.add("active");
+
+  var detail = event.detail;
+  var html = detail.html;
+  var edit = detail.edit;
+
+  var htmlElement = document.getElementById(html.elemId);
+  htmlElement.contentEditable = "true";
+
+  function removeContentEditableUI() {
+    wrap.parentNode.removeChild(wrap);
+    htmlRoot.classList.remove("active");
+    htmlElement.contentEditable = "inherit";
   }
-  var onSave = function onSave() {
-    htmlElem.content = domElem.innerHTML;
-    htmlr.css("pointer-events", "none");
-    html.css("z-index", "");
+
+  cancelButton.onclick = function cancel() {
+    removeContentEditableUI();
+
     if (edit) {
-      updateObject(htmlElem);
+      htmlElement.innerHTML = html.content;
     } else {
-      send(htmlElem);
+      html.visible = false;
+      html.remove();
     }
-    save.off("click", onSave);
-    cancelButton.off("click", cancel);
-    controls.remove();
   };
-  save.on("click", onSave);
-  cancelButton.on("click", cancel);
+
+  saveButton.onclick = function save() {
+    removeContentEditableUI();
+
+    html.content = htmlElement.innerHTML;
+
+    if (edit) {
+      updateObject(html);
+    } else {
+      send(html);
+    }
+  };
 }
 
-$(window).on("htmlEditor", function(event, data) {
-  var html = data.html;
-  var edit = data.edit;
-  initCE(html, edit);
-});
+document.addEventListener("htmlEditor", initializeContentEditableUI);

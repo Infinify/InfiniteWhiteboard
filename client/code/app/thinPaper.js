@@ -15,8 +15,6 @@ var Path = paper.Path;
 var PointText = paper.PointText;
 var Tool = paper.Tool;
 
-var propagatingEventsToOtherViews = true;
-
 $(window).on("clearCanvas", function() {
   project.activeLayer.removeChildren();
 });
@@ -313,7 +311,7 @@ window.nopTool = new Tool();
   window.htmlTool = new Tool();
   var w = $(window);
   window.htmlTool.onMouseDown = function(event) {
-    w.trigger("html", event.point);
+    document.dispatchEvent(new CustomEvent("html", { detail: event.point }));
     nopTool.activate();
     changePos(event.point);
   };

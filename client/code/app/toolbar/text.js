@@ -35,6 +35,7 @@ textTool.on("click", function() {
       $("#textPreviewWrapper").show();
     }
   } else {
+    nopTool.activate();
     if (window.newTextItem) {
       window.newTextItem.visible = false;
     }

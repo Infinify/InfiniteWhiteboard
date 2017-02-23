@@ -20,6 +20,20 @@ body {
     pointer-events: none
 }
 
+#html.active {
+    pointer-events: all;
+}
+
+.active #htmlContainer {
+    z-index: 1;
+}
+
+#paperToolsContainer {
+    text-align: center;
+    line-height: 1.5;
+    clear: both;
+}
+
 .cursor-move {
     cursor: move
 }

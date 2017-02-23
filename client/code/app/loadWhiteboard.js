@@ -57,8 +57,8 @@ ss.event.on("newObject", function(iwb, channelName) {
       channelName === "_global" && !window.whiteboard
   ) {
     var tmp = window.thinPaperProject.activeLayer.children;
-    for (var i = 0, t; i < tmp.length; i++) {
-      t = tmp[i];
+    for (var i = 0; i < tmp.length; i++) {
+      var t = tmp[i];
       if (t.r === iwb.r && t.removeOnNewObject) {
         t.visible = false;
         t.remove();
@@ -74,17 +74,15 @@ ss.event.on("updateObject", function(iwb, channelName) {
     iwb.whiteboard === window.whiteboard ||
       channelName === "_global" && !window.whiteboard
   ) {
-    var tmp = window.timeMachineProject.activeLayer.children;
-    for (var i = 0, t; i < tmp.length; i++) {
-      t = tmp[i];
+    // Keep parent in time machine project but remove from user project
+    window.timeMachineProject.activeLayer.children.forEach(function(t) {
       if (t.iwb._id === iwb._parent) {
         t.visible = false;
-        i--;
       }
-    }
-    tmp = window.thinPaperProject.activeLayer.children;
-    for (i = 0, t; i < tmp.length; i++) {
-      t = tmp[i];
+    });
+    var tmp = window.thinPaperProject.activeLayer.children;
+    for (var i = 0; i < tmp.length; i++) {
+      var t = tmp[i];
       if (t.r === iwb.r && t.removeOnNewObject) {
         t.visible = false;
         t.remove();

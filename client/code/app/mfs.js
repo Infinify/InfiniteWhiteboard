@@ -110,7 +110,9 @@ window.toggleMFS = function(event) {
   var old = localStorage.mfs && JSON.parse(localStorage.mfs) ||
     { id: getId(), flag: false };
   old.flag = !old.flag;
-  if (old.flag) {
+  var mfsActive = propagatingEventsToOtherViews = old.flag;
+
+  if (mfsActive) {
     old.mapCenter = map.center();
     old.center = map.locationPoint(old.mapCenter);
     old.tileCenter = map.locationCoordinate(old.mapCenter);
@@ -122,7 +124,7 @@ window.toggleMFS = function(event) {
     window.oldH = window.outerHeight;
     window.posTimer = setInterval(positionTimerHandler, 40);
 
-    mfsb.innerText = "MFS off";
+    mfsb.innerText = "MFS is on";
     window.location.href = "#" +
       old.zoom +
       "/" +
@@ -131,7 +133,7 @@ window.toggleMFS = function(event) {
       old.mapCenter.lon;
   } else {
     clearTimeout(window.posTimer);
-    mfsb.innerText = "MFS on";
+    mfsb.innerText = "MFS is off";
   }
   window.mfs = old;
   localStorage.mfs = JSON.stringify(old);
@@ -166,10 +168,13 @@ if (mfsb) {
   };
 
   var mfsInit = localStorage.mfs && JSON.parse(localStorage.mfs);
-  if (mfsInit && mfsInit.flag) {
-    mfsb.innerText = "MFS off";
+
+  var mfsActive = propagatingEventsToOtherViews = mfsInit && mfsInit.flag;
+
+  if (mfsActive) {
+    mfsb.innerText = "MFS is on";
   } else {
-    mfsb.innerText = "MFS on";
+    mfsb.innerText = "MFS is off";
   }
 }
 
@@ -222,12 +227,13 @@ function handle_storage(e) {
   if (e.key === "mfs") {
     if (v) {
       window.mfs = v;
-      if (v.flag) {
+      var mfsActive = propagatingEventsToOtherViews = v.flag;
+      if (mfsActive) {
         activateMfs(v);
-        mfsb.innerText = "MFS off";
+        mfsb.innerText = "MFS is on";
       } else {
         clearTimeout(window.posTimer);
-        mfsb.innerText = "MFS on";
+        mfsb.innerText = "MFS is off";
       }
     }
 

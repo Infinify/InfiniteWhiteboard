@@ -32,53 +32,30 @@ var tools = [
   "places",
   "interact"
 ];
-var toolDivs = tools.reduce(
+var toolClasses = tools.reduce(
   function(map, tool) {
-    map[tool] = document.getElementById(tool);
+    map[tool] = document.getElementById(tool).classList;
     return map;
   },
   {}
 );
-$("#toolContainer")
-  .accordion({
-    header: "div > h3",
-    collapsible: true,
-    active: false,
-    heightStyle: "content"
-  })
-  .on("click", function(event) {
-    var target = event.target;
-    while (!target.classList.contains("tool") && target !== this) {
-      target = target.parentNode;
-    }
-    if (!target.classList.contains("tool") || !target.id) {
-      return;
-    }
 
-    var id = target.id;
+$(".toolHeader").on("click", function(event) {
+  var target = this.parentNode;
+  target.classList.toggle("open");
+  var id = target.id;
 
-    tools.forEach(function(tool) {
-      if (id !== tool) {
-        var classes = toolDivs[tool].classList;
-        if (classes.contains("open")) {
-          classes.remove("open");
-        }
+  tools.forEach(function(tool) {
+    if (id !== tool) {
+      var classes = toolClasses[tool];
+      if (classes.contains("open")) {
+        classes.remove("open");
       }
-    });
-
-    drawToolHandler();
+    }
   });
 
-$(".toolContainer .ui-accordion-header, .ui-accordion-header > *").attr(
-  "tabindex",
-  "-1"
-);
-
-var $toolHeader = $(".toolHeader");
-$toolHeader.on("click", function() {
-  $(this).parent().toggleClass("open");
-});
-$toolHeader.hover(function() {
+  drawToolHandler();
+}).hover(function() {
   $(this).find("i").toggleClass("iconHover");
 });
 

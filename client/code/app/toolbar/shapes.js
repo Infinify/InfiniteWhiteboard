@@ -15,6 +15,7 @@ $(".toolContent", document.getElementById("shapes")).append(
 );
 
 var shapes = $("#shapes").on("click", function() {
+  nopTool.activate();
   if (!shapes.hasClass("open")) {
     return;
   }

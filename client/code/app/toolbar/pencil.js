@@ -16,6 +16,7 @@ $(".toolContent", document.getElementById("pencil")).append(
 
 var pencil = $("#pencil").on("click", function() {
   if (!pencil.hasClass("open")) {
+    nopTool.activate();
     return;
   }
 

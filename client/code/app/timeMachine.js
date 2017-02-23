@@ -6,7 +6,6 @@ var Raster = paper.Raster;
 var Path = paper.Path;
 var PointText = paper.PointText;
 var Item = paper.Item;
-var propagatingEventsToOtherViews = true;
 var tileSize = 256;
 var zInterval = 7;
 
@@ -15,13 +14,10 @@ for (var zi = -1021, zl = 54; zi < zl; zi++) {
   zToPaths[String(zi)] = [];
 }
 
-var htmlR = document.getElementById("html");
-var htmlE = document.getElementById("htmlContainer");
-var htmlr = $(htmlR);
-var html = $(htmlE);
+var htmlContainer = document.getElementById("htmlContainer");
 $(window).on("clearCanvas", function() {
   project.activeLayer.removeChildren();
-  htmlE.innerHTML = "";
+  htmlContainer.innerHTML = "";
 
   for (var zi = -1021, zl = 53; zi < zl; zi++) {
     zToPaths[String(zi)] = [];
@@ -85,11 +81,11 @@ var Html = Item.extend({
   setContent: function(content) {
     this._content = content;
     if (enableScripts) {
-      this.rep.remove();
+      htmlContainer.removeChild(this.elem);
     }
     this.elem.innerHTML = content;
     if (enableScripts) {
-      html.append(this.rep);
+      htmlContainer.appendChild(this.elem);
     }
   },
   getBounds: function() {
@@ -120,14 +116,14 @@ var Html = Item.extend({
         if (!enableScripts) {
           this.elem.innerHTML = "";
         }
-        html.append(this.rep);
+        htmlContainer.appendChild(this.elem);
         if (!enableScripts) {
           this.elem.innerHTML = this._content;
         }
       }
       this._draw(null, null, this._matrix);
     } else {
-      this.rep.remove();
+      htmlContainer.removeChild(this.elem);
     }
   },
   initialize: function Html(content, point) {
@@ -136,15 +132,12 @@ var Html = Item.extend({
       this.position = point;
     }
     this.elemId = "htmlElem" + id++;
-    this.rep = $(
-      '<div class="htmlItem is-container container" id="' +
-        this.elemId +
-        '"></div>'
-    );
+    var elem = this.elem = document.createElement("div");
+    elem.className = "htmlItem is-container container";
+    elem.id = this.elemId;
     if (!enableScripts) {
-      html.append(this.rep);
+      htmlContainer.appendChild(this.elem);
     }
-    this.elem = this.rep[0];
     this.content = content;
   },
   _draw: function(ctx, param, matrix) {
@@ -158,28 +151,19 @@ var Html = Item.extend({
   }
 });
 var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
-$(window).on("html", function(event, point) {
+document.addEventListener("html", function(event) {
+  var point = event.detail;
   var hitResult = project.hitTest(point, hitOptions);
   if (!hitResult || !(hitResult.item instanceof Html)) {
     hitResult = window.timeMachineProject.hitTest(point, hitOptions);
   }
   hitResult = hitResult && hitResult.item instanceof Html && hitResult.item;
   var html = hitResult ||
-    new Html('<div contenteditable="true">Click me to edit html</div>', point);
+    new Html("<div>This is html text inside a div element</div>", point);
   html.visible = true;
-  $(window).trigger("htmlEditor", { html: html, edit: Boolean(hitResult) });
-  // Disable the html tool and drawing mode not to create more than one at a time
-  $(".toolContainer #login + .clear").trigger("click");
-});
-var interact = $("#interact");
-interact.on("click", function() {
-  if (interact.hasClass("open")) {
-    htmlr.css("pointer-events", "all");
-    html.css("z-index", "1");
-  } else {
-    htmlr.css("pointer-events", "none");
-    html.css("z-index", "");
-  }
+  document.dispatchEvent(new CustomEvent("htmlEditor", {
+    detail: { html: html, edit: Boolean(hitResult) }
+  }));
 });
 
 Array.prototype.binaryIndexOf = binaryIndexOf;

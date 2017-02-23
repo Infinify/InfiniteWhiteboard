@@ -60,8 +60,6 @@ function loginSuccessHandler() {
     populateAcl();
   });
 
-  $("#privateBoards").accordion("option", "active", false);
-  $("#sharedBoards").accordion("option", "active", false);
   $("#newWhiteboardFieldText").html("Create new personal whiteboard");
 
   $("#loginSpinner")

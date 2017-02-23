@@ -80,7 +80,7 @@ var Html = Item.extend({
   },
   setContent: function(content) {
     this._content = content;
-    if (enableScripts) {
+    if (enableScripts && this.elem.parentNode) {
       htmlContainer.removeChild(this.elem);
     }
     this.elem.innerHTML = content;
@@ -122,7 +122,7 @@ var Html = Item.extend({
         }
       }
       this._draw(null, null, this._matrix);
-    } else {
+    } else if (this.elem.parentNode) {
       htmlContainer.removeChild(this.elem);
     }
   },

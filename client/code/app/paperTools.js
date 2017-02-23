@@ -714,4 +714,4 @@ var tool;
   };
 })();
 
-window.thinPaperProject = paper.project;
+window.paperToolsProject = paper.project;

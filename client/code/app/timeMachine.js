@@ -374,7 +374,7 @@ window.translateChildren = function(x, y, mfs, offset) {
     a.translate(x, y);
   }
 
-  var drawLayer = window.thinPaperProject.activeLayer;
+  var drawLayer = window.paperToolsProject.activeLayer;
   if (drawLayer.children.length) {
     drawLayer.translate(x, y);
   }
@@ -450,7 +450,7 @@ window.zoomChildren = function(scale, x, y, mfs) {
   xSum += x;
   ySum += y;
 
-  var drawLayer = window.thinPaperProject.activeLayer;
+  var drawLayer = window.paperToolsProject.activeLayer;
   var drawChildren = drawLayer.children;
   if (drawChildren.length) {
     drawLayer.scale(z, center);

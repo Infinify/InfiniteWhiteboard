@@ -85,7 +85,7 @@ module.exports = id => {
       "app/drawToolHandler.js",
       "app/loadWhiteboard.js",
       "app/timeMachine.js",
-      "app/thinPaper.js",
+      "app/paperTools.js",
       "app/polymaps.js",
       "app/mfs.js",
       "app/entry.js"

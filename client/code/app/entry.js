@@ -66,7 +66,7 @@ ss.server.on("ready", function onReady() {
 require("/polymaps");
 require("/contentEditable");
 require("/timeMachine");
-require("/thinPaper");
+require("/paperTools");
 require("/mfs");
 require("/loadWhiteboard");
 require("/toolBar");

@@ -56,7 +56,7 @@ ss.event.on("newObject", function(iwb, channelName) {
     iwb.whiteboard === window.whiteboard ||
       channelName === "_global" && !window.whiteboard
   ) {
-    var tmp = window.thinPaperProject.activeLayer.children;
+    var tmp = window.paperToolsProject.activeLayer.children;
     for (var i = 0; i < tmp.length; i++) {
       var t = tmp[i];
       if (t.r === iwb.r && t.removeOnNewObject) {
@@ -80,7 +80,7 @@ ss.event.on("updateObject", function(iwb, channelName) {
         t.visible = false;
       }
     });
-    var tmp = window.thinPaperProject.activeLayer.children;
+    var tmp = window.paperToolsProject.activeLayer.children;
     for (var i = 0; i < tmp.length; i++) {
       var t = tmp[i];
       if (t.r === iwb.r && t.removeOnNewObject) {

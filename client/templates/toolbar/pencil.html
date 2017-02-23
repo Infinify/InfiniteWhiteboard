@@ -9,7 +9,7 @@
     </select>
 </div>
 <div id="pencilStrokeWidth"><span style="float:left; font-size:12px; margin-top:15px;">Width</span></div>
-<a onclick="window.colorPickerTool.activate()">Picker</a>
-<a onclick="window.drawTool.activate()">Draw</a>
+<a class="toolActivator" id="colorPickerTool" onclick="window.colorPickerTool.activate()">Picker</a>
+<a class="toolActivator" id="drawTool" onclick="window.drawTool.activate()">Draw</a>
 <a onclick="$('.palette').fadeToggle()">Palette</a>
 <ul class="palette" style="display: none;"></ul>

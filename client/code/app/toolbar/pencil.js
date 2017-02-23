@@ -14,6 +14,8 @@ $(".toolContent", document.getElementById("pencil")).append(
   ss.tmpl["toolbar-pencil"].render({})
 );
 
+var colorPickerToolButton = document.getElementById("colorPickerTool");
+var drawToolButton = document.getElementById("drawTool");
 var pencil = $("#pencil").on("click", function() {
   if (!pencil.hasClass("open")) {
     nopTool.activate();
@@ -42,7 +44,9 @@ var pencil = $("#pencil").on("click", function() {
       hexToB(color) / 256
     );
 
-  window.drawTool.activate();
+  if (!colorPickerToolButton.classList.contains("active") && !drawToolButton.classList.contains("active")) {
+    window.drawTool.activate();
+  }
   delete window.timestamp;
   window.timeAnimation();
 });

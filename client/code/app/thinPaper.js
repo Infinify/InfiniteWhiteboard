@@ -38,11 +38,26 @@ window.currentStrokeStyle = {
   strokeColor: new paper.Color(0, 0, 0),
   strokeWidth: 5
 };
-
+function activate(tool) {
+  return function () {
+    var toolActivator = document.getElementById(tool);
+    if (!toolActivator) { return; }
+    toolActivator.classList.add("active");
+  };
+}
+function deactivate(tool) {
+  return function () {
+    var toolActivator = document.getElementById(tool);
+    if (!toolActivator) { return; }
+    toolActivator.classList.remove("active");
+  };
+}
 window.nopTool = new Tool();
-
+var tool;
 (function() {
-  window.drawTool = new Tool();
+  window.drawTool = tool = new Tool();
+  tool.onActivate = activate("drawTool");
+  tool.onDeactivate = deactivate("drawTool");
 
   var path;
   var onMouseDowns = window.onMouseDowns = function(event, mfs) {
@@ -178,7 +193,9 @@ window.nopTool = new Tool();
 })();
 
 (function() {
-  window.textTool = new Tool();
+  window.textTool = tool = new Tool();
+  tool.onActivate = activate("textTool");
+  tool.onDeactivate = deactivate("textTool");
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
@@ -261,7 +278,9 @@ window.nopTool = new Tool();
   };
 })();
 (function() {
-  window.imageTool = new Tool();
+  window.imageTool = tool = new Tool();
+  tool.onActivate = activate("imageTool");
+  tool.onDeactivate = deactivate("imageTool");
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
@@ -308,8 +327,9 @@ window.nopTool = new Tool();
   };
 })();
 (function() {
-  window.htmlTool = new Tool();
-  var w = $(window);
+  window.htmlTool = tool = new Tool();
+  tool.onActivate = activate("htmlTool");
+  tool.onDeactivate = deactivate("htmlTool");
   window.htmlTool.onMouseDown = function(event) {
     document.dispatchEvent(new CustomEvent("html", { detail: event.point }));
     nopTool.activate();
@@ -319,7 +339,9 @@ window.nopTool = new Tool();
 
 (function() {
   var path;
-  window.circleTool = new Tool();
+  window.circleTool = tool = new Tool();
+  tool.onActivate = activate("circleTool");
+  tool.onDeactivate = deactivate("circleTool");
 
   window.circleTool.onMouseDrag = function onMouseDrag(event) {
     // The radius is the distance between the position
@@ -345,7 +367,9 @@ window.nopTool = new Tool();
   };
 })();
 (function() {
-  window.rectangleTool = new Tool();
+  window.rectangleTool = tool = new Tool();
+  tool.onActivate = activate("rectangleTool");
+  tool.onDeactivate = deactivate("rectangleTool");
   var rect;
 
   window.rectangleTool.onMouseDrag = function onMouseDrag(event) {
@@ -402,7 +426,9 @@ window.nopTool = new Tool();
   };
 })();
 (function() {
-  window.ellipseTool = new Tool();
+  window.ellipseTool = tool = new Tool();
+  tool.onActivate = activate("ellipseTool");
+  tool.onDeactivate = deactivate("ellipseTool");
   var ellipse;
 
   window.ellipseTool.onMouseDrag = function onMouseDrag(event) {
@@ -461,7 +487,9 @@ window.nopTool = new Tool();
 
 (function() {
   var path;
-  window.bezierTool = new Tool();
+  window.bezierTool = tool = new Tool();
+  tool.onActivate = activate("bezierTool");
+  tool.onDeactivate = deactivate("bezierTool");
 
   var types = ["point", "handleIn", "handleOut"];
 
@@ -535,7 +563,9 @@ window.nopTool = new Tool();
   };
 })();
 (function() {
-  window.editTool = new Tool();
+  window.editTool = tool = new Tool();
+  tool.onActivate = activate("editTool");
+  tool.onDeactivate = deactivate("editTool");
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
@@ -629,7 +659,9 @@ window.nopTool = new Tool();
   };
 })();
 (function() {
-  window.colorPickerTool = new Tool();
+  window.colorPickerTool = tool = new Tool();
+  tool.onActivate = activate("colorPickerTool");
+  tool.onDeactivate = deactivate("colorPickerTool");
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
@@ -648,7 +680,9 @@ window.nopTool = new Tool();
 })();
 (function() {
   var path;
-  window.starTool = new Tool();
+  window.starTool = tool = new Tool();
+  tool.onActivate = activate("starTool");
+  tool.onDeactivate = deactivate("starTool");
 
   window.starTool.onMouseDown = function onMouseDown(event) {
     changePos(event.point);

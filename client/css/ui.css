@@ -24,6 +24,10 @@ body {
     pointer-events: all;
 }
 
+.toolActivator.active {
+    font-weight: bold;
+}
+
 .active #htmlContainer {
     z-index: 1;
 }

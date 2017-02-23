@@ -15,8 +15,8 @@ $(".toolContent", document.getElementById("shapes")).append(
 );
 
 var shapes = $("#shapes").on("click", function() {
-  nopTool.activate();
   if (!shapes.hasClass("open")) {
+    nopTool.activate();
     return;
   }
   window.currentStrokeStyle.strokeWidth = $("#shapeStrokeWidth").slider(

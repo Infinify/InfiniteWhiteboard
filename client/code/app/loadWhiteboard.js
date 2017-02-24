@@ -4,29 +4,26 @@ minTime = +new Date();
 maxTime = 0;
 
 function prepareObject(o) {
-  drawObject(o);
-  if (o._parent) {
-    var parent = data[o.whiteboard][o._parent];
+  var d = +new Date(o.timestamp);
+  var whiteboard = o.whiteboard;
+  var wb = data[whiteboard];
+  var _parent = o._parent;
+  var _id = o._id;
+  o.timestamp = d;
+
+  if (_parent) {
+    var parent = wb[_parent];
     if (parent) {
-      while (parent.next) {
+      while (parent.next && parent.next._id !== _id) {
         parent = parent.next;
       }
-      var pp = parent.currentPaperItem;
-      var cp = o.currentPaperItem;
-      parent.nextPaper = cp;
       parent.next = o;
       o.parent = parent;
-      if (cp) {
-        cp.parentPaper = pp;
-      }
-      if (pp) {
-        o.parentPaper = pp;
-        pp.nextPaper = cp;
-        pp.visible = false;
-      }
     }
   }
-  var d = +new Date(o.timestamp);
+
+  drawObject(o);
+  
   minTime = Math.min(minTime, d) || minTime;
   maxTime = Math.max(maxTime, d) || maxTime;
 }
@@ -96,7 +93,7 @@ ss.event.on("updateObject", function(iwb, channelName) {
 NProgress.configure({ trickle: false, showSpinner: false });
 
 function objectsReady() {
-  $(window).trigger("timeAnimation");
+  document.dispatchEvent(new CustomEvent("timeAnimation"));
   NProgress.done();
 }
 
@@ -161,8 +158,9 @@ function loadWhiteboard(whiteboard) {
     }
 
     object = Object.create(object);
-    wb.push(object);
     wb[object._id] = object;
+    wb.push(object);
+    
     var length = wb.length;
     var count = wb.count;
     var finished = length >= count;
@@ -182,7 +180,7 @@ function loadWhiteboard(whiteboard) {
       }
     } else if (length % 256 === 0) {
       NProgress.set(length / count);
-      updateTimeLine();
+      document.dispatchEvent(new CustomEvent("timeAnimation"));
     }
 
     return !finished;
@@ -197,7 +195,7 @@ function loadWhiteboard(whiteboard) {
     return onData(err, body);
   }
 
-  var cache = [];
+  var cache = Object.create(null);
   var cachedOrThrottledRequest = function(id) {
     if (!cache.hasOwnProperty(id)) {
       superagent.get(root + id).use(throttle.plugin()).end(function(err, res) {
@@ -206,9 +204,10 @@ function loadWhiteboard(whiteboard) {
     }
   };
 
+  var items = [];
   var loadCache = hasCache && db && db.iws.each(function(item) {
       cache[item._id] = item;
-      cache.push(item);
+      items.push(item);
     });
 
   Dexie.Promise
@@ -220,7 +219,7 @@ function loadWhiteboard(whiteboard) {
     })
     .then(function(result) {
       if (result === undefined) {
-        cache.forEach(function(item) {
+        items.forEach(function(item) {
           if (!wb.hasOwnProperty(item._id)) {
             onData(null, item);
           }

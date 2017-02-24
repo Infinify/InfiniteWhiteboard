@@ -214,6 +214,7 @@ window.drawObject = function(iwb, reRender) {
     }
     tmp.push(iwb);
     if (Math.abs(currRound - zoomRound) > zInterval) {
+      setVisibility(iwb, window.timestamp || +new Date());
       return;
     }
   }
@@ -248,8 +249,7 @@ window.drawObject = function(iwb, reRender) {
   }
   paperItem.deleted = !paperItem.visible;
   paperItem.iwb = iwb;
-
-  paperItem.timestamp = +new Date(iwb.timestamp);
+  paperItem.timestamp = iwb.timestamp;
 
   var c0 = d.c0;
   x = c0.column * tileSize;
@@ -269,18 +269,7 @@ window.drawObject = function(iwb, reRender) {
   }
 
   if (iwb.currentPaperItem) {
-    var current = iwb.currentPaperItem;
-    var parent = current.parentPaper;
-    if (parent) {
-      parent.nextPaper = paperItem;
-      paperItem.parentPaper = parent;
-    }
-    var next = current.nextPaper;
-    if (next) {
-      next.parentPaper = paperItem;
-      paperItem.nextPaper = next;
-    }
-    current.remove();
+    iwb.currentPaperItem.remove();
   }
 
   iwb.currentPaperItem = paperItem;
@@ -304,11 +293,7 @@ window.drawObject = function(iwb, reRender) {
     paperItem
   );
 
-  var noUpdateOverride = !(paperItem.nextPaper &&
-    (!window.timestamp || paperItem.nextPaper.timestamp <= window.timestamp));
-  paperItem.visible = !paperItem.deleted &&
-    (!window.timestamp || paperItem.timestamp <= window.timestamp) &&
-    noUpdateOverride;
+  setVisibility(iwb, window.timestamp || +new Date());
 };
 function debounce(func, wait, immediate) {
   var timeout, args, context, timestamp, result;
@@ -493,8 +478,7 @@ window.zoomChildren = function(scale, x, y, mfs) {
         ) {
           a = zToPaths[String(j)];
           for (i = 0, l = a.length; i < l; i++) {
-            tmp = a[i];
-            drawObject(tmp, true);
+            drawObject(a[i], true);
           }
         }
       },
@@ -503,36 +487,49 @@ window.zoomChildren = function(scale, x, y, mfs) {
   }
 };
 
-function setVisibility(item, t) {
-  var visible = item.timestamp <= t;
-  var parent = item.parentPaper;
-  var next = item.nextPaper;
+function setVisibility(iwb, t) {
+  var item = iwb.currentPaperItem;
+  var visible = iwb.timestamp <= t;
+  var parent = iwb.parent;
+  var next = iwb.next;
   if (visible) {
-    if (parent) {
-      parent.visible = false;
+    if (parent && parent.currentPaperItem) {
+      parent.currentPaperItem.visible = false;
     }
     if (next) {
-      while (next && next.nextPaper && next.nextPaper.timestamp <= t) {
-        next.visible = false;
-        next = next.nextPaper;
+      while (next && next.next && next.next.timestamp <= t) {
+        if (next.currentPaperItem) {
+          next.currentPaperItem.visible = false;
+        }
+        next = next.next;
       }
       if (next.timestamp <= t) {
         visible = false;
       }
-      next.visible = !next.deleted && next.timestamp <= t;
+      if (next.currentPaperItem) {
+        next.currentPaperItem.visible = !next.deleted && next.timestamp <= t;
+      }
     }
   } else if (parent) {
-    while (parent && parent.parentPaper && parent.timestamp > t) {
-      parent.visible = false;
-      parent = parent.parentPaper;
+    while (parent && parent.parent && parent.timestamp > t) {
+      if (parent.currentPaperItem) {
+        parent.currentPaperItem.visible = false;
+      }
+      parent = parent.parent;
     }
-    while (parent && parent.nextPaper && parent.nextPaper.timestamp <= t) {
-      parent.visible = false;
-      parent = parent.nextPaper;
+    while (parent && parent.next && parent.next.timestamp <= t) {
+      if (parent.currentPaperItem) {
+        parent.currentPaperItem.visible = false;
+      }
+      parent = parent.next;
     }
-    parent.visible = !parent.deleted && parent.timestamp <= t;
+    if (parent.currentPaperItem) {
+      parent.currentPaperItem.visible = !parent.deleted && parent.timestamp <= t;
+    }
   }
-  item.visible = !item.deleted && visible;
+  if (item) {
+    item.visible = !item.deleted && visible;
+  }
 }
 
 var prevTime = 0;
@@ -552,12 +549,12 @@ window.timeAnimation = function(preserveUrl, skipTrigger) {
       i <= l;
       i++
     ) {
-      setVisibility(children[i], t);
+      setVisibility(children[i].iwb, t);
     }
   }
 
   if (!skipTrigger) {
-    $(window).trigger("timeAnimation");
+    document.dispatchEvent(new CustomEvent("timeAnimation"));
   }
   if (!preserveUrl) {
     changePosition();

@@ -18,7 +18,7 @@ function updateTimeLine() {
   now.textContent = new Date(t);
   timeLineSlide.slider("value", 100 * (t - minTime) / (maxTime - minTime));
 }
-$(window).on("timeAnimation", updateTimeLine);
+document.addEventListener("timeAnimation", updateTimeLine);
 
 if (!Math.sign) {
   Math.sign = function(x) {

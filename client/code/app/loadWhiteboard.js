@@ -35,8 +35,9 @@ function handleUpdate(iwb) {
   var object = Object.create(iwb);
 
   wb.count = wb.count + 1 || 1;
-  wb.push(object);
   wb[object._id] = object;
+  wb.push(object);
+  
   prepareObject(object);
 
   if (db) {
@@ -195,9 +196,9 @@ function loadWhiteboard(whiteboard) {
     return onData(err, body);
   }
 
-  var cache = Object.create(null);
+  var cached = Object.create(null);
   var cachedOrThrottledRequest = function(id) {
-    if (!cache.hasOwnProperty(id)) {
+    if (!(id in cached)) {
       superagent.get(root + id).use(throttle.plugin()).end(function(err, res) {
         cacheOnData(err, res && res.body);
       });
@@ -206,7 +207,7 @@ function loadWhiteboard(whiteboard) {
 
   var items = [];
   var loadCache = hasCache && db && db.iws.each(function(item) {
-      cache[item._id] = item;
+      cached[item._id] = true;
       items.push(item);
     });
 

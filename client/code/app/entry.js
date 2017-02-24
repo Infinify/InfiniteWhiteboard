@@ -3,64 +3,60 @@
 // Make 'ss' available to all modules and the browser console
 window.ss = require("socketstream");
 
-var connectionDialog = $("#connectionDialog");
-connectionDialog.dialog({
-  autoOpen: true,
-  modal: true,
-  closeOnEscape: false,
-  dialogClass: "connectionDialog",
-  maxWidth: 300,
-  minWidth: 300,
-  draggable: false,
-  create: function() {
-    $("#connectionDialogSpinner").spin({
-      color: "#CFCFCF",
-      radius: 30,
-      speed: 0.8,
-      lines: 30,
-      top: "0px",
-      left: "100px"
-    });
-  }
-}).css("visibility", "visible");
+new Spinner({
+  color: "#CFCFCF",
+  radius: 30,
+  speed: 0.8,
+  lines: 30,
+  top: "0px",
+  left: "100px"
+}).spin(document.getElementById("connectionDialogSpinner"));
 
-var reconnectAttempts = 0, timeoutHandle, timeLeft;
+var overlay = document.querySelector(".ui-widget-overlay").style;
+var connectionDialog = document.getElementById("connectionDialog").style;
+
+var timeoutHandle;
+var reconnectAttempts = 0;
 var reconnectionTimeout = 1;
+
 ss.server.on("disconnect", function onDisconnect() {
-  timeLeft = reconnectionTimeout * Math.pow(1.5, reconnectAttempts);
+  var timeLeft = reconnectionTimeout * Math.pow(1.5, reconnectAttempts);
+
+  connectionDialog.display = "block";
+  overlay.display = "block";
+
   reconnectAttempts++;
-  console.log("Connection down :-(");
-  connectionDialog.dialog("open");
-  connectionDialog.show();
-  $("#reconnectAttemptsDisplay").html(reconnectAttempts + " attempts");
+  document.getElementById(
+    "reconnectAttemptsDisplay"
+  ).textContent = reconnectAttempts + " attempts";
 
   if (timeoutHandle) {
     clearTimeout(timeoutHandle);
   }
 
-  var timeoutDisplay = $("#reconnectTimeoutDisplay");
+  var timeoutDisplay = document.getElementById("reconnectTimeoutDisplay");
   timeoutHandle = setInterval(
     function() {
       timeLeft -= 1;
-      timeoutDisplay.html(
-        timeLeft < 0
-          ? "Reconnecting..."
-          : "Reconnecting in " + Math.round(timeLeft) + " seconds."
-      );
+      timeoutDisplay.textContent = timeLeft < 0
+        ? "Reconnecting..."
+        : "Reconnecting in " + Math.round(timeLeft) + " seconds.";
     },
     1000
   );
 });
 
 ss.server.on("reconnect", function onReconnect() {
-  reconnectAttempts = 0;
-  connectionDialog.dialog("close");
-  console.log("Connection back up :-)");
+  connectionDialog.display = "none";
+  overlay.display = "none";
+
   clearTimeout(timeoutHandle);
+  reconnectAttempts = 0;
 });
 
 ss.server.on("ready", function onReady() {
-  connectionDialog.dialog("close");
+  connectionDialog.display = "none";
+  overlay.display = "none";
 });
 
 require("/polymaps");

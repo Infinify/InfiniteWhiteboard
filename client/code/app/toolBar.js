@@ -40,8 +40,18 @@ var toolClasses = tools.reduce(
   {}
 );
 
-$(".toolHeader").on("click", function(event) {
-  var target = this.parentNode;
+document.getElementById("toolbarWrapper").onclick = function onToolClick(
+  event
+) {
+  var target = event.target;
+  var currentTarget = event.currentTarget;
+  while (!target.classList.contains("toolHeader") && target !== currentTarget) {
+    target = target.parentNode;
+  }
+  if (!target.classList.contains("toolHeader")) {
+    return;
+  }
+  target = target.parentNode;
   target.classList.toggle("open");
   var id = target.id;
 
@@ -55,15 +65,22 @@ $(".toolHeader").on("click", function(event) {
   });
 
   drawToolHandler();
-}).hover(function() {
-  $(this).find("i").toggleClass("iconHover");
-});
+};
+function onHeaderHover() {
+  this.querySelector("i").classList.toggle("iconHover");
+}
+[].slice
+  .call(document.querySelectorAll(".toolHeader"))
+  .forEach(function(toolHeader) {
+    toolHeader.onmouseover = toolHeader.onmouseout = onHeaderHover;
+  });
 
-var toolbarWrapperDOM = $(document.getElementById("toolbarWrapper"));
-$("#hideToolbarButton").on("click", function() {
-  toolbarWrapperDOM.hide("slide", { direction: "left" }, 300);
-});
+var toolbarStyle = document.getElementById("toolbarWrapper").style;
 
-$("#showToolbarButton").on("click", function() {
-  toolbarWrapperDOM.show("drop", { direction: "left" }, 300, function() {});
-});
+document.getElementById("hideToolbarButton").onclick = function() {
+  toolbarStyle.display = "none";
+};
+
+document.getElementById("showToolbarButton").onclick = function() {
+  toolbarStyle.display = "";
+};

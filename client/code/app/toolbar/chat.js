@@ -226,7 +226,7 @@ function initChat(whiteboard) {
       renderMessage(messages[i]);
     }
 
-    $(document.getElementById("#chatlog-" + window.whiteboard)).show();
+    $(currentChatLog).show();
   });
 }
 

@@ -348,7 +348,7 @@ window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
 
   window.populateAcl();
 
-  $(window).trigger("clearCanvas");
+  document.dispatchEvent(new CustomEvent("clearCanvas"));
 };
 
 $(".whiteboardList h4").on("click", function() {

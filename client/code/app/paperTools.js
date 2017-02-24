@@ -15,7 +15,7 @@ var Path = paper.Path;
 var PointText = paper.PointText;
 var Tool = paper.Tool;
 
-$(window).on("clearCanvas", function() {
+document.addEventListener("clearCanvas", function() {
   project.activeLayer.removeChildren();
 });
 
@@ -39,16 +39,20 @@ window.currentStrokeStyle = {
   strokeWidth: 5
 };
 function activate(tool) {
-  return function () {
+  return function() {
     var toolActivator = document.getElementById(tool);
-    if (!toolActivator) { return; }
+    if (!toolActivator) {
+      return;
+    }
     toolActivator.classList.add("active");
   };
 }
 function deactivate(tool) {
-  return function () {
+  return function() {
     var toolActivator = document.getElementById(tool);
-    if (!toolActivator) { return; }
+    if (!toolActivator) {
+      return;
+    }
     toolActivator.classList.remove("active");
   };
 }
@@ -199,12 +203,16 @@ var tool;
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
+  function showTextPreview(point) {
+    var style = document.getElementById("textPreviewWrapper").style;
+    style.top = point.y - 20 + "px";
+    style.left = point.x - 300 + "px";
+    style.display = "";
+  }
+
   window.textTool.edit = function edit(path) {
-    $("#textPreviewWrapper")
-      .css("top", path.point.y - 20)
-      .css("left", path.point.x - 300)
-      .show();
-    $("#textPreview").val(path.content);
+    showTextPreview(path.point);
+    document.getElementById("textPreview").value = path.content;
     window.newTextItem = path;
   };
 
@@ -233,17 +241,14 @@ var tool;
     }
 
     if (moveWrapper) {
-      $("#textPreviewWrapper")
-        .css("top", event.point.y - 20)
-        .css("left", event.point.x - 300)
-        .show();
+      showTextPreview(event.point);
     }
-    $("body").css("cursor", "move");
+    document.body.style.cursor = "move";
 
     setTimeout(
       function() {
         // has to be wrapped in a timeout
-        $("#textPreview").focus();
+        document.getElementById("textPreview").focus();
       },
       0
     );
@@ -263,10 +268,7 @@ var tool;
       // there is no text or dragging existing text
       newItem.startedDragging = true;
       newItem.point = newItem.point.__add(event.delta);
-      $("#textPreviewWrapper")
-        .css("top", newItem.point.y - 20)
-        .css("left", newItem.point.x - 300)
-        .show();
+      showTextPreview(newItem.point);
     }
     changePos(event.point);
   };
@@ -305,7 +307,7 @@ var tool;
       newRasterItem.startedDragging = true;
     }
 
-    $("body").css("cursor", "move");
+    document.body.style.cursor = "move";
     changePos(event.point);
   };
 
@@ -674,7 +676,7 @@ var tool;
     var stroke = hitResult && hitResult.item.strokeColor;
     window.currentStrokeStyle.fillColor = fill || "";
     window.currentStrokeStyle.strokeColor = stroke || "white";
-    $(window).trigger("setColor");
+    document.dispatchEvent(new CustomEvent("setColor"));
     changePos(event.point);
   };
 })();

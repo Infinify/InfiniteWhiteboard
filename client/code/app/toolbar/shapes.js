@@ -14,8 +14,8 @@ $(".toolContent", document.getElementById("shapes")).append(
   ss.tmpl["toolbar-shapes"].render({})
 );
 
-var shapes = $("#shapes").on("click", function() {
-  if (!shapes.hasClass("open")) {
+var shapes = $(".toolHeader", "#shapes").on("click", function() {
+  if (shapes.hasClass("open")) {
     nopTool.activate();
     return;
   }

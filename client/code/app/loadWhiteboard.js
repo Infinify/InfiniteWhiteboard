@@ -23,7 +23,7 @@ function prepareObject(o) {
   }
 
   drawObject(o);
-  
+
   minTime = Math.min(minTime, d) || minTime;
   maxTime = Math.max(maxTime, d) || maxTime;
 }
@@ -37,7 +37,7 @@ function handleUpdate(iwb) {
   wb.count = wb.count + 1 || 1;
   wb[object._id] = object;
   wb.push(object);
-  
+
   prepareObject(object);
 
   if (db) {
@@ -161,7 +161,7 @@ function loadWhiteboard(whiteboard) {
     object = Object.create(object);
     wb[object._id] = object;
     wb.push(object);
-    
+
     var length = wb.length;
     var count = wb.count;
     var finished = length >= count;

@@ -11,8 +11,9 @@ var map = window.map = po
   .add(po.hash())
   .add(po.compass().position("bottom-left"));
 
+var compassStyle = document.querySelector(".compass").style;
 document.getElementById("compassToggle").onclick = function() {
-  $(".compass").fadeToggle();
+  compassStyle.display = compassStyle.display === "none" ? "" : "none";
 };
 
 function iwbData() {

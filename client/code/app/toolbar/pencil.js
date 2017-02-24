@@ -16,8 +16,8 @@ $(".toolContent", document.getElementById("pencil")).append(
 
 var colorPickerToolButton = document.getElementById("colorPickerTool");
 var drawToolButton = document.getElementById("drawTool");
-var pencil = $("#pencil").on("click", function() {
-  if (!pencil.hasClass("open")) {
+var pencil = $(".toolHeader", "#pencil").on("click", function() {
+  if (pencil.hasClass("open")) {
     nopTool.activate();
     return;
   }
@@ -44,7 +44,10 @@ var pencil = $("#pencil").on("click", function() {
       hexToB(color) / 256
     );
 
-  if (!colorPickerToolButton.classList.contains("active") && !drawToolButton.classList.contains("active")) {
+  if (
+    !colorPickerToolButton.classList.contains("active") &&
+      !drawToolButton.classList.contains("active")
+  ) {
     window.drawTool.activate();
   }
   delete window.timestamp;
@@ -64,7 +67,7 @@ function colorPickedHandler(color, which) {
   } else {
     delete window.currentStrokeStyle[which + "Color"];
   }
-  $(window).trigger("setColor");
+  document.dispatchEvent(new CustomEvent("setColor"));
 }
 
 colorPickedHandler(window.initColor);
@@ -139,7 +142,7 @@ palette.on("click", function(event) {
   stroke.spectrum("set", strokeColor);
 });
 
-$(window).on("setColor", function() {
+document.addEventListener("setColor", function() {
   var fillColor = currentStrokeStyle.fillColor;
   fillColor = fillColor && fillColor.toCSS ? fillColor.toCSS() : fillColor;
   var strokeColor = currentStrokeStyle.strokeColor;

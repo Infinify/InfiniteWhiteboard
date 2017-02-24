@@ -132,11 +132,20 @@ li,ul {
     background-color: #3d3d3d
 }
 
-.connectionDialog {
-    z-index: 100
+#connectionDialogSpinner {
+    height: 80px
 }
 
-.connectionDialog .body {
+#reloadWarning {
+    color: lightcoral
+}
+
+#reconnectHeader {
+    font-size: 15px
+}
+
+.connectionDialog {
+    z-index: 100;
     font-family: 'Ubuntu',Helvetica,Arial,sans-serif;
     padding: 10px;
     -moz-border-radius: 5px;
@@ -145,10 +154,21 @@ li,ul {
     background-color: #fff;
     box-shadow: 1px 0 15px 0 rgba(50,50,50,.5);
     border: 1px solid #bdbdbd;
-    text-align: center
+    text-align: center;
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    max-width: 280px;
 }
 
-.connectionDialog .ui-dialog-titlebar-close,.no-pointer-events svg.map.drawingMode,svg.map.drawingMode>rect {
+.connectionDialog p {
+    margin: 10px
+}
+
+.no-pointer-events svg.map.drawingMode,svg.map.drawingMode>rect {
     display: none
 }
 

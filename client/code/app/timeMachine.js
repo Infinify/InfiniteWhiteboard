@@ -15,7 +15,8 @@ for (var zi = -1021, zl = 54; zi < zl; zi++) {
 }
 
 var htmlContainer = document.getElementById("htmlContainer");
-$(window).on("clearCanvas", function() {
+
+document.addEventListener("clearCanvas", function() {
   project.activeLayer.removeChildren();
   htmlContainer.innerHTML = "";
 
@@ -524,7 +525,8 @@ function setVisibility(iwb, t) {
       parent = parent.next;
     }
     if (parent.currentPaperItem) {
-      parent.currentPaperItem.visible = !parent.deleted && parent.timestamp <= t;
+      parent.currentPaperItem.visible = !parent.deleted &&
+        parent.timestamp <= t;
     }
   }
   if (item) {

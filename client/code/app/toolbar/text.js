@@ -25,8 +25,8 @@ var textTool = $("#textTool");
 
 $(".toolContent", textTool).append(ss.tmpl["toolbar-text"].render({}));
 
-textTool.on("click", function() {
-  if (textTool.hasClass("open")) {
+$(".toolHeader", textTool).on("click", function() {
+  if (!textTool.hasClass("open")) {
     window.textTool.activate();
     delete window.timestamp;
     window.timeAnimation();

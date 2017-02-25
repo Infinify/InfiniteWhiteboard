@@ -7,41 +7,27 @@ var textToolParams = window.textToolParams = {
   fontSize: 30
 };
 
-i18n.init({ resStore: require("./translations/places_i18n") });
+var textTool = document.getElementById("textTool");
 
-var t = i18n.t;
+var textPreviewWrapper = document.getElementById("textPreviewWrapper");
 
-$("#toolContainer").append(
-  ss.tmpl["toolbar-tool"].render({
-    toolId: "textTool",
-    toolIconClasses: "icon-text toolIcon textIcon",
-    toolHeaderText: t("Text")
-  })
-);
-
-$("#toolbarWrapper").append(ss.tmpl["toolbar-textPreview"].render({}));
-
-var textTool = $("#textTool");
-
-$(".toolContent", textTool).append(ss.tmpl["toolbar-text"].render({}));
-
-$(".toolHeader", textTool).on("click", function() {
-  if (!textTool.hasClass("open")) {
+textTool.querySelector(".toolHeader").onclick = function() {
+  if (!textTool.classList.contains("open")) {
     window.textTool.activate();
     delete window.timestamp;
     window.timeAnimation();
     if (window.newTextItem) {
       window.newTextItem.visible = true;
-      $("#textPreviewWrapper").show();
+      textPreviewWrapper.style.display = "block";
     }
   } else {
     nopTool.activate();
     if (window.newTextItem) {
       window.newTextItem.visible = false;
     }
-    $("#textPreviewWrapper").hide();
+    textPreviewWrapper.style.display = "none";
   }
-});
+};
 
 function colorPickedHandlerFill() {
   var color = $("#textFillColor").spectrum("get").toRgb();
@@ -70,6 +56,7 @@ $("#textFillColor").spectrum({
   allowEmpty: true
 });
 
+var currentFontSizeDisplay = document.getElementById("currentFontSizeDisplay");
 $("#textSizeSlider").slider({
   range: "max",
   min: 10,
@@ -78,7 +65,7 @@ $("#textSizeSlider").slider({
   step: 1,
   slide: function(event, ui) {
     textToolParams.textSize = ui.value;
-    $("#currentFontSizeDisplay").html(ui.value + "px");
+    currentFontSizeDisplay.textContent = ui.value + "px";
 
     if (window.newTextItem) {
       window.newTextItem.fontSize = ui.value;
@@ -87,20 +74,20 @@ $("#textSizeSlider").slider({
   }
 });
 
-$("#textFontSelection").on("change", function(event) {
+document.getElementById("textFontSelection").onchange = function(event) {
   textToolParams.fontFamily = event.target.value;
   window.newTextItem
     ? window.newTextItem.fontFamily = event.target.value
     : null;
-});
+};
 
 var $emphasisButtons = $("#emphasisButtons");
 $emphasisButtons.buttonset();
 $emphasisButtons.find("label").unbind("mouseup");
 // small hack for making buttonset react on click events while simultaneously moving the mouse
 $emphasisButtons.on("change", function() {
-  var bold = $("#emphasisBold").prop("checked"),
-    italic = $("#emphasisItalic").prop("checked");
+  var bold = document.getElementById("emphasisBold").checked,
+    italic = document.getElementById("emphasisItalic").checked;
 
   textToolParams.emphasis = "";
   window.newTextItem ? window.newTextItem.fontWeight = "" : null;
@@ -121,25 +108,24 @@ $emphasisButtons.on("change", function() {
   }
 });
 
-var textPreviewWrapper = $("#textPreviewWrapper");
-var textPreview = $("#textPreview");
-textPreview.elastic();
-textPreview.on("keyup", function() {
-  var error = textPreviewWrapper.find("p.error");
-  var newVal = textPreview.val();
+$("#textPreview").elastic();
+var textPreview = document.getElementById("textPreview");
+textPreview.onkeyup = function() {
+  var error = textPreviewWrapper.querySelector("p.error");
+  var newVal = textPreview.value;
   if (newVal.length > 512) {
-    error.css("display", "block");
-    textPreview.val(window.newTextItem.content);
+    error.style.display = "block";
+    textPreview.value = window.newTextItem.content;
     return;
   } else if (newVal.length === 512) {
-    error.css("display", "block");
+    error.style.display = "block";
   } else {
-    error.css("display", "none");
+    error.style.display = "none";
   }
   window.newTextItem.content = newVal;
-});
+};
 
-$("#newTextOKButton").click(function() {
+document.getElementById("newTextOKButton").onclick = function() {
   if (window.newTextItem.content.length > 512) {
     return;
   }
@@ -152,17 +138,17 @@ $("#newTextOKButton").click(function() {
   window.newTextItem.selected = false;
   window.newTextItem.remove();
   delete window.newTextItem;
-  textPreview.val("");
-  textPreviewWrapper.hide();
-  $("body").css("cursor", "default");
-});
+  textPreview.value = "";
+  textPreviewWrapper.style.display = "none";
+  document.body.style.cursor = "default";
+};
 
-$("#newTextCancelButton").click(function() {
+document.getElementById("newTextCancelButton").onclick = function() {
   window.newTextItem.content = "";
   window.newTextItem.selected = false;
   window.newTextItem.remove();
   delete window.newTextItem;
-  textPreview.val("");
-  textPreviewWrapper.hide();
-  $("body").css("cursor", "default");
-});
+  textPreview.value = "";
+  textPreviewWrapper.style.display = "none";
+  document.body.style.cursor = "default";
+};

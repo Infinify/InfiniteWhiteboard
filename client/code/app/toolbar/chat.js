@@ -156,6 +156,7 @@ function updateCount(wb) {
 
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
 var $chat = $("#chat");
+var chatLogs = document.getElementById("chatLogs");
 
 function initChat(whiteboard) {
   var template = whiteboard &&
@@ -173,18 +174,20 @@ function initChat(whiteboard) {
     owner = "Public";
   }
 
-  $chat.append(
-    ss.tmpl[template].render({
-      chatlogId: whiteboard,
-      chatlogName: whiteboard,
-      chatlogDisplayName: (
-        whiteboard === "_global"
-          ? "Global whiteboard"
-          : decodeURIComponent(whiteboardName)
-      ),
-      whiteboardOwner: owner,
-      submitMessageIcon: "icon-ok-circled"
-    })
+  chatLogs.appendChild(
+    htmlToElement(
+      ss.tmpl[template].render({
+        chatlogId: whiteboard,
+        chatlogName: whiteboard,
+        chatlogDisplayName: (
+          whiteboard === "_global"
+            ? "Global whiteboard"
+            : decodeURIComponent(whiteboardName)
+        ),
+        whiteboardOwner: owner,
+        submitMessageIcon: "icon-ok-circled"
+      })
+    )
   );
 
   document.getElementById(

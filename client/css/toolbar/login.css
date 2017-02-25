@@ -66,14 +66,7 @@
     color: rgba(0,163,255,.9)
 }
 
-#logoutDiv {
-    padding: 0;
-    clear: both;
-    display: none
-}
-
 .iconButton#logoutButton {
-    display: none;
     padding: 0;
     top: 4px;
     color: #3d3d3d;

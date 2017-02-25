@@ -1,5 +1,3 @@
-$("#toolContainer").append(ss.tmpl["toolbar-timeline"].render({}));
-
 var now = document.getElementById("now");
 var timeLineSlide = $("#timelineslide").slider({
   range: "max",
@@ -36,10 +34,9 @@ if (!Math.sign) {
 }
 
 var timeCallerTimeout;
+var timeLapseButton = document.getElementById("timeLapseButton");
 function stopTimeAnimation() {
-  $("#timeLapseButton")
-    .html('<i class="icon-play"></i>')
-    .removeClass("icon-pause");
+  timeLapseButton.innerHtml = '<i class="icon-play"></i>';
   timeCallerTimeout = clearInterval(timeCallerTimeout);
   window.timeAnimation();
 }
@@ -66,9 +63,7 @@ var timeRange = $("#timerange").slider({
 });
 
 function startTimeAnimation() {
-  $("#timeLapseButton")
-    .html('<i class="icon-pause"></i>')
-    .removeClass("icon-play");
+  timeLapseButton.innerHtml = '<i class="icon-pause"></i>';
   timestamp = Math.min(
     maxTime,
     Math.max(minTime, window.timestamp || +new Date())
@@ -83,20 +78,20 @@ function startTimeAnimation() {
   timeCallerTimeout = setInterval(timeCaller, 15);
 }
 
-$("#timeLapseButton").mousedown(function() {
+document.getElementById("timeLapseButton").onclick = function() {
   if (timeCallerTimeout) {
     stopTimeAnimation();
   } else {
     startTimeAnimation();
   }
-});
+};
 
-$("#firstPathButton").mousedown(function() {
+document.getElementById("firstPathButton").onclick = function() {
   window.timestamp = minTime;
   window.timeAnimation();
-});
+};
 
-$("#nowButton").mousedown(function() {
+document.getElementById("nowButton").onclick = function() {
   window.timestamp = +new Date();
   window.timeAnimation();
-});
+};

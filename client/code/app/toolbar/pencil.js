@@ -1,22 +1,7 @@
-i18n.init({ resStore: require("./translations/pencil_i18n") });
-
-var t = i18n.t;
-
-$("#toolContainer").append(
-  ss.tmpl["toolbar-tool"].render({
-    toolId: "pencil",
-    toolIconClasses: "icon-brush1 toolIcon drawIcon",
-    toolHeaderText: t("Pencil")
-  })
-);
-
-$(".toolContent", document.getElementById("pencil")).append(
-  ss.tmpl["toolbar-pencil"].render({})
-);
-
 var colorPickerToolButton = document.getElementById("colorPickerTool");
 var drawToolButton = document.getElementById("drawTool");
-var pencil = $(".toolHeader", "#pencil").on("click", function() {
+var pencil = document.getElementById("pencil");
+pencil.querySelector(".toolHeader").onclick = function() {
   if (pencil.hasClass("open")) {
     nopTool.activate();
     return;
@@ -52,13 +37,12 @@ var pencil = $(".toolHeader", "#pencil").on("click", function() {
   }
   delete window.timestamp;
   window.timeAnimation();
-});
+};
 
 function colorPickedHandler(color, which) {
   which = which || "stroke";
   if (color) {
-    var $currentColorDOM = $("#currentStrokeColor");
-    $currentColorDOM.css("background-color", color);
+    document.getElementById("currentStrokeColor").style.backgroundColor = color;
     window.currentStrokeStyle[which + "Color"] = new paper.Color(
       hexToR(color) / 256,
       hexToG(color) / 256,
@@ -78,12 +62,7 @@ $("#pencilStrokeWidth").slider({
   max: 50,
   value: window.currentStrokeStyle.strokeWidth || 10,
   slide: function(event, ui) {
-    var currentWidth = ui.value;
-    window.currentStrokeStyle.strokeWidth = currentWidth;
-    $("#currentStrokeColor")
-      .css("height", currentWidth)
-      .css("width", currentWidth);
-    event.stopPropagation();
+    window.currentStrokeStyle.strokeWidth = ui.value;
   }
 });
 
@@ -97,9 +76,9 @@ $("#pencilSimplify").slider({
   }
 });
 
-$("#miterSelector").change(function(event) {
+document.getElementById("miterSelector").onchange = function(event) {
   window.pencilCap = event.currentTarget.value.toLowerCase();
-});
+};
 
 function colorPickedHandlerFill(color) {
   colorPickedHandler(color && color.toHexString(), "fill");
@@ -125,11 +104,11 @@ var stroke = $("#currentStrokeColor").spectrum({
   allowEmpty: true
 });
 
-var palette = $(".palette");
-palette.on("click", function(event) {
-  var jq = $(event.target.parentElement);
-  var fillColor = jq.find(".fill").css("background-color");
-  var strokeColor = jq.find(".stroke").css("background-color");
+var palette = document.querySelector(".palette");
+palette.onclick = function(event) {
+  var parent = event.target.parentElement;
+  var fillColor = parent.querySelector(".fill").style.backgroundColor;
+  var strokeColor = parent.querySelector(".stroke").style.backgroundColor;
   currentStrokeStyle.fillColor = fillColor;
   currentStrokeStyle.strokeColor = strokeColor;
   fillColor = currentStrokeStyle.fillColor;
@@ -140,7 +119,7 @@ palette.on("click", function(event) {
     : strokeColor;
   fill.spectrum("set", fillColor);
   stroke.spectrum("set", strokeColor);
-});
+};
 
 document.addEventListener("setColor", function() {
   var fillColor = currentStrokeStyle.fillColor;
@@ -151,14 +130,17 @@ document.addEventListener("setColor", function() {
     : strokeColor;
   fill.spectrum("set", fillColor);
   stroke.spectrum("set", strokeColor);
-  palette.prepend(
-    "<li>" +
-      '<div class="stroke" style="background-color: ' +
-      strokeColor +
-      '"/>' +
-      '<div class="fill" style="background-color: ' +
-      fillColor +
-      '"/>' +
-      "</li>"
+  palette.insertBefore(
+    htmlToElement(
+      "<li>" +
+        '<div class="stroke" style="background-color: ' +
+        strokeColor +
+        '"/>' +
+        '<div class="fill" style="background-color: ' +
+        fillColor +
+        '"/>' +
+        "</li>"
+    ),
+    palette.firstChild
   );
 });

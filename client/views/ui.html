@@ -33,36 +33,274 @@
   </div>
   <div id="chat">
     <i id="hideChatButton" class="icon-right-circle" tabindex="-1" title="(H) Hide Chat"></i>
+    <div id="chatLogs"></div>
   </div>
   <div id="map" tabindex="3" class="map"></div>
   <div class="toolBar" id="toolbarWrapper">
     <div id="toolbarHeader">
       <button id="hideToolbarButton" class="iconButton icon-left-circle" tabindex="-1" title="(H) Hide Tools"></button>
       <span id="displayName"></span>
-      <button id="logoutButton" class="icon-off-1 iconButton" tabindex="-1"></button>
+      <button id="logoutButton" class="icon-off-1 iconButton" style="display: none" tabindex="-1"></button>
     </div>
-    <div id="toolContainer" class="toolContainer" style="z-index: 10;"></div>
-    <div id="interact" class="tool ui-accordion ui-widget ui-helper-reset toolContainer">
-      <h3 class="toolHeader">
-        <svg class="toolIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30px" style="margin-left: 2px;margin-right: 5px;top: inherit;transform: translateY(8px);">
-          <title>HTML5 Logo Badge</title>
-          <path fill="#E34F26" d="M71,460 L30,0 481,0 440,460 255,512"></path>
-          <path fill="#EF652A" d="M256,472 L405,431 440,37 256,37"></path>
-          <path fill="#EBEBEB" d="M256,208 L181,208 176,150 256,150 256,94 255,94 114,94 115,109 129,265 256,265zM256,355 L255,355 192,338 188,293 158,293 132,293 139,382 255,414 256,414z"></path>
-          <path fill="#FFF" d="M255,208 L255,265 325,265 318,338 255,355 255,414 371,382 372,372 385,223 387,208 371,208zM255,94 L255,129 255,150 255,150 392,150 392,150 392,150 393,138 396,109 397,94z"></path>
-        </svg>
-        <a href="#" class="toolHeaderText" tabindex="-1">Interact</a>
-      </h3>
+    <div id="toolContainer" class="toolContainer" style="z-index: 10;">
 
-      <div class="toolContent ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content" role="tabpanel">
-        This allows you to interact with embedded content such as youtube videos, iframes, etc.
+      <div id="login" class="tool">
+        <h3 class="toolHeader">
+          <i class="toolIcon icon-infinity"></i>
+          <a href="#" class="toolHeaderText">Login</a>
+        </h3>
+
+        <div class="toolContent">
+          <div id="loginSpinner" style="display: none;">
+            <div class="spinnerText"></div>
+          </div>
+          <div id="loginMessages"></div>
+          <div id="loginDiv">
+            <input type="text" id="usernameField" class="usernameField" title="Username" placeholder="Username">
+            <input type="password" id="passwordField" class="passwordField" title="Password" placeholder="Password">
+            <button class="clearButton button25px" tabindex="-1">
+              <i id="loginButton" class="icon-right-circle">
+                <span class="buttonText">Login</span>
+              </i>
+            </button>
+            <button class="clearButton button25px" tabindex="-1">
+              <i id="registerButton" class="icon-user-add">
+                <span class="buttonText">Register</span>
+              </i>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="clear"></div>
+
+      <div id="pencil" class="tool">
+        <h3 class="toolHeader">
+          <i class="toolIcon icon-brush1 drawIcon"></i>
+          <a href="#" class="toolHeaderText">Pencil</a>
+        </h3>
+
+        <div class="toolContent">
+          <div style="line-height:40px; border:0; text-align:center; vertical-align: middle;">
+            <input type="text" id="currentStrokeColor" title="Select stroke color for pencil" style="display: none;">
+            <input type="text" id="currentFillColor" title="Select fill color for pencil" style="display: none;">
+            <br>
+            <label for="miterSelector">Cap</label>
+            <select id="miterSelector" name="miterSelector">
+              <option value="Round" selected="">Round</option>
+              <option value="Butt">Butt</option>
+            </select>
+          </div>
+          <div id="pencilStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+            <span style="float:left; font-size:12px; margin-top:15px;">Width</span>
+          </div>
+          <a class="toolActivator" id="colorPickerTool" onclick="window.colorPickerTool.activate()">Picker</a>
+          <a class="toolActivator" id="drawTool" onclick="window.drawTool.activate()">Draw</a>
+          <a onclick="var s = this.nextElementSibling.style;s.display = s.display === '' ? 'none' : ''">Palette</a>
+          <ul class="palette" style="display: none;"></ul>
+        </div>
+      </div>
+
+      <div id="shapes" class="tool">
+        <h3 class="toolHeader">
+          <i class="toolIcon icon-whiteboard1 shapesIcon"></i>
+          <a href="#" class="toolHeaderText">Shapes</a>
+        </h3>
+
+        <div class="toolContent">
+          <div style="line-height:40px; border:0; text-align:center; vertical-align: middle;">
+            <input type="text" id="currentShapeStrokeColor" title="Select stroke color for shape tools" style="display: none;">
+            <input type="text" id="currentShapeFillColor" title="Select fill color for shape tools" style="display: none;">
+          </div>
+          <div id="shapeStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+            <span style="float:left; font-size:12px; margin-top:15px;">Width</span>
+          </div>
+
+          <div id="paperToolsContainer">
+            <a class="toolActivator" id="circleTool" onclick="window.circleTool.activate();">Circle</a>
+            <a class="toolActivator" id="rectangleTool" onclick="window.rectangleTool.activate();">Rectangle</a>
+            <a class="toolActivator" id="ellipseTool" onclick="window.ellipseTool.activate();">Ellipse</a>
+            <a class="toolActivator" id="bezierTool" onclick="window.bezierTool.activate();">Bezier</a>
+            <a class="toolActivator" id="starTool" onclick="window.starTool.activate();">Star</a>
+            <a class="toolActivator" id="imageTool" onclick="window.imageTool.activate()">Image</a><br>
+            <a class="toolActivator" id="htmlTool" onclick="window.htmlTool.activate()">HTML</a>
+            <a class="toolActivator" id="editTool" onclick="window.editTool.activate();">Drag</a>
+          </div>
+        </div>
+      </div>
+      
+      <div id="textTool" class="tool">
+        <h3 class="toolHeader">
+          <i class="toolIcon icon-text textIcon"></i>
+          <a href="#" class="toolHeaderText">Text</a>
+        </h3>
+
+        <div class="toolContent">
+          <p>Click on the whiteboard <br>to type.</p>
+        </div>
+      </div>
+      
+      <div id="whiteboards" class="tool">
+        <h3 class="toolHeader">
+          <i class="toolIcon icon-whiteboards1 whiteboardIcon"></i>
+          <a href="#" class="toolHeaderText">Whiteboards</a>
+        </h3>
+
+        <div class="toolContent">
+          <div id="mainPublicWhiteboard" class="whiteboardList">
+            <i class="icon-globe-2" style="color:#3d3d3d;"></i>
+            <a class="whiteboardlink globalWhiteboard" href="/">
+              <span style="color:darkblue; margin-left:5px;">Global Whiteboard</span>
+            </a>
+          </div>
+
+          <div id="privateBoards" class="whiteboardList mod" style="display: none;">
+            <h4>
+              <i class="icon-minus-circled" style="color:#3d3d3d;"></i>
+              <span class="listHeader">My whiteboards</span>
+            </h4>
+            <div class="accordionContainer">
+
+              <input id="search_input_private" placeholder="Type to filter" title="Filter private whiteboards" class="clearOnFocus">
+
+              <div class="whiteboardContainer scrollbarStyle1">
+                <ul id="privateBoardsContainer"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div id="sharedBoards" class="whiteboardList mod" style="display: none;">
+            <h4>
+              <i class="icon-minus-circled" style="color:#3d3d3d;"></i>
+              <span class="listHeader">Shared with me</span>
+            </h4>
+            <div class="accordionContainer">
+              <input id="search_input_shared" placeholder="Type to filter" title="Filter shared whiteboards" class="clearOnFocus">
+              <div class="whiteboardContainer scrollbarStyle1">
+                <ul id="sharedBoardsListContainer"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div id="publicBoards" class="whiteboardList mod">
+            <h4>
+              <i class="icon-minus-circled" style="color:#3d3d3d;"></i>
+              <span class="listHeader">Public</span>
+            </h4>
+            <div class="accordionContainer">
+              <input id="search_input_public" value="Type to filter" title="Filter public whiteboards" class="clearOnFocus">
+              <div class="whiteboardContainer scrollbarStyle1">
+                <ul id="publicBoardsContainer">
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div id="newWhiteboards">
+            <span id="newWhiteboardFieldText" style="line-height:20px; font-size:14px;">Create new public whiteboard</span>
+
+            <input type="text" id="newWhiteboardNameField" class="newWhiteboardNameField" placeholder="Whiteboard name">
+
+            <button class="clearButton button25px" tabindex="-1">
+              <i id="newWhiteboardButton" class=" icon-plus-circled">
+                <span class="buttonText">Create</span>
+              </i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="timeMachine" class="tool">
+        <h3 class="toolHeader">
+          <i class="icon-back-in-time toolIcon timemachineIcon"></i>
+          <a href="#">Time Machine</a>
+        </h3>
+        <div class="toolContent">
+          <div id="timeDiv">
+            <div>&nbsp;</div>
+            <span id="rtspeed">Reverse</span><span id="maxspeed">Forward</span>
+            <div id="timerange" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+            </div>
+
+            <p id="controlButtons">
+              <button id="firstPathButton" class="timemachineButton1" title="First path"><i class="icon-fast-backward"></i></button>
+              <button id="timeLapseButton" class="timemachineButton1" title="Play/Pause"><i class="icon-play"></i></button>
+              <button id="nowButton" class="timemachineButton1" title="Last path"><i class="icon-fast-forward"></i></button>
+            </p>
+
+            <div id="now"></div>
+
+            <div id="timelineslide" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+            </div>
+
+            <span id="timeLine">Timeline</span>
+          </div>
+        </div>
+      </div>
+      
+      <div id="places" class="tool">
+        <h3 class="toolHeader">
+          <i class="toolIcon icon-location placesIcon"></i>
+          <a href="#" class="toolHeaderText">Locations</a>
+        </h3>
+
+        <div class="toolContent">
+          <button class="icon-target iconButton" id="originButton">Origin</button>
+          <button id="randomLocationButton" class="iconButton icon-help-circled">Random Location</button>
+        </div>
+      </div>
+      
+      <div id="interact" class="tool">
+        <h3 class="toolHeader">
+          <svg class="toolIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30px" style="margin-left: 2px;margin-right: 5px;top: inherit;transform: translateY(8px);">
+            <title>HTML5 Logo Badge</title>
+            <path fill="#E34F26" d="M71,460 L30,0 481,0 440,460 255,512"></path>
+            <path fill="#EF652A" d="M256,472 L405,431 440,37 256,37"></path>
+            <path fill="#EBEBEB" d="M256,208 L181,208 176,150 256,150 256,94 255,94 114,94 115,109 129,265 256,265zM256,355 L255,355 192,338 188,293 158,293 132,293 139,382 255,414 256,414z"></path>
+            <path fill="#FFF" d="M255,208 L255,265 325,265 318,338 255,355 255,414 371,382 372,372 385,223 387,208 371,208zM255,94 L255,129 255,150 255,150 392,150 392,150 392,150 393,138 396,109 397,94z"></path>
+          </svg>
+          <a href="#" class="toolHeaderText" tabindex="-1">Interact</a>
+        </h3>
+
+        <div class="toolContent">
+          This allows you to interact with embedded content such as youtube videos, iframes, etc.
+        </div>
+      </div>
     </div>
+    <div class="clear"></div>
     <div class="elementWrapper" id="betaFlag">BETA</div>
     <button id="mfsb" title="Multi-FullScreen mode, use several browser windows as one surface">MFS</button>
     <button id="compassToggle" class="iconButton icon-compass-circled" tabindex="-1" title="Show / Hide Compass"></button>
     <div class="clear"></div>
+    
+    <div id="textPreviewWrapper" style="position: absolute; display:none;">
+      <p class="error" style="color: red; display: none">Text limit reached (512 characters)</p>
+      <textarea title="textPreview" id="textPreview" style="position: relative; border: 1px dotted #808080; padding: 10px; resize:none; width:250px; height:20px;     -webkit-border-radius: 3px;
+    border-radius: 3px;"></textarea>
+
+      <select title="textFontSelection" id="textFontSelection" style="width:100%; margin-bottom:10px; -webkit-border-radius: 3px;
+    border-radius: 3px; height: 30px;">
+        <option value="Courier New">Courier New</option>
+        <option value="Garamond">Garamond</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Helvetica">Helvetica</option>
+      </select>
+
+      <input type="text" title="textFillColor" id="textFillColor" style="display:inline;"/>
+
+      <div id="emphasisButtons" style="display:inline;">
+        <input type="checkbox" id="emphasisBold"><label for="emphasisBold"><i class="icon-bold-1"></i></label>
+        <input type="checkbox" id="emphasisItalic"><label for="emphasisItalic"><i class="icon-italic"></i></label>
+      </div>
+
+      <br />
+      <br />
+
+      <span>Text size <span id="currentFontSizeDisplay" style="font-weight:bold;">40px</span></span>
+      <hr class="dottedHr">
+      <div id="textSizeSlider"></div>
+
+      <button id="newTextOKButton" style="position:relative;">Ok!</button>
+      <button id="newTextCancelButton" style="position:relative;">Cancel</button>
+    </div>
   </div>
 </div>
 

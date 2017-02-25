@@ -14,6 +14,38 @@ window.hexToB = function hexToB(h) {
   return parseInt(cutHex(h).substring(4, 6), 16);
 };
 
+/**
+ * @param {String} html representing a single element
+ * @return {Element}
+ */
+window.htmlToElement = function htmlToElement(html) {
+  var template = document.createElement("template");
+  template.innerHTML = html;
+  return template.content.firstChild;
+};
+
+/**
+ * @param {String} html representing any number of sibling elements
+ * @return {NodeList}
+ */
+window.htmlToElements = function htmlToElements(html) {
+  var template = document.createElement("template");
+  template.innerHTML = html;
+  return template.content.childNodes;
+};
+
+/**
+ * @param {String} html representing any number of sibling elements
+ * @param {Element} root element to append children to
+ * @return {Element[]}
+ */
+window.renderHtml = function renderHtml(html, root) {
+  var nodeList = htmlToElements(html);
+  return [].slice.call(nodeList).map(function(child) {
+    return root.appendChild(child);
+  });
+};
+
 require("/toolbar/login");
 require("/toolbar/pencil");
 require("/toolbar/shapes");
@@ -67,7 +99,10 @@ document.getElementById("toolbarWrapper").onclick = function onToolClick(
   drawToolHandler();
 };
 function onHeaderHover() {
-  this.querySelector("i").classList.toggle("iconHover");
+  var toolIcon = this.querySelector(".toolIcon");
+  if (toolIcon) {
+    toolIcon.classList.toggle("iconHover");
+  }
 }
 [].slice
   .call(document.querySelectorAll(".toolHeader"))

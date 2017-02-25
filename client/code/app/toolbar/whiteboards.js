@@ -11,26 +11,6 @@ var t = i18n.t;
 
 var toolHeaderText = t("Whiteboards");
 
-$("#toolContainer").append(
-  ss.tmpl["toolbar-tool"].render({
-    toolId: "whiteboards",
-    toolIconClasses: "toolIcon icon-whiteboards1 whiteboardIcon",
-    toolHeaderText: toolHeaderText
-  })
-);
-
-$(".toolContent", document.getElementById("whiteboards")).append(
-  ss.tmpl["toolbar-whiteboardsLoggedIn"].render({
-    globalWhiteboard: t("Global Whiteboard"),
-    private: t("My whiteboards"),
-    shared: t("Shared with me"),
-    public: t("Public"),
-    newWhiteboardsButtonText: t("Create"),
-    newWhiteboardNameField: t("Whiteboard name"),
-    newWhiteboard: t("Create new public whiteboard")
-  })
-);
-
 var eventType = "touchend click";
 function myCustomBind(controlName, callback) {
   $(controlName).off(eventType).on(eventType, function(e) {

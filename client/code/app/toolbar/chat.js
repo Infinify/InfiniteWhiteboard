@@ -1,16 +1,19 @@
 function clickHandler(e) {
-  var msgDiv = $(e.currentTarget).closest("div.messageElement");
-  if (msgDiv.length !== 1) {
-    return true;
+  var msgDiv = e.currentTarget;
+  while (!msgDiv.classList.contains("messageElement")) {
+    msgDiv = msgDiv.parentNode;
+  }
+  if (!msgDiv.classList.contains("messageElement")) {
+    return;
   }
 
-  var href = $("a", msgDiv).attr("href");
+  var href = msgDiv.querySelector("a").href;
   var args = href.slice(1).split("/").map(Number);
   if (args.length < 3 || args.some(isNaN)) {
     return true;
   }
 
-  var time = +msgDiv.attr("data-timemachine");
+  var time = +msgDiv.dataset["timemachine"];
 
   switch (e.target.className) {
     case "time":
@@ -41,21 +44,17 @@ function clickHandler(e) {
   }
 
   // TODO disable all tools when jumping using chat
-  var pencil = $("#pencil");
-  if (pencil.hasClass("open")) {
-    $("h3", pencil).trigger("click");
-  }
 
   return false;
 }
 
-function renderMessage(message, pending) {
+function renderMessage(messageContainer, message, pending) {
   var tm = new Date(
     message.timemachine || message.timestamp || message.timeStamp
   );
   var d = new Date(message.timeStamp);
   var sender = message.sender;
-  var $messageElement = $(
+  var messageElement = htmlToElement(
     ss.tmpl["chat-message"].render({
       time: d.toString("d.M.yyyy hh:mm"),
       timemachine: tm.toString("d.M.yyyy hh:mm"),
@@ -65,46 +64,40 @@ function renderMessage(message, pending) {
     })
   );
 
-  var $messageContainer = $(
-    ".messageContainer",
-    document.getElementById("chatlog-" + message.whiteboard)
-  );
-  $messageContainer.append($messageElement);
-  $messageContainer.scrollTop($messageContainer[0].scrollHeight);
+  messageContainer.appendChild(messageElement);
 
-  $(".location", $messageElement).on("click", clickHandler);
-  $(".user", $messageElement).on("click", clickHandler);
-  $(".time", $messageElement).on("click", clickHandler);
+  messageElement.querySelector(".location").onclick = clickHandler;
+  messageElement.querySelector(".user").onclick = clickHandler;
+  messageElement.querySelector(".time").onclick = clickHandler;
 
-  $messageElement.find(".message").linkify();
+  $(messageElement.querySelector(".message")).linkify();
 
-  $messageElement.attr("data-time", +d);
-
-  $messageElement.attr("data-timemachine", +tm);
+  messageElement.dataset["timemachine"] = +tm;
 
   if (
     sender === window.userObject.username ||
       sender === window.userObject.anonymous
   ) {
-    $messageElement.addClass("sent");
+    messageElement.classList.add("sent");
     if (pending) {
-      $messageElement.addClass("pending");
+      messageElement.classList.add("pending");
     }
   } else {
-    $messageElement.addClass("recieved");
+    messageElement.classList.add("recieved");
   }
 
-  return $messageElement;
+  return messageElement;
 }
 
 function send() {
   var whiteboard = window.whiteboard || "_global";
-  var messageField = $(document.getElementById(whiteboard + "-messageField"));
-  var val = messageField.val();
+  var messageField = document.getElementById(whiteboard + "-messageField");
+  var val = messageField.value;
   if (val.length === 0) {
     return;
   }
-  messageField.val("").focus();
+  messageField.value = "";
+  messageField.focus();
 
   var message = {
     message: val,
@@ -116,7 +109,12 @@ function send() {
     uuid: window.name
   };
 
-  var element = renderMessage(message, true);
+  var messageContainer = document.getElementById("chatlog-" + message.whiteboard).querySelector(".messageContainer");
+  
+  var element = renderMessage(messageContainer, message, true);
+  
+  messageContainer.scrollTop = messageContainer.scrollHeight;
+  
   ss.rpc("iwb.sendMessage", message, function(err) {
     if (err) {
       console.log(err);
@@ -150,12 +148,10 @@ function updateCount(wb) {
   wb = whiteboardUsers[wb];
   if (!wb) return;
   var count = Object.keys(wb.users).length;
-  var text = count === 1 ? "Only you online" : count + " Users online";
-  wb.userCount.text(text);
+  wb.userCount.textContent = count === 1 ? "Only you online" : count + " Users online";
 }
 
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
-var $chat = $("#chat");
 var chatLogs = document.getElementById("chatLogs");
 
 function initChat(whiteboard) {
@@ -196,16 +192,16 @@ function initChat(whiteboard) {
 
   var currentChatLog = document.getElementById("chatlog-" + whiteboard);
 
-  var userCount = $(".userCount", currentChatLog);
+  var userCount = currentChatLog.querySelector(".userCount");
 
-  var userList = $(".userList", currentChatLog);
+  var userList = currentChatLog.querySelector(".userList");
 
-  userCount.on("click", function() {
-    userList.fadeToggle();
-  });
+  userCount.onclick = function() {
+    userList.style.display = userList.style.display === '' ? 'none' : ''; 
+  };
 
   var wb = whiteboardUsers[whiteboard] = {
-    userListDiv: userList[0],
+    userListDiv: userList,
     userCount: userCount,
     users: {}
   };
@@ -224,12 +220,16 @@ function initChat(whiteboard) {
       console.log(arguments);
       return;
     }
+    
+    var messageContainer = document.getElementById("chatlog-" + whiteboard).querySelector(".messageContainer");
 
     for (var i = messages.length - 1; i >= 0; i--) {
-      renderMessage(messages[i]);
+      renderMessage(messageContainer, messages[i]);
     }
 
-    $(currentChatLog).show();
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+    
+    currentChatLog.display = "";
   });
 }
 
@@ -237,8 +237,12 @@ ss.event.on("newMessage", function(message) {
   if (message.uuid === window.name) {
     return;
   }
+  
+  var messageContainer = document.getElementById("chatlog-" + message.whiteboard).querySelector(".messageContainer");
 
-  renderMessage(message);
+  renderMessage(messageContainer, message);
+  
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 });
 
 ss.event.on("newPos", function(newPos, channel) {
@@ -267,23 +271,23 @@ ss.event.on("unsub", function(unsub, channel) {
   updateCount(channel);
 });
 
-$("#hideChatButton").on("click", function() {
-  $chat.hide("slide", { direction: "right" }, 300);
-});
+var chat = document.getElementById("chat").style;
 
-$("#showChatButton").on("click", function() {
-  $chat.show("drop", { direction: "right" }, 300, function() {
-    setTimeout(function() {
-      var chatlog = document.getElementById("chatlog-" + window.whiteboard),
-        $messageContainer = $(".messageContainer", chatlog);
+document.getElementById("hideChatButton").onclick = function() {
+  chat.display = "none";
+};
 
-      $messageContainer.scrollTop($messageContainer[0].scrollHeight);
-    });
+document.getElementById("showChatButton").onclick = function() {
+  chat.display = "";
+  setTimeout(function() {
+    var messageContainer = document.getElementById("chatlog-" + window.whiteboard).querySelector(".messageContainer");
+
+    messageContainer.scrollTop = messageContainer.scrollHeight;
   });
-});
+};
 
 // Keyboard (enter / return) behaviour
-$(document).keypress(function(e) {
+document.onkeypress = function(e) {
   switch (e.which) {
     case 13:
       // return-key
@@ -304,6 +308,6 @@ $(document).keypress(function(e) {
       break;
   }
   return true;
-});
+};
 
 module.exports = initChat;

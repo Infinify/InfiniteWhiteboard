@@ -7,7 +7,7 @@ function clickHandler(e) {
     return;
   }
 
-  var href = msgDiv.querySelector("a").href;
+  var href = msgDiv.querySelector("a").hash;
   var args = href.slice(1).split("/").map(Number);
   if (args.length < 3 || args.some(isNaN)) {
     return true;

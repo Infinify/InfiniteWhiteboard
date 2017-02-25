@@ -1,40 +1,33 @@
 var whiteboardData = {};
-$("#logoutButton").click(function() {
+document.getElementById("logoutButton").addEventListener("click", function() {
   whiteboardData.aclUsers = [];
   whiteboardData.adminWhiteboards = [];
   whiteboardData.privateWhiteboards = [];
 });
 
-var toolHeaderText = "Whiteboards";
-
-var eventType = "touchend click";
-function myCustomBind(controlName, callback) {
-  $(controlName).off(eventType).on(eventType, function(e) {
-    callback.call(this, e);
-  });
+function onSelectWhiteboard(event) {
+  var tmp = event.target;
+  var name = tmp.dataset.name;
+  if (name) {
+    changeWhiteboard(name);
+    event.stopPropagation();
+    event.preventDefault();
+  }
 }
+var whiteboardToolContent = document.querySelector("#whiteboards .toolContent");
+whiteboardToolContent.onclick = onSelectWhiteboard;
+whiteboardToolContent.ontouchend = onSelectWhiteboard;
 
-var globalRE = /globalWhiteboard/;
-function whiteboardLinkHandlers() {
-  myCustomBind(".whiteboardlink", function(event) {
-    if (this.text) {
-      // Chrome ipad fix for multi whiteboards
-      changeWhiteboard(
-        globalRE.test(this.className) ? "_global" : $(this).attr("data-name")
-      );
-      event.stopPropagation();
-      event.preventDefault();
-    }
-  });
-}
-var publicBoardsContainer = $("#publicBoardsContainer");
-var privateBoardsContainer = $("#privateBoardsContainer");
-var $sharedBoardsListContainer = $("#sharedBoardsListContainer");
+var publicBoardsContainer = document.getElementById("publicBoardsContainer");
+var privateBoardsContainer = document.getElementById("privateBoardsContainer");
+var sharedBoardsListContainer = document.getElementById(
+  "sharedBoardsListContainer"
+);
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
 window.updateWhiteboardLists = function(callback) {
-  $sharedBoardsListContainer.html("");
-  privateBoardsContainer.html("");
-  publicBoardsContainer.html("");
+  sharedBoardsListContainer.innerHTML = "";
+  privateBoardsContainer.innerHTML = "";
+  publicBoardsContainer.innerHTML = "";
 
   ss.rpc("whiteboards.getWhiteboardNames", function(err, response) {
     if (err || !response) {
@@ -68,7 +61,7 @@ window.updateWhiteboardLists = function(callback) {
         name +
         "</a></li>";
     }
-    privateBoardsContainer.append(html);
+    renderHtml(html, privateBoardsContainer);
     html = "";
 
     for (i = 0, l = publicBoards.length; i < l; i++) {
@@ -83,8 +76,6 @@ window.updateWhiteboardLists = function(callback) {
         name +
         "</a></li>";
     }
-    publicBoardsContainer.append(html);
-    html = "";
 
     for (i = 0, l = anyone.length; i < l; i++) {
       uri = anyone[i].resource;
@@ -100,7 +91,7 @@ window.updateWhiteboardLists = function(callback) {
         name +
         "</a></li>";
     }
-    publicBoardsContainer.append(html);
+    renderHtml(html, publicBoardsContainer);
     html = "";
 
     whiteboardData.adminWhiteboards = [];
@@ -124,17 +115,11 @@ window.updateWhiteboardLists = function(callback) {
         whiteboardData.adminWhiteboards.push(user[i]);
       }
     }
-    $sharedBoardsListContainer.append(html);
-
-    whiteboardLinkHandlers();
+    renderHtml(html, sharedBoardsListContainer);
 
     $("#search_input_public").fastLiveFilter("#publicBoardsContainer");
     $("#search_input_private").fastLiveFilter("#privateBoardsContainer");
-    var search_input_shared = $("#search_input_shared");
-    search_input_shared.fastLiveFilter("#sharedBoardsListContainer");
-    search_input_shared.one("focus", function() {
-      $(this).val("");
-    });
+    $("#search_input_shared").fastLiveFilter("#sharedBoardsListContainer");
 
     callback(response);
   });
@@ -146,11 +131,44 @@ window.updateWhiteboardLists(function() {
   initChat(window.whiteboard);
 });
 
-whiteboardData.aclUsers = [];
-window.populateAcl = function populateAcl() {
-  $("#aclWrapper").html("");
+function selectRole(event) {
+  var userName = this.dataset.username, newPermission = event.target.value;
 
-  $("#shareLinkURL").val(location.origin + "/" + window.whiteboard);
+  ss.rpc("acl.setUserRole", whiteboard, userName, newPermission, function(
+    err,
+    res
+  ) {
+    if (err) {
+      console.log(arguments);
+    }
+  });
+}
+
+function removeUser() {
+  var userName = this.dataset.username;
+
+  ss.rpc("acl.removeUserRoles", whiteboard, userName, function(err, res) {
+    if (err) {
+      console.log(arguments);
+      return;
+    }
+    var user = document.getElementById("aclUser-" + userName);
+    user.parentNode.removeChild(user);
+    var index = whiteboardData.aclUsers.indexOf(userName);
+    if (index !== -1) {
+      whiteboardData.aclUsers.splice(index, 1);
+    }
+  });
+}
+
+whiteboardData.aclUsers = [];
+var aclWrapper = document.getElementById("aclWrapper");
+window.populateAcl = function populateAcl() {
+  aclWrapper.innerHTML = "";
+
+  document.getElementById("shareLinkURL").value = location.origin +
+    "/" +
+    window.whiteboard;
 
   ss.rpc("acl.getUsersAndPermissions", whiteboard, function(err, res) {
     if (err || !res) {
@@ -158,9 +176,11 @@ window.populateAcl = function populateAcl() {
       return;
     }
     whiteboardData.aclUsers = [];
-    var aclPublicAccess = $("#aclPublicAccess");
-    aclPublicAccess.find("option[value=none]").attr("selected", "selected");
-    $("#aclUsernameField").val("Enter username to add...");
+    var aclPublicAccess = document.getElementById("aclPublicAccess");
+    aclPublicAccess.querySelector("option[value=none]").selected = "selected";
+    document.getElementById(
+      "aclUsernameField"
+    ).value = "Enter username to add...";
     var users = "";
     for (var i = 0; i < res.length; i++) {
       var user = res[i];
@@ -168,9 +188,9 @@ window.populateAcl = function populateAcl() {
       var userName = user.username;
 
       if (userName === "anyone") {
-        aclPublicAccess
-          .find("option[value=" + role + "]")
-          .attr("selected", "selected");
+        aclPublicAccess.querySelector(
+          "option[value=" + role + "]"
+        ).selected = "selected";
         continue;
       }
 
@@ -182,100 +202,110 @@ window.populateAcl = function populateAcl() {
 
       users += ss.tmpl["sharingSettings-aclUser"].render(data);
     }
-    $("#aclWrapper").html(users);
+    aclWrapper.innerHTML = users;
+
+    [].slice
+      .call(aclWrapper.querySelectorAll(".aclSelect"))
+      .forEach(function(selector) {
+        selector.onchange = selectRole;
+      });
+
+    [].slice
+      .call(aclWrapper.querySelectorAll(".removeUserButton"))
+      .forEach(function(button) {
+        button.onclick = removeUser;
+      });
   });
 };
 
-var newWhiteboardNameField = $("#newWhiteboardNameField");
-var whiteboardsHeader = $(
-  ".toolHeaderText",
-  document.getElementById("whiteboards")
-);
-function newWhiteboard() {
-  whiteboardsHeader.html("Checking&hellip;");
+var newWhiteboardNameField = document.getElementById("newWhiteboardNameField");
+var whiteboardsHeader = document
+  .getElementById("whiteboards")
+  .querySelector(".toolHeaderText");
 
-  var val = newWhiteboardNameField.val();
-  newWhiteboardNameField.val("");
+function newWhiteboard() {
+  whiteboardsHeader.innerHTML = "Checking&hellip;";
+
+  var val = newWhiteboardNameField.value;
+  newWhiteboardNameField.value = "";
 
   ss.rpc("whiteboards.createWhiteboard", val, function(err) {
+    var msg = err ? err || "Choose a different name" : "Success";
+    whiteboardsHeader.innerHTML = '<span style="font-size:12px;"> ' +
+      msg +
+      "</span>";
+    whiteboardsHeader.firstChild.style.color = err ? "red" : "green";
+    setTimeout(
+      function() {
+        whiteboardsHeader.innerHTML = "Whiteboards";
+      },
+      3000
+    );
+
     if (!err) {
-      whiteboardsHeader
-        .html('<span style="color:green; font-size:12px;">Success</span>')
-        .delay(2000)
-        .fadeOut(1000, function() {
-          whiteboardsHeader.html(toolHeaderText).fadeIn();
-        });
       window.updateWhiteboardLists(function() {
         window.changeWhiteboard(val);
       });
       window.populateAcl();
-    } else {
-      whiteboardsHeader
-        .html(
-          '<span style="color:red; font-size:12px;"> ' +
-            (err || "Choose a different name") +
-            " </span>"
-        )
-        .delay(2000)
-        .fadeOut(1000, function() {
-          whiteboardsHeader.html(toolHeaderText).fadeIn();
-        });
     }
   });
 }
 
-$("#newWhiteboardButton").mousedown(newWhiteboard);
+document.getElementById("newWhiteboardButton").onclick = newWhiteboard;
 
-newWhiteboardNameField.keyup(function(event) {
+newWhiteboardNameField.onkeyup = function(event) {
   if (event.keyCode === 13) {
     newWhiteboard();
   }
-});
+};
 
-newWhiteboardNameField.one("focus", function() {
-  $(this).val("");
-});
-
-var search_input_public = $("#search_input_public");
-search_input_public.one("focus", function() {
-  $(this).val("");
-});
-var publicBoards = $("#publicBoards");
-search_input_public.keyup(function(event) {
+var search_input_public = document.getElementById("search_input_public");
+var publicBoards = document.getElementById("publicBoards");
+search_input_public.onkeyup = function(event) {
   if (event.keyCode === 13) {
-    var elems = $("li", publicBoards), tmp, i, il;
+    var elems = publicBoards.querySelectorAll("li"), tmp, i, il;
     for (i = 0, il = elems.length; i < il; i++) {
       tmp = elems[i];
       if (tmp.style.display !== "none") {
         tmp = tmp.children[0];
-        changeWhiteboard(
-          globalRE.test(tmp.className) ? "_global" : tmp.dataset.name
-        );
+        changeWhiteboard(tmp.dataset.name);
         return;
       }
     }
   }
-});
-var search_input_private = $("#search_input_private");
-search_input_private.one("focus", function() {
-  $(this).val("");
-});
-var privateBoards = $("#privateBoards");
-search_input_private.keyup(function(event) {
+};
+
+var search_input_shared = document.getElementById("search_input_shared");
+var sharedBoards = document.getElementById("sharedBoards");
+search_input_shared.onkeyup = function(event) {
   if (event.keyCode === 13) {
-    var elems = $("li", privateBoards), tmp, i, il;
+    var elems = sharedBoards.querySelectorAll("li"), tmp, i, il;
     for (i = 0, il = elems.length; i < il; i++) {
       tmp = elems[i];
       if (tmp.style.display !== "none") {
         tmp = tmp.children[0];
-        changeWhiteboard(
-          globalRE.test(tmp.className) ? "_global" : tmp.dataset.name
-        );
+        changeWhiteboard(tmp.dataset.name);
         return;
       }
     }
   }
-});
+};
+
+var search_input_private = document.getElementById("search_input_private");
+var privateBoards = document.getElementById("privateBoards");
+search_input_private.onkeyup = function(event) {
+  if (event.keyCode === 13) {
+    var elems = privateBoards.querySelectorAll("li"), tmp, i, il;
+    for (i = 0, il = elems.length; i < il; i++) {
+      tmp = elems[i];
+      if (tmp.style.display !== "none") {
+        tmp = tmp.children[0];
+        changeWhiteboard(tmp.dataset.name);
+        return;
+      }
+    }
+  }
+};
 
 var sharingSettingsDialog = $("#sharingSettingsDialog");
 window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
@@ -307,14 +337,18 @@ window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
     err && console.log(err);
   });
 
-  $("> div", document.getElementById("chat")).hide();
+  [].slice
+    .call(document.getElementById("chatLogs").children)
+    .forEach(function(log) {
+      log.style.display = "none";
+    });
 
   if (!log) {
     initChat(toWhiteboard);
     log = document.getElementById("chatlog-" + toWhiteboard);
   }
 
-  $(log).show();
+  log.style.display = "";
 
   sharingSettingsDialog.dialog("close");
 
@@ -323,13 +357,18 @@ window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
   document.dispatchEvent(new CustomEvent("clearCanvas"));
 };
 
-$(".whiteboardList h4").on("click", function() {
-  $(this.nextElementSibling).fadeToggle();
-  $(this)
-    .find("i")
-    .toggleClass("icon-plus-circled")
-    .toggleClass("icon-minus-circled");
-});
+function whiteboardListClickHandler() {
+  var style = this.nextElementSibling.style;
+  style.display = style.display === "" ? "none" : "";
+  var icon = this.querySelector("i").classList;
+  icon.toggle("icon-plus-circled");
+  icon.toggle("icon-minus-circled");
+}
+[].slice
+  .call(document.querySelectorAll(".whiteboardList h4"))
+  .forEach(function(whiteboardListHeader) {
+    whiteboardListHeader.onclick = whiteboardListClickHandler;
+  });
 
 sharingSettingsDialog.dialog({
   dialogClass: "aclDialog",
@@ -344,22 +383,9 @@ sharingSettingsDialog.dialog({
     window.populateAcl();
 
     // start reacting to the change events of the permission dropdowns
-    var dialog = $("#sharingSettingsDialog");
-    dialog.on("change", ".aclSelect", function(event) {
-      var userName = $(this).attr("data-username"),
-        newPermission = event.target.value;
+    var dialog = document.getElementById("sharingSettingsDialog");
 
-      ss.rpc("acl.setUserRole", whiteboard, userName, newPermission, function(
-        err,
-        res
-      ) {
-        if (err) {
-          console.log(arguments);
-        }
-      });
-    });
-
-    dialog.on("change", "#aclPublicAccess", function(event) {
+    dialog.querySelector("#aclPublicAccess").onchange = function(event) {
       var username = "anyone", newPermission = event.target.value;
 
       if (newPermission === "none") {
@@ -378,28 +404,10 @@ sharingSettingsDialog.dialog({
           }
         });
       }
-    });
+    };
 
-    dialog.on("click", ".removeUserButton", function() {
-      var userId = $(this).attr("data-userId"),
-        userName = $(this).attr("data-username"),
-        i;
-
-      ss.rpc("acl.removeUserRoles", whiteboard, userName, function(err, res) {
-        if (err) {
-          console.log(arguments);
-          return;
-        }
-        $("#aclUser-" + userName).remove();
-        var index = whiteboardData.aclUsers.indexOf(userName);
-        if (index !== -1) {
-          whiteboardData.aclUsers.splice(i, 1);
-        }
-      });
-    });
-
-    dialog.on("click", "#addUserButton", function() {
-      var candidateUser = $("#aclUsernameField").val();
+    dialog.querySelector("#addUserButton").onclick = function() {
+      var candidateUser = document.getElementById("aclUsernameField").value;
 
       // can't set roles for owner
       if (candidateUser === window.userObject.username) {
@@ -420,7 +428,9 @@ sharingSettingsDialog.dialog({
           // username doesn't exist, try again
           return;
         }
-        var permission = $("#newUserPermission").find(":selected").val();
+        var permission = document.getElementById(
+          "newUserPermission"
+        ).selectedOptions[0].value;
 
         // add new permission
         ss.rpc(
@@ -441,20 +451,28 @@ sharingSettingsDialog.dialog({
 
         whiteboardData.aclUsers.push(candidateUser);
 
-        $(
-          "#aclWrapper"
-        ).append(ss.tmpl["sharingSettings-aclUser"].render(data));
-      });
-    });
+        var html = htmlToElement(
+          ss.tmpl["sharingSettings-aclUser"].render(data)
+        );
 
-    $("#aclUsernameField").on("focus", function() {
-      $(this).val("");
-    });
+        aclWrapper.appendChild(html);
+
+        html.querySelector(".aclSelect").onchange = selectRole;
+
+        html.querySelector(".removeUserButton").onclick = removeUser;
+      });
+    };
+
+    document.getElementById("aclUsernameField").onfocus = function() {
+      this.value = "";
+    };
   }
 });
 
-$(document).on("click", "#sharingSettingsButton", function() {
-  sharingSettingsDialog.dialog("open");
+document.addEventListener("click", function(event) {
+  if (event.target.id === "sharingSettingsButton") {
+    sharingSettingsDialog.dialog("open");
+  }
 });
 
 window.loggedInUserIsOwner = function(whiteboardQuery) {

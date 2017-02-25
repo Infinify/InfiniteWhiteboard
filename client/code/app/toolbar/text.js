@@ -81,11 +81,11 @@ document.getElementById("textFontSelection").onchange = function(event) {
     : null;
 };
 
-var $emphasisButtons = $("#emphasisButtons");
-$emphasisButtons.buttonset();
-$emphasisButtons.find("label").unbind("mouseup");
+var emphasisButtons = $("#emphasisButtons");
+emphasisButtons.buttonset();
+emphasisButtons.find("label").unbind("mouseup");
 // small hack for making buttonset react on click events while simultaneously moving the mouse
-$emphasisButtons.on("change", function() {
+emphasisButtons.on("change", function() {
   var bold = document.getElementById("emphasisBold").checked,
     italic = document.getElementById("emphasisItalic").checked;
 

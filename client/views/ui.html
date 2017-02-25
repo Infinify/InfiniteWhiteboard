@@ -148,7 +148,7 @@
           <div id="mainPublicWhiteboard" class="whiteboardList">
             <i class="icon-globe-2" style="color:#3d3d3d;"></i>
             <a class="whiteboardlink globalWhiteboard" href="/">
-              <span style="color:darkblue; margin-left:5px;">Global Whiteboard</span>
+              <span data-name="_global" style="color:darkblue; margin-left:5px;">Global Whiteboard</span>
             </a>
           </div>
 
@@ -186,7 +186,7 @@
               <span class="listHeader">Public</span>
             </h4>
             <div class="accordionContainer">
-              <input id="search_input_public" value="Type to filter" title="Filter public whiteboards" class="clearOnFocus">
+              <input id="search_input_public" placeholder="Type to filter" title="Filter public whiteboards" class="clearOnFocus">
               <div class="whiteboardContainer scrollbarStyle1">
                 <ul id="publicBoardsContainer">
                 </ul>
@@ -204,6 +204,40 @@
                 <span class="buttonText">Create</span>
               </i>
             </button>
+          </div>
+
+          <div id="sharingSettingsDialog" title="" style="display:none; z-index:1000;">
+            <h2>Public access</h2>
+            <hr>
+            <div class="aclRule">
+              <select title="Access type" id="aclPublicAccess">
+                <option value="none">No public access</option>
+                <option value="edit">Anyone can edit and chat</option>
+                <option value="chat">Anyone can view and chat</option>
+                <option value="view">Anyone can view</option>
+              </select>
+            </div>
+            <br>
+            <input title="Link for sharing" id="shareLinkURL" type="text" value="" style="width:95%;"><br/>
+            <span class="linkDescription">Share this link to give others access to your whiteboard.</span>
+
+            <br><br><br>
+            <h2>Who has access</h2>
+            <hr>
+            <div id="aclWrapper">
+            </div>
+
+            <div id="addUserWrapper">
+              <input title="Username" id="aclUsernameField" type="text" value="Add user..." style="width:205px;">
+              <select title="User permissions" id="newUserPermission">
+                <option disabled>Select permission</option>
+                <option value="admin">is admin</option>
+                <option value="edit">can edit and chat</option>
+                <option value="chat">can view and chat</option>
+                <option value="view">can view</option>
+              </select>
+              <button id="addUserButton">+</button>
+            </div>
           </div>
         </div>
       </div>

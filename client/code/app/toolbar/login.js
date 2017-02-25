@@ -141,7 +141,7 @@ usernameField.onkeyup = passwordField.onkeyup = loginOnEnter;
 logoutButton.onclick = function() {
   var userObject = window.userObject;
 
-  ss.rpc("auth.logout", null, function(err, success) {
+  ss.rpc("auth.logout", function(err, success) {
     if (err) {
       console.log(arguments);
       return;
@@ -163,17 +163,14 @@ logoutButton.onclick = function() {
 
     userObject.hash = userObject.id = userObject.username = null;
 
-    window.updateWhiteboardLists(function(response) {
-      var anyone = response.anyone.map(function(aclEntry) {
-        return aclEntry.resource;
-      });
-      var publicBoards = response.publicBoards.map(function(publicBoard) {
-        return publicBoard.name;
-      });
+    window.updateWhiteboardLists(function(boards) {
       var current = window.whiteboard;
-      if (
-        anyone.indexOf(current) === -1 && publicBoards.indexOf(current) === -1
-      ) {
+      var hasAccess = boards.anyone.some(function(acl) {
+        return acl.resource === current;
+      }) || boards.publicBoards.some(function(board) {
+          return board.name === current;
+        });
+      if (!hasAccess) {
         // subscribe to global chat and pubsub
         chatLogs.innerHTML = "";
         changeWhiteboard("_global");

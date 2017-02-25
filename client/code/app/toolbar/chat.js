@@ -120,11 +120,11 @@ function send() {
   ss.rpc("iwb.sendMessage", message, function(err) {
     if (err) {
       console.log(err);
-      element.addClass("failed");
+      element.classList.add("failed");
       // TODO show notification of failed sending with button to resend and mark message as not sent
       return;
     }
-    element.removeClass("pending");
+    element.classList.remove("pending");
   });
 }
 

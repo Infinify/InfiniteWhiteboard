@@ -200,9 +200,7 @@ function newWhiteboard() {
   ss.rpc("whiteboards.createWhiteboard", val, function(err) {
     if (!err) {
       whiteboardsHeader
-        .html(
-          '<span style="color:green; font-size:12px;">Success</span>'
-        )
+        .html('<span style="color:green; font-size:12px;">Success</span>')
         .delay(2000)
         .fadeOut(1000, function() {
           whiteboardsHeader.html(toolHeaderText).fadeIn();

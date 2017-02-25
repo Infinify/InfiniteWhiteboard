@@ -109,12 +109,14 @@ function send() {
     uuid: window.name
   };
 
-  var messageContainer = document.getElementById("chatlog-" + message.whiteboard).querySelector(".messageContainer");
-  
+  var messageContainer = document
+    .getElementById("chatlog-" + message.whiteboard)
+    .querySelector(".messageContainer");
+
   var element = renderMessage(messageContainer, message, true);
-  
+
   messageContainer.scrollTop = messageContainer.scrollHeight;
-  
+
   ss.rpc("iwb.sendMessage", message, function(err) {
     if (err) {
       console.log(err);
@@ -148,7 +150,9 @@ function updateCount(wb) {
   wb = whiteboardUsers[wb];
   if (!wb) return;
   var count = Object.keys(wb.users).length;
-  wb.userCount.textContent = count === 1 ? "Only you online" : count + " Users online";
+  wb.userCount.textContent = count === 1
+    ? "Only you online"
+    : count + " Users online";
 }
 
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
@@ -197,7 +201,7 @@ function initChat(whiteboard) {
   var userList = currentChatLog.querySelector(".userList");
 
   userCount.onclick = function() {
-    userList.style.display = userList.style.display === '' ? 'none' : ''; 
+    userList.style.display = userList.style.display === "" ? "none" : "";
   };
 
   var wb = whiteboardUsers[whiteboard] = {
@@ -220,15 +224,17 @@ function initChat(whiteboard) {
       console.log(arguments);
       return;
     }
-    
-    var messageContainer = document.getElementById("chatlog-" + whiteboard).querySelector(".messageContainer");
+
+    var messageContainer = document
+      .getElementById("chatlog-" + whiteboard)
+      .querySelector(".messageContainer");
 
     for (var i = messages.length - 1; i >= 0; i--) {
       renderMessage(messageContainer, messages[i]);
     }
 
     messageContainer.scrollTop = messageContainer.scrollHeight;
-    
+
     currentChatLog.display = "";
   });
 }
@@ -237,11 +243,13 @@ ss.event.on("newMessage", function(message) {
   if (message.uuid === window.name) {
     return;
   }
-  
-  var messageContainer = document.getElementById("chatlog-" + message.whiteboard).querySelector(".messageContainer");
+
+  var messageContainer = document
+    .getElementById("chatlog-" + message.whiteboard)
+    .querySelector(".messageContainer");
 
   renderMessage(messageContainer, message);
-  
+
   messageContainer.scrollTop = messageContainer.scrollHeight;
 });
 
@@ -280,7 +288,9 @@ document.getElementById("hideChatButton").onclick = function() {
 document.getElementById("showChatButton").onclick = function() {
   chat.display = "";
   setTimeout(function() {
-    var messageContainer = document.getElementById("chatlog-" + window.whiteboard).querySelector(".messageContainer");
+    var messageContainer = document
+      .getElementById("chatlog-" + window.whiteboard)
+      .querySelector(".messageContainer");
 
     messageContainer.scrollTop = messageContainer.scrollHeight;
   });

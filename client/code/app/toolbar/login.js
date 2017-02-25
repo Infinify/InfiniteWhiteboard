@@ -47,7 +47,7 @@ function loginSuccessHandler() {
   spinnerText.innerHTML = "Welcome!";
 
   loginTool.classList.add("loggedIn");
-  
+
   toolbarHeader.classList.add("loggedIn");
 
   displayName.textContent = usernameField.value;
@@ -62,7 +62,7 @@ function loginSuccessHandler() {
     initChat(window.whiteboard);
     populateAcl();
   });
-  
+
   setTimeout(
     function() {
       hideLoading();

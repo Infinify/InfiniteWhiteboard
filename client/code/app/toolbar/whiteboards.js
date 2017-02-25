@@ -5,11 +5,7 @@ $("#logoutButton").click(function() {
   whiteboardData.privateWhiteboards = [];
 });
 
-i18n.init({ resStore: require("./translations/whiteboards_i18n") });
-
-var t = i18n.t;
-
-var toolHeaderText = t("Whiteboards");
+var toolHeaderText = "Whiteboards";
 
 var eventType = "touchend click";
 function myCustomBind(controlName, callback) {
@@ -196,7 +192,7 @@ var whiteboardsHeader = $(
   document.getElementById("whiteboards")
 );
 function newWhiteboard() {
-  whiteboardsHeader.html(t("checkingMessage"));
+  whiteboardsHeader.html("Checking&hellip;");
 
   var val = newWhiteboardNameField.val();
   newWhiteboardNameField.val("");
@@ -205,9 +201,7 @@ function newWhiteboard() {
     if (!err) {
       whiteboardsHeader
         .html(
-          '<span style="color:green; font-size:12px;"> ' +
-            t("Success") +
-            " </span>"
+          '<span style="color:green; font-size:12px;">Success</span>'
         )
         .delay(2000)
         .fadeOut(1000, function() {
@@ -221,7 +215,7 @@ function newWhiteboard() {
       whiteboardsHeader
         .html(
           '<span style="color:red; font-size:12px;"> ' +
-            (err || t("chooseDifferentWBnameMessage")) +
+            (err || "Choose a different name") +
             " </span>"
         )
         .delay(2000)

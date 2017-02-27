@@ -115,7 +115,6 @@ function onEmphasisButtonChange() {
   emphasisButton.oninput = emphasisButton.onclick = onEmphasisButtonChange;
 });
 
-$("#textPreview").elastic();
 var textPreview = document.getElementById("textPreview");
 textPreview.onkeyup = function() {
   var error = textPreviewWrapper.querySelector("p.error");

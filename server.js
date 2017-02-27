@@ -55,7 +55,6 @@ module.exports = id => {
       "libs/date.js",
       "libs/fly.js",
       "libs/spectrum.js",
-      "libs/jquery.elastic.source.js",
       "libs/sha512.js",
       "libs/encoding.js",
       "libs/chunked-request.js",

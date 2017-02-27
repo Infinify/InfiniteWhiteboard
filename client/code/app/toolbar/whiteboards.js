@@ -24,6 +24,7 @@ var privateBoardsContainer = document.getElementById("privateBoardsContainer");
 var sharedBoardsListContainer = document.getElementById(
   "sharedBoardsListContainer"
 );
+
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
 window.updateWhiteboardLists = function(callback) {
   sharedBoardsListContainer.innerHTML = "";
@@ -117,10 +118,6 @@ window.updateWhiteboardLists = function(callback) {
       }
     }
     renderHtml(html, sharedBoardsListContainer);
-
-    $("#search_input_public").fastLiveFilter("#publicBoardsContainer");
-    $("#search_input_private").fastLiveFilter("#privateBoardsContainer");
-    $("#search_input_shared").fastLiveFilter("#sharedBoardsListContainer");
 
     callback(response);
   });
@@ -219,6 +216,10 @@ search_input_private.onkeyup = function(event) {
     }
   }
 };
+
+fastLiveFilter(search_input_public, publicBoardsContainer);
+fastLiveFilter(search_input_private, privateBoardsContainer);
+fastLiveFilter(search_input_shared, sharedBoardsListContainer);
 
 window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
   toWhiteboard = toWhiteboard || "_global";

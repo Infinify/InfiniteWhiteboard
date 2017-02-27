@@ -32,7 +32,7 @@ body {
     overflow: hidden;
 }
 
-#html,.canvas,svg.map.drawingMode {
+#html,.canvas,svg.map.drawingMode,#map {
     pointer-events: none
 }
 

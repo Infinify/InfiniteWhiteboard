@@ -1,71 +1,191 @@
-// encoding: utf-8
-// $.fn.linkify 1.0 - MIT/GPL Licensed - More info: http://github.com/maranomynet/linkify/
-(function (b) {
-    var x = /(^|["'(\s]|&lt;)(www\..+?\..+?)((?:[:?]|\.+)?(?:\s|$)|&gt;|[)"',])/g, y = /(^|["'(\s]|&lt;)((?:(?:https?|ftp):\/\/|mailto:).+?)((?:[:?]|\.+)?(?:\s|$)|&gt;|[)"',])/g, z = function (h) {
-        return h.replace(x, '$1<a tabindex="-1" href="<``>://$2">$2</a>$3').replace(y, '$1<a tabindex="-1" href="$2">$2</a>$3').replace(/"<``>/g, '"http')
-    }, s = b.fn.linkify = function (c) {
-        if (!b.isPlainObject(c)) {
-            c = {use: (typeof c == 'string') ? c : undefined, handleLinks: b.isFunction(c) ? c : arguments[1]}
+/* encoding: utf-8
+
+ ****  linkify plugin for jQuery - automatically finds and changes URLs in text content into proper hyperlinks  ****
+
+ Version: 1.0
+
+ Copyright (c) 2009
+ Már Örlygsson  (http://mar.anomy.net/)  &
+ Hugsmiðjan ehf. (http://www.hugsmidjan.is)
+
+ Dual licensed under a MIT licence (http://en.wikipedia.org/wiki/MIT_License)
+ and GPL 2.0 or above (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+
+ -----------------------------------------------------------------------------
+
+ Demo and Qunit-tests:
+ * <./jquery.linkify-1.0-demo.html>
+ * <./jquery.linkify-1.0-test.html>
+
+ Documentation:
+ * ...
+
+ Get updates from:
+ * <http://github.com/maranomynet/linkify/>
+ * <git://github.com/maranomynet/linkify.git>
+
+ -----------------------------------------------------------------------------
+
+ Requires:
+ * jQuery (1.2.6 or later)
+
+ Usage:
+
+ jQuery('.articlebody').linkify();
+
+ // adding plugins:
+ jQuery.extend( jQuery.fn.linkify.plugins, {
+ name1: {
+ re:   RegExp
+ tmpl: String/Function
+ },
+ name2: function(html){ return html; }
+ });
+
+ // Uses all plugins by default:
+ jQuery('.articlebody').linkify();
+
+ // Use only certain plugins:
+ jQuery('.articlebody').linkify( 'name1,name2' );
+ jQuery('.articlebody').linkify({  use: 'name1,name2'  });
+ jQuery('.articlebody').linkify({  use: ['name1','name2']  });
+
+ // Explicitly use all plugins:
+ jQuery('.articlebody').linkify('*');
+ jQuery('.articlebody').linkify({  use: '*'  });
+ jQuery('.articlebody').linkify({  use: ['*']  });
+
+ // Use no plugins:
+ jQuery('.articlebody').linkify('');
+ jQuery('.articlebody').linkify({  use: ''  });
+ jQuery('.articlebody').linkify({  use: []  });
+ jQuery('.articlebody').linkify({  use: ['']  });
+
+ // Perfmorm actions on all newly created links:
+ jQuery('.articlebody').linkify( function (links){ links.addClass('linkified'); } );
+ jQuery('.articlebody').linkify({  handleLinks: function (links){ links.addClass('linkified'); }  });
+
+ */
+
+(function($){
+
+  var linkify = $.fn.linkify = function ( cfg ) {
+    if ( !$.isPlainObject( cfg ) )
+    {
+      cfg = {
+        use:         (typeof cfg == 'string') ? cfg : undefined,
+        handleLinks: $.isFunction(cfg) ? cfg : arguments[1]
+      };
+    }
+    var use = cfg.use,
+      allPlugins = linkify.plugins || {},
+      plugins = [],
+      tmpCont,
+      newLinks = [],
+      callback = cfg.handleLinks;
+    if ( use == undefined ||  use == '*' ) // use === undefined  ||  use === null
+    {
+      for ( var name in allPlugins )
+      {
+        plugins.push( allPlugins[name] );
+      }
+    }
+    else
+    {
+      use = $.isArray( use ) ? use : $.trim(use).split( / *, */ );
+      var plugin,
+        name;
+      for ( var i=0, l=use.length;  i<l;  i++ )
+      {
+        name = use[i];
+        plugin = allPlugins[name];
+        if ( plugin )
+        {
+          plugins.push( plugin );
         }
-        var d = c.use, k = s.plugins || {}, l = [z], f, m = [], n = c.handleLinks;
-        if (d == undefined || d == '*') {
-            for (var i in k) {
-                l.push(k[i])
-            }
-        } else {
-            d = b.isArray(d) ? d : b.trim(d).split(/ *, */);
-            var o, i;
-            for (var p = 0, A = d.length; p < A; p++) {
-                i = d[p];
-                o = k[i];
-                if (o) {
-                    l.push(o)
+      }
+    }
+
+    this.each(function () {
+      var childNodes = this.childNodes,
+        i = childNodes.length;
+      while ( i-- )
+      {
+        var n = childNodes[i];
+        if ( n.nodeType == 3 )
+        {
+          var html = n.nodeValue;
+          if ( html.length>1  &&  /\S/.test(html) )
+          {
+            var htmlChanged,
+              preHtml;
+            tmpCont = tmpCont || $('<div/>')[0];
+            tmpCont.innerHTML = '';
+            tmpCont.appendChild( n.cloneNode(false) );
+            var tmpContNodes = tmpCont.childNodes;
+
+            for (var j=0, plugin; (plugin = plugins[j]); j++)
+            {
+              var k = tmpContNodes.length,
+                tmpNode;
+              while ( k-- )
+              {
+                tmpNode = tmpContNodes[k];
+                if ( tmpNode.nodeType == 3 )
+                {
+                  html = tmpNode.nodeValue;
+                  if ( html.length>1  &&  /\S/.test(html) )
+                  {
+                    preHtml = html;
+                    html = html
+                      .replace( /&/g, '&amp;' )
+                      .replace( /</g, '&lt;' )
+                      .replace( />/g, '&gt;' );
+                    html = $.isFunction( plugin ) ?
+                      plugin( html ):
+                      html.replace( plugin.re, plugin.tmpl );
+                    htmlChanged = htmlChanged || preHtml!=html;
+                    preHtml!=html  &&  $(tmpNode).after(html).remove();
+                  }
                 }
+              }
             }
+            html = tmpCont.innerHTML;
+            if ( callback )
+            {
+              html = $('<div/>').html(html);
+              //newLinks.push.apply( newLinks,  html.find('a').toArray() );
+              newLinks = newLinks.concat( html.find('a').toArray().reverse() );
+              html = html.contents();
+            }
+            htmlChanged  &&  $(n).after(html).remove();
+          }
         }
-        this.each(function () {
-            var h = this.childNodes, t = h.length;
-            while (t--) {
-                var e = h[t];
-                if (e.nodeType == 3) {
-                    var a = e.nodeValue;
-                    if (a.length > 1 && /\S/.test(a)) {
-                        var q, r;
-                        f = f || b('<div/>')[0];
-                        f.innerHTML = '';
-                        f.appendChild(e.cloneNode(false));
-                        var u = f.childNodes;
-                        for (var v = 0, g; (g = l[v]); v++) {
-                            var w = u.length, j;
-                            while (w--) {
-                                j = u[w];
-                                if (j.nodeType == 3) {
-                                    a = j.nodeValue;
-                                    if (a.length > 1 && /\S/.test(a)) {
-                                        r = a;
-                                        a = a.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                                        a = b.isFunction(g) ? g(a) : a.replace(g.re, g.tmpl);
-                                        q = q || r != a;
-                                        r != a && b(j).after(a).remove()
-                                    }
-                                }
-                            }
-                        }
-                        a = f.innerHTML;
-                        if (n) {
-                            a = b('<div/>').html(a);
-                            m = m.concat(a.find('a').toArray().reverse());
-                            a = a.contents()
-                        }
-                        q && b(e).after(a).remove()
-                    }
-                } else if (e.nodeType == 1 && !/^(a|button|textarea)$/i.test(e.tagName)) {
-                    arguments.callee.call(e)
-                }
-            }
-        });
-        n && n(b(m.reverse()));
-        return this
-    };
-    s.plugins = {mailto: {re: /(^|["'(\s]|&lt;)([^"'(\s&]+?@.+\.[a-z]{2,7})(([:?]|\.+)?(\s|$)|&gt;|[)"',])/gi, tmpl: '$1<a href="mailto:$2">$2</a>$3'}}
+        else if ( n.nodeType == 1  &&  !/^(a|button|textarea)$/i.test(n.tagName) )
+        {
+          arguments.callee.call( n );
+        }
+      };
+    });
+    callback  &&  callback( $(newLinks.reverse()) );
+    return this;
+  };
+
+  linkify.plugins = {
+    // default links plugin
+    linkifier: function ( html ) {
+      var noProtocolUrl   = /(^|["'(\s]|&lt;)(www\..+?\..+?)((?:[:?]|\.+)?(?=(?:\s|$)|&gt;|[)"',]))/g,
+        httpOrMailtoUrl = /(^|["'(\s]|&lt;)((?:(?:https?|ftp):\/\/|mailto:).+?)((?:[:?]|\.+)?(?=(?:\s|$)|&gt;|[)"',]))/g;
+      return html
+        .replace( noProtocolUrl, '$1<a href="<``>://$2">$2</a>$3' )  // NOTE: we escape `"http` as `"<``>` to make sure `httpOrMailtoUrl` below doesn't find it as a false-positive
+        .replace( httpOrMailtoUrl, '$1<a href="$2">$2</a>$3' )
+        .replace( /"<``>/g, '"http' );  // reinsert `"http`
+    },
+    // default mailto: plugin
+    mailto: {
+      re: /(^|["'(\s]|&lt;)([a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)(?=(\s|$)|&gt;|[)"',])/gi,
+      tmpl: '$1<a href="mailto:$2">$2</a>$3'
+    }
+  };
+
 })(jQuery);

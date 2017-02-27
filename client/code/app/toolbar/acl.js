@@ -35,6 +35,8 @@ function removeUser() {
 
 aclUsers = [];
 var aclWrapper = document.getElementById("aclWrapper");
+var aclPublicAccess = document.getElementById("aclPublicAccess");
+var noPublicAccessOption = aclPublicAccess.querySelector("option[value=none]");
 window.populateAcl = function populateAcl() {
   aclWrapper.innerHTML = "";
 
@@ -48,8 +50,7 @@ window.populateAcl = function populateAcl() {
       return;
     }
     aclUsers = [];
-    var aclPublicAccess = document.getElementById("aclPublicAccess");
-    aclPublicAccess.querySelector("option[value=none]").selected = "selected";
+    noPublicAccessOption.selected = "selected";
 
     var users = "";
     for (var i = 0; i < res.length; i++) {
@@ -88,104 +89,99 @@ window.populateAcl = function populateAcl() {
   });
 };
 
-var sharingSettingsDialog = $("#sharingSettingsDialog");
-sharingSettingsDialog.dialog({
-  dialogClass: "aclDialog",
-  autoOpen: false,
-  draggable: true,
-  position: { my: "center", at: "center", of: window },
-  maxHeight: 500,
-  minHeight: 300,
-  maxWidth: 400,
-  minWidth: 400,
-  create: function() {
-    window.populateAcl();
+document.getElementById("aclPublicAccess").onchange = function(event) {
+  var username = "anyone", newPermission = event.target.value;
 
-    // start reacting to the change events of the permission dropdowns
-    var dialog = document.getElementById("sharingSettingsDialog");
-
-    dialog.querySelector("#aclPublicAccess").onchange = function(event) {
-      var username = "anyone", newPermission = event.target.value;
-
-      if (newPermission === "none") {
-        ss.rpc("acl.removeUserRoles", whiteboard, username, function(err, res) {
-          if (err) {
-            console.log(arguments);
-          }
-        });
-      } else {
-        ss.rpc("acl.setUserRole", whiteboard, username, newPermission, function(
-          err,
-          res
-        ) {
-          if (err) {
-            console.log(arguments);
-          }
-        });
+  if (newPermission === "none") {
+    ss.rpc("acl.removeUserRoles", whiteboard, username, function(err, res) {
+      if (err) {
+        console.log(arguments);
       }
-    };
-
-    dialog.querySelector("#addUserButton").onclick = function() {
-      var candidateUser = document.getElementById("aclUsernameField").value;
-
-      // can't set roles for owner
-      if (candidateUser === window.userObject.username) {
-        return;
+    });
+  } else {
+    ss.rpc("acl.setUserRole", whiteboard, username, newPermission, function(
+      err,
+      res
+    ) {
+      if (err) {
+        console.log(arguments);
       }
+    });
+  }
+};
 
-      if (aclUsers.indexOf(candidateUser) !== -1) {
-        return;
-      }
+document.getElementById("addUserButton").onclick = function() {
+  var candidateUser = document.getElementById("aclUsernameField").value;
 
-      // does uer exist
-      ss.rpc("auth.getUserByName", candidateUser, function(err, res) {
+  // can't set roles for owner
+  if (candidateUser === window.userObject.username) {
+    return;
+  }
+
+  if (aclUsers.indexOf(candidateUser) !== -1) {
+    return;
+  }
+
+  // does uer exist
+  ss.rpc("auth.getUserByName", candidateUser, function(err, res) {
+    if (err) {
+      console.log(arguments);
+      return;
+    }
+    if (!res) {
+      // username doesn't exist, try again
+      return;
+    }
+    var permission = document.getElementById(
+      "newUserPermission"
+    ).selectedOptions[0].value;
+
+    // add new permission
+    ss.rpc(
+      "acl.setUserRole",
+      whiteboard,
+      candidateUser,
+      permission,
+      function(err, res) {
         if (err) {
           console.log(arguments);
-          return;
         }
-        if (!res) {
-          // username doesn't exist, try again
-          return;
-        }
-        var permission = document.getElementById(
-          "newUserPermission"
-        ).selectedOptions[0].value;
+      }
+    );
 
-        // add new permission
-        ss.rpc(
-          "acl.setUserRole",
-          whiteboard,
-          candidateUser,
-          permission,
-          function(err, res) {
-            if (err) {
-              console.log(arguments);
-            }
-          }
-        );
+    var data = { userName: candidateUser, userId: res._id };
 
-        var data = { userName: candidateUser, userId: res._id };
+    data[permission] = "selected";
 
-        data[permission] = "selected";
+    aclUsers.push(candidateUser);
 
-        aclUsers.push(candidateUser);
+    var html = htmlToElement(
+      ss.tmpl["sharingSettings-aclUser"].render(data)
+    );
 
-        var html = htmlToElement(
-          ss.tmpl["sharingSettings-aclUser"].render(data)
-        );
+    aclWrapper.appendChild(html);
 
-        aclWrapper.appendChild(html);
+    html.querySelector(".aclSelect").onchange = selectRole;
 
-        html.querySelector(".aclSelect").onchange = selectRole;
+    html.querySelector(".removeUserButton").onclick = removeUser;
+  });
+};
 
-        html.querySelector(".removeUserButton").onclick = removeUser;
-      });
-    };
-  }
-});
-
+var dialog = document.getElementById("sharingSettingsDialog");
+var dialogStyle = dialog.style;
 document.addEventListener("click", function(event) {
   if (event.target.id === "sharingSettingsButton") {
-    sharingSettingsDialog.dialog("open");
+    dialogStyle.display = "";
   }
 });
+
+document.getElementById("closeAclDialogButton").onclick = function () {
+  dialogStyle.display = "none";
+};
+
+document.addEventListener("clearCanvas", function() {
+  dialogStyle.display = "none";
+  populateAcl();
+});
+
+populateAcl();

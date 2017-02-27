@@ -2,30 +2,38 @@ body {
     overflow: hidden
 }
 
-#chat,#toolbarWrapper,.canvas {
+#chat,#toolbarWrapper,.canvas,#html,.htmlItem,#map,#uiWrapper,svg.map {
     position: absolute
 }
 
 #mfsb {
-    margin: 5px 0
+    background-color: white;
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 5px 6px;
+    margin: 4px 0;
 }
 
 #now {
     display: inline-block
 }
 
-#toolbarWrapper {
-    bottom: 0
-}
-
-#map,.canvas {
+#map,#html,.canvas,#uiWrapper {
     left: 0;
     top: 0
 }
 
-#html,#map,.canvas,.map,body,html {
+#html,#map,.canvas,.map,body,html,#uiWrapper {
     height: 100%;
     width: 100%
+}
+
+#html,.canvas {
+    overflow: hidden;
+}
+
+#html,.canvas,svg.map.drawingMode {
+    pointer-events: none
 }
 
 .compass .back {

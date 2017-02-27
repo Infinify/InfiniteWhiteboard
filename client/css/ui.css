@@ -12,14 +12,6 @@ body {
     padding: 0
 }
 
-#html,.canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    pointer-events: none
-}
-
 #html.active {
     pointer-events: all;
 }
@@ -51,21 +43,9 @@ body {
 }
 
 .htmlItem {
-    position: absolute;
     -webkit-transform-origin: left top 0;
     -ms-transform-origin: left top 0;
     transform-origin: left top 0
-}
-
-#map,#uiWrapper {
-    top: 0;
-    left: 0
-}
-
-#uiWrapper {
-    position: absolute;
-    height: 100%;
-    width: 100%
 }
 
 #langopts {
@@ -144,8 +124,16 @@ li,ul {
     font-size: 15px
 }
 
+.dialog {
+  position: absolute;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
 .connectionDialog {
-    z-index: 100;
     font-family: 'Ubuntu',Helvetica,Arial,sans-serif;
     padding: 10px;
     -moz-border-radius: 5px;
@@ -156,11 +144,6 @@ li,ul {
     border: 1px solid #bdbdbd;
     text-align: center;
     font-size: 12px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
     max-width: 280px;
 }
 
@@ -181,14 +164,6 @@ li,ul {
     height: 100%;
     background: #aaa;
     opacity: .3
-}
-
-svg.map.drawingMode {
-    pointer-events: none
-}
-
-svg.map {
-    position: absolute
 }
 
 g.zoom {

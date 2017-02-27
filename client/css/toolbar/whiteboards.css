@@ -92,7 +92,16 @@ input#newWhiteboardNameField {
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 1px 0 15px 0 rgba(50,50,50,.5);
-    border: 1px solid #bdbdbd
+    border: 1px solid #bdbdbd;
+    position: absolute;
+    width: 421px;
+    top: 50vh;
+    left: 50vw;
+}
+
+#shareLinkURL {
+    width: 92%;
+    max-width: 92%;
 }
 
 .aclDialog {
@@ -117,8 +126,20 @@ input#newWhiteboardNameField {
     font-size: 14px
 }
 
+#aclUsernameField {
+    width: 205px;
+}
+
 .aclDialog .linkDescription,.whiteboardContainer .role {
     font-size: 10px
+}
+
+#closeAclDialogButton {
+    float: right;
+}
+
+.aclRule, .linkDescription {
+    margin: 10px 0;
 }
 
 .aclDialog .ui-dialog-titlebar-close {

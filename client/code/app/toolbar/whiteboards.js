@@ -12,8 +12,8 @@ function onSelectWhiteboard(event) {
   if (name) {
     changeWhiteboard(name);
     event.stopPropagation();
-    event.preventDefault();
   }
+  event.preventDefault();
 }
 var whiteboardToolContent = document.querySelector("#whiteboards .toolContent");
 whiteboardToolContent.onclick = onSelectWhiteboard;
@@ -160,7 +160,6 @@ function newWhiteboard() {
       window.updateWhiteboardLists(function() {
         window.changeWhiteboard(name);
       });
-      window.populateAcl();
     }
   });
 }
@@ -221,7 +220,6 @@ search_input_private.onkeyup = function(event) {
   }
 };
 
-var sharingSettingsDialog = $("#sharingSettingsDialog");
 window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
   toWhiteboard = toWhiteboard || "_global";
   if (window.whiteboard === toWhiteboard) {
@@ -263,10 +261,6 @@ window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
   }
 
   log.style.display = "";
-
-  sharingSettingsDialog.dialog("close");
-
-  window.populateAcl();
 
   document.dispatchEvent(new CustomEvent("clearCanvas"));
 };

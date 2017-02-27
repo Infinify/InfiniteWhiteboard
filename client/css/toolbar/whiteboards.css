@@ -138,8 +138,8 @@ input#newWhiteboardNameField {
     float: right;
 }
 
-.aclRule, .linkDescription {
-    margin: 10px 0;
+.anyoneRule, .linkDescription {
+    margin-bottom: 30px;
 }
 
 .aclDialog .ui-dialog-titlebar-close {

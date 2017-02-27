@@ -1,5 +1,5 @@
 function clickHandler(e) {
-  var msgDiv = e.currentTarget;
+  var msgDiv = e.target;
   while (!msgDiv.classList.contains("messageElement")) {
     msgDiv = msgDiv.parentNode;
   }
@@ -66,12 +66,6 @@ function renderMessage(messageContainer, message, pending) {
 
   messageContainer.appendChild(messageElement);
 
-  messageElement.querySelector(".location").onclick = clickHandler;
-  messageElement.querySelector(".user").onclick = clickHandler;
-  messageElement.querySelector(".time").onclick = clickHandler;
-
-  $(messageElement.querySelector(".message")).linkify();
-
   messageElement.dataset["timemachine"] = +tm;
 
   if (
@@ -114,6 +108,8 @@ function send() {
     .querySelector(".messageContainer");
 
   var element = renderMessage(messageContainer, message, true);
+
+  linkify([element.querySelector(".message")]);
 
   messageContainer.scrollTop = messageContainer.scrollHeight;
 
@@ -174,27 +170,25 @@ function initChat(whiteboard) {
     owner = "Public";
   }
 
-  chatLogs.appendChild(
-    htmlToElement(
-      ss.tmpl[template].render({
-        chatlogId: whiteboard,
-        chatlogName: whiteboard,
-        chatlogDisplayName: (
-          whiteboard === "_global"
-            ? "Global whiteboard"
-            : decodeURIComponent(whiteboardName)
-        ),
-        whiteboardOwner: owner,
-        submitMessageIcon: "icon-ok-circled"
-      })
-    )
+  var currentChatLog = htmlToElement(
+    ss.tmpl[template].render({
+      chatlogId: whiteboard,
+      chatlogName: whiteboard,
+      chatlogDisplayName: (
+        whiteboard === "_global"
+          ? "Global whiteboard"
+          : decodeURIComponent(whiteboardName)
+      ),
+      whiteboardOwner: owner,
+      submitMessageIcon: "icon-ok-circled"
+    })
   );
+
+  chatLogs.appendChild(currentChatLog);
 
   document.getElementById(
     window.whiteboard + "-submitMessageButton"
   ).onclick = send;
-
-  var currentChatLog = document.getElementById("chatlog-" + whiteboard);
 
   var userCount = currentChatLog.querySelector(".userCount");
 
@@ -215,7 +209,7 @@ function initChat(whiteboard) {
       console.log(err);
     } else {
       res.reduce(userCreator, wb);
-      updateCount(window.whiteboard);
+      updateCount(whiteboard);
     }
   });
 
@@ -225,13 +219,15 @@ function initChat(whiteboard) {
       return;
     }
 
-    var messageContainer = document
-      .getElementById("chatlog-" + whiteboard)
-      .querySelector(".messageContainer");
+    var messageContainer = currentChatLog.querySelector(".messageContainer");
+
+    messageContainer.onclick = clickHandler;
 
     for (var i = messages.length - 1; i >= 0; i--) {
       renderMessage(messageContainer, messages[i]);
     }
+
+    linkify(messageContainer.querySelectorAll(".message"));
 
     messageContainer.scrollTop = messageContainer.scrollHeight;
 
@@ -248,7 +244,9 @@ ss.event.on("newMessage", function(message) {
     .getElementById("chatlog-" + message.whiteboard)
     .querySelector(".messageContainer");
 
-  renderMessage(messageContainer, message);
+  var element = renderMessage(messageContainer, message);
+
+  linkify([element.querySelector(".message")]);
 
   messageContainer.scrollTop = messageContainer.scrollHeight;
 });

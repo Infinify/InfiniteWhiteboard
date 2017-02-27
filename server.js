@@ -43,7 +43,6 @@ module.exports = id => {
       "libs/jquery-ui.js",
       "libs/jquery.ui.touch-punch.js",
       "libs/jquery.linkify-1.0-min.js",
-      "libs/jquery.transform2d.js",
       "libs/jquery.fastLiveFilter.js",
       "libs/load-image.all.min.js",
       "libs/saveimages.js",

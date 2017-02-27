@@ -66,120 +66,129 @@
  jQuery('.articlebody').linkify({  handleLinks: function (links){ links.addClass('linkified'); }  });
 
  */
-
-(function($){
-
-  var linkify = $.fn.linkify = function ( cfg ) {
-    if ( !$.isPlainObject( cfg ) )
-    {
+(function () {
+  function type(obj) {
+    return Object.prototype.toString.call(obj).replace(/^\[object (.+)\]$/, '$1').toLowerCase();
+  }
+  var parseHTML = function(str) {
+    var tmp = document.implementation.createHTMLDocument();
+    tmp.body.innerHTML = str;
+    return tmp.body;
+  };
+  function linkify(nodelist, cfg) {
+    var cfgType = type(cfg);
+    if (cfgType !== 'object') {
       cfg = {
-        use:         (typeof cfg == 'string') ? cfg : undefined,
-        handleLinks: $.isFunction(cfg) ? cfg : arguments[1]
+        use: (cfgType === 'string') ? cfg : undefined,
+        handleLinks: (cfgType === 'function') ? cfg : arguments[1]
       };
     }
     var use = cfg.use,
       allPlugins = linkify.plugins || {},
       plugins = [],
-      tmpCont,
+      tmpCont = null,
       newLinks = [],
       callback = cfg.handleLinks;
-    if ( use == undefined ||  use == '*' ) // use === undefined  ||  use === null
+    if (use === undefined)
     {
-      for ( var name in allPlugins )
-      {
-        plugins.push( allPlugins[name] );
-      }
-    }
-    else
-    {
-      use = $.isArray( use ) ? use : $.trim(use).split( / *, */ );
-      var plugin,
-        name;
-      for ( var i=0, l=use.length;  i<l;  i++ )
-      {
-        name = use[i];
-        plugin = allPlugins[name];
-        if ( plugin )
-        {
-          plugins.push( plugin );
+      for (var name in allPlugins) {
+        if (allPlugins.hasOwnProperty(name)) {
+          plugins.push(allPlugins[name]);
         }
       }
     }
-
-    this.each(function () {
-      var childNodes = this.childNodes,
-        i = childNodes.length;
-      while ( i-- )
-      {
-        var n = childNodes[i];
-        if ( n.nodeType == 3 )
-        {
-          var html = n.nodeValue;
-          if ( html.length>1  &&  /\S/.test(html) )
-          {
-            var htmlChanged,
-              preHtml;
-            tmpCont = tmpCont || $('<div/>')[0];
+    else {
+      use = Array.isArray(use) ? use : use.trim().split(/ *, */);
+      var pluginDefinition,
+        pluginName;
+      for (var i = 0, ul = use.length; i < ul; i++) {
+        pluginName = use[i];
+        pluginDefinition = allPlugins[pluginName];
+        if (pluginDefinition) {
+          plugins.push(pluginDefinition);
+        }
+      }
+    }
+    for (var n = 0; n < nodelist.length; ++n) {
+      var item = nodelist[n];
+      var childNodes = item.childNodes,
+        j = childNodes.length;
+      while (j--) {
+        var node = childNodes[j];
+        if (node.nodeType === 3) {
+          var html = node.nodeValue;
+          if (html.length > 1 && /\S/.test(html)) {
+            var htmlChanged = false,
+              preHtml,
+              parent,
+              ref;
+            tmpCont = tmpCont || document.implementation.createHTMLDocument().body;
             tmpCont.innerHTML = '';
-            tmpCont.appendChild( n.cloneNode(false) );
+            tmpCont.appendChild(node.cloneNode(false));
             var tmpContNodes = tmpCont.childNodes;
 
-            for (var j=0, plugin; (plugin = plugins[j]); j++)
-            {
-              var k = tmpContNodes.length,
+            for (var k = 0, plugin; (plugin = plugins[k]); k++) {
+              var l = tmpContNodes.length,
                 tmpNode;
-              while ( k-- )
-              {
-                tmpNode = tmpContNodes[k];
-                if ( tmpNode.nodeType == 3 )
-                {
+              while (l--) {
+                tmpNode = tmpContNodes[l];
+                if (tmpNode.nodeType == 3) {
                   html = tmpNode.nodeValue;
-                  if ( html.length>1  &&  /\S/.test(html) )
-                  {
+                  if (html.length > 1 && /\S/.test(html)) {
                     preHtml = html;
                     html = html
-                      .replace( /&/g, '&amp;' )
-                      .replace( /</g, '&lt;' )
-                      .replace( />/g, '&gt;' );
-                    html = $.isFunction( plugin ) ?
-                      plugin( html ):
-                      html.replace( plugin.re, plugin.tmpl );
-                    htmlChanged = htmlChanged || preHtml!=html;
-                    preHtml!=html  &&  $(tmpNode).after(html).remove();
+                      .replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;');
+                    html = type(plugin) === 'function' ?
+                      plugin(html) :
+                      html.replace(plugin.re, plugin.tmpl);
+                    if (preHtml !== html) {
+                      htmlChanged = true;
+                      ref = tmpNode.nextElementSibling;
+                      parent = tmpNode.parentNode;
+                      parent.removeChild(tmpNode);
+                      [].slice.call(parseHTML(html).children).forEach(function (child) {
+                        parent.insertBefore(child, ref);
+                      });
+                    }
                   }
                 }
               }
             }
             html = tmpCont.innerHTML;
-            if ( callback )
-            {
-              html = $('<div/>').html(html);
-              //newLinks.push.apply( newLinks,  html.find('a').toArray() );
-              newLinks = newLinks.concat( html.find('a').toArray().reverse() );
-              html = html.contents();
+            if (callback) {
+              html = parseHTML(html);
+              newLinks = newLinks.concat([].slice.call(html.querySelectorAll('a')).reverse());
             }
-            htmlChanged  &&  $(n).after(html).remove();
+            if (htmlChanged) {
+              ref = node.nextElementSibling;
+              parent = node.parentNode;
+              parent.removeChild(node);
+              [].slice.call(parseHTML(html).children).forEach(function (child) {
+                parent.insertBefore(child, ref);
+              });
+            }
           }
         }
-        else if ( n.nodeType == 1  &&  !/^(a|button|textarea)$/i.test(n.tagName) )
-        {
-          arguments.callee.call( n );
+        else if (node.nodeType == 1 && !/^(a|button|textarea)$/i.test(node.tagName)) {
+          arguments.callee.call(node);
         }
-      };
-    });
-    callback  &&  callback( $(newLinks.reverse()) );
-    return this;
-  };
+      }
+    }
+    callback && callback(newLinks.reverse());
+    return nodelist;
+  }
 
   linkify.plugins = {
     // default links plugin
-    linkifier: function ( html ) {
-      var noProtocolUrl   = /(^|["'(\s]|&lt;)(www\..+?\..+?)((?:[:?]|\.+)?(?=(?:\s|$)|&gt;|[)"',]))/g,
+    linkifier: function (html) {
+      var noProtocolUrl = /(^|["'(\s]|&lt;)(www\..+?\..+?)((?:[:?]|\.+)?(?=(?:\s|$)|&gt;|[)"',]))/g,
         httpOrMailtoUrl = /(^|["'(\s]|&lt;)((?:(?:https?|ftp):\/\/|mailto:).+?)((?:[:?]|\.+)?(?=(?:\s|$)|&gt;|[)"',]))/g;
       return html
-        .replace( noProtocolUrl, '$1<a href="<``>://$2">$2</a>$3' )  // NOTE: we escape `"http` as `"<``>` to make sure `httpOrMailtoUrl` below doesn't find it as a false-positive
-        .replace( httpOrMailtoUrl, '$1<a href="$2">$2</a>$3' )
-        .replace( /"<``>/g, '"http' );  // reinsert `"http`
+        .replace(noProtocolUrl, '$1<a href="<``>://$2">$2</a>$3')  // NOTE: we escape `"http` as `"<``>` to make sure `httpOrMailtoUrl` below doesn't find it as a false-positive
+        .replace(httpOrMailtoUrl, '$1<a href="$2">$2</a>$3')
+        .replace(/"<``>/g, '"http');  // reinsert `"http`
     },
     // default mailto: plugin
     mailto: {
@@ -188,4 +197,5 @@
     }
   };
 
-})(jQuery);
+  window.linkify = linkify;
+})();

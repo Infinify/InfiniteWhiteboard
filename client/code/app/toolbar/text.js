@@ -81,31 +81,38 @@ document.getElementById("textFontSelection").onchange = function(event) {
     : null;
 };
 
-var emphasisButtons = $("#emphasisButtons");
-emphasisButtons.buttonset();
-emphasisButtons.find("label").unbind("mouseup");
-// small hack for making buttonset react on click events while simultaneously moving the mouse
-emphasisButtons.on("change", function() {
-  var bold = document.getElementById("emphasisBold").checked,
-    italic = document.getElementById("emphasisItalic").checked;
+var emphasisBold = document.getElementById("emphasisBold");
+var emphasisItalic = document.getElementById("emphasisItalic");
+var boldButton = emphasisBold.nextElementSibling.classList;
+var italicButton = emphasisItalic.nextElementSibling.classList;
+function onEmphasisButtonChange() {
+  var bold = emphasisBold.checked;
+  var italic = emphasisItalic.checked;
+  var props = [];
 
-  textToolParams.emphasis = "";
-  window.newTextItem ? window.newTextItem.fontWeight = "" : null;
-
-  if (bold && italic) {
-    textToolParams.emphasis = "bold italic";
-    window.newTextItem ? window.newTextItem.fontWeight = "bold italic" : null;
+  if (bold) {
+    props.push("bold");
+    boldButton.add("ui-state-active")
   } else {
-    if (bold) {
-      textToolParams.emphasis = "bold";
-      window.newTextItem ? window.newTextItem.fontWeight = "bold" : null;
-    }
-
-    if (italic) {
-      textToolParams.emphasis = "italic";
-      window.newTextItem ? window.newTextItem.fontWeight = "italic" : null;
-    }
+    boldButton.remove("ui-state-active");
   }
+
+  if (italic) {
+    props.push("italic");
+    italicButton.add("ui-state-active")
+  } else {
+    italicButton.remove("ui-state-active");
+  }
+  
+  var emphasis = props.join(" ");
+  textToolParams.emphasis = emphasis;
+  if (window.newTextItem) {
+    window.newTextItem.fontWeight = emphasis
+  }
+}
+
+[].slice.call(document.querySelectorAll("#emphasisButtons input")).forEach(function (emphasisButton) {
+  emphasisButton.oninput = emphasisButton.onclick = onEmphasisButtonChange;
 });
 
 $("#textPreview").elastic();

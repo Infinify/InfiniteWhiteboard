@@ -95,6 +95,7 @@ exports.actions = (req, res, ss) => {
               } else {
                 createWhiteboard(board);
               }
+              return name;
             });
         },
         res

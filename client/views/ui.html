@@ -145,60 +145,55 @@
         </h3>
 
         <div class="toolContent">
-          <div id="mainPublicWhiteboard" class="whiteboardList">
-            <i class="icon-globe-2" style="color:#3d3d3d;"></i>
-            <a class="whiteboardlink globalWhiteboard" href="/">
-              <span data-name="_global" style="color:darkblue; margin-left:5px;">Global Whiteboard</span>
+          <div class="whiteboardList globalWhiteboard">
+            <i class="icon-globe-2"></i>
+            <a class="whiteboardlink listHeader" href="/" data-name="_global">
+              <span data-name="_global">Global Whiteboard</span>
             </a>
           </div>
 
-          <div id="privateBoards" class="whiteboardList mod" style="display: none;">
+          <div id="privateBoards" class="whiteboardList" style="display: none;">
             <h4>
-              <i class="icon-minus-circled" style="color:#3d3d3d;"></i>
+              <i class="icon-minus-circled"></i>
               <span class="listHeader">My whiteboards</span>
             </h4>
             <div class="accordionContainer">
-
-              <input id="search_input_private" placeholder="Type to filter" title="Filter private whiteboards" class="clearOnFocus">
-
+              <input id="search_input_private" placeholder="Type to filter" title="Filter private whiteboards">
               <div class="whiteboardContainer scrollbarStyle1">
                 <ul id="privateBoardsContainer"></ul>
               </div>
             </div>
           </div>
 
-          <div id="sharedBoards" class="whiteboardList mod" style="display: none;">
+          <div id="sharedBoards" class="whiteboardList" style="display: none;">
             <h4>
-              <i class="icon-minus-circled" style="color:#3d3d3d;"></i>
+              <i class="icon-minus-circled"></i>
               <span class="listHeader">Shared with me</span>
             </h4>
             <div class="accordionContainer">
-              <input id="search_input_shared" placeholder="Type to filter" title="Filter shared whiteboards" class="clearOnFocus">
+              <input id="search_input_shared" placeholder="Type to filter" title="Filter shared whiteboards">
               <div class="whiteboardContainer scrollbarStyle1">
                 <ul id="sharedBoardsListContainer"></ul>
               </div>
             </div>
           </div>
 
-          <div id="publicBoards" class="whiteboardList mod">
+          <div id="publicBoards" class="whiteboardList">
             <h4>
-              <i class="icon-minus-circled" style="color:#3d3d3d;"></i>
+              <i class="icon-minus-circled"></i>
               <span class="listHeader">Public</span>
             </h4>
             <div class="accordionContainer">
-              <input id="search_input_public" placeholder="Type to filter" title="Filter public whiteboards" class="clearOnFocus">
+              <input id="search_input_public" placeholder="Type to filter" title="Filter public whiteboards">
               <div class="whiteboardContainer scrollbarStyle1">
-                <ul id="publicBoardsContainer">
-                </ul>
+                <ul id="publicBoardsContainer"></ul>
               </div>
             </div>
           </div>
 
           <div id="newWhiteboards">
             <span id="newWhiteboardFieldText" style="line-height:20px; font-size:14px;">Create new public whiteboard</span>
-
             <input type="text" id="newWhiteboardNameField" class="newWhiteboardNameField" placeholder="Whiteboard name">
-
             <button class="clearButton button25px" tabindex="-1">
               <i id="newWhiteboardButton" class=" icon-plus-circled">
                 <span class="buttonText">Create</span>
@@ -218,17 +213,19 @@
               </select>
             </div>
             <br>
+            
             <input title="Link for sharing" id="shareLinkURL" type="text" value="" style="width:95%;"><br/>
             <span class="linkDescription">Share this link to give others access to your whiteboard.</span>
 
             <br><br><br>
             <h2>Who has access</h2>
             <hr>
+            
             <div id="aclWrapper">
             </div>
 
             <div id="addUserWrapper">
-              <input title="Username" id="aclUsernameField" type="text" value="Add user..." style="width:205px;">
+              <input title="Username" id="aclUsernameField" type="text" placeholder="Enter username to add..." style="width:205px;">
               <select title="User permissions" id="newUserPermission">
                 <option disabled>Select permission</option>
                 <option value="admin">is admin</option>

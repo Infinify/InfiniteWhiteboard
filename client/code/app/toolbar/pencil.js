@@ -2,7 +2,7 @@ var colorPickerToolButton = document.getElementById("colorPickerTool");
 var drawToolButton = document.getElementById("drawTool");
 var pencil = document.getElementById("pencil");
 pencil.querySelector(".toolHeader").onclick = function() {
-  if (pencil.hasClass("open")) {
+  if (pencil.classList.contains("open")) {
     nopTool.activate();
     return;
   }
@@ -135,10 +135,10 @@ document.addEventListener("setColor", function() {
       "<li>" +
         '<div class="stroke" style="background-color: ' +
         strokeColor +
-        '"/>' +
+        '"></div>' +
         '<div class="fill" style="background-color: ' +
         fillColor +
-        '"/>' +
+        '"></div>' +
         "</li>"
     ),
     palette.firstChild

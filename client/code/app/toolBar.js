@@ -50,6 +50,7 @@ require("/toolbar/login");
 require("/toolbar/pencil");
 require("/toolbar/shapes");
 require("/toolbar/text");
+require("/toolbar/acl");
 require("/toolbar/whiteboards");
 require("/toolbar/timeline");
 require("/toolbar/places");

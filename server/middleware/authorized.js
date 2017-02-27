@@ -18,7 +18,7 @@ exports.check = () => (req, res, next) => {
   if (whiteboard && whiteboard.whiteboard) {
     whiteboard = whiteboard.whiteboard;
   }
-  if (!whiteboard in boards) {
+  if (!(whiteboard in boards)) {
     return res("404 Not Found");
   }
 

@@ -66,6 +66,7 @@ module.exports = id => {
       "libs/indexeddbshim-UnicodeIdentifiers.js",
       "libs/dexie.js",
       "libs/classList.js",
+      "app/toolbar/acl.js",
       "app/toolbar/chat.js",
       "app/toolbar/login.js",
       "app/toolbar/whiteboards.js",

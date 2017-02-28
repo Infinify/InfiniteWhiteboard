@@ -29,7 +29,14 @@
 }
 
 #timelineslide,#timerange {
-    top: 10px
+    border: inherit;
+    height: inherit;
+    padding: 0;
+    max-width: 205px;
+}
+
+#timerange {
+    margin-top: 12px;
 }
 
 #rtspeed,#timeLine {

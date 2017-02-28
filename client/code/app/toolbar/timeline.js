@@ -1,20 +1,15 @@
 var now = document.getElementById("now");
-var timeLineSlide = $("#timelineslide").slider({
-  range: "max",
-  min: 0,
-  max: 100,
-  value: 0,
-  slide: function(event, ui) {
-    window.timestamp = minTime + (maxTime - minTime) * ui.value / 100;
-    now.textContent = new Date(timestamp);
-    window.timeAnimation(false, true);
-  }
-});
+var timeLineSlide = document.getElementById("timelineslide");
+timeLineSlide.onchange = timeLineSlide.oninput = function(event) {
+  window.timestamp = minTime + (maxTime - minTime) * timeLineSlide.value / 100;
+  now.textContent = new Date(timestamp);
+  window.timeAnimation(false, true);
+};
 
 function updateTimeLine() {
   var t = window.timestamp || maxTime;
   now.textContent = new Date(t);
-  timeLineSlide.slider("value", 100 * (t - minTime) / (maxTime - minTime));
+  timeLineSlide.value = 100 * (t - minTime) / (maxTime - minTime);
 }
 document.addEventListener("timeAnimation", updateTimeLine);
 
@@ -51,16 +46,12 @@ function timeCaller() {
   }
 }
 
-var timeRange = $("#timerange").slider({
-  range: "max",
-  min: -16,
-  max: 16,
-  value: Math.sign(timeStep) * Math.log(Math.abs(timeStep) + 1),
-  slide: function(event, ui) {
-    var value = ui.value;
-    timeStep = Math.sign(value) * (Math.exp(Math.abs(value)) - 1);
-  }
-});
+var timeRange = document.getElementById("timerange");
+timeRange.onchange = function() {
+  var value = timeRange.value;
+  timeStep = Math.sign(value) * (Math.exp(Math.abs(value)) - 1);
+};
+timeRange.value = Math.sign(timeStep) * Math.log(Math.abs(timeStep) + 1);
 
 function startTimeAnimation() {
   timeLapseButton.innerHtml = '<i class="icon-pause"></i>';

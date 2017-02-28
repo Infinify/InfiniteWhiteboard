@@ -1,12 +1,11 @@
 var shapes = document.getElementById("shapes");
+var shapeStrokeWidth = document.getElementById("shapeStrokeWidth");
 shapes.querySelector(".toolHeader").onclick = function() {
   if (shapes.classList.contains("open")) {
     nopTool.activate();
     return;
   }
-  window.currentStrokeStyle.strokeWidth = $("#shapeStrokeWidth").slider(
-    "value"
-  );
+  window.currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
 
   var color = $("#currentShapeFillColor").spectrum("get");
   color = color && color.toHexString();
@@ -49,15 +48,9 @@ function colorPickedHandler(color, which) {
 
 colorPickedHandler(window.initColor);
 
-$("#shapeStrokeWidth").slider({
-  range: "max",
-  min: 1,
-  max: 50,
-  value: window.currentStrokeStyle.strokeWidth || 10,
-  slide: function(event, ui) {
-    window.currentStrokeStyle.strokeWidth = ui.value;
-  }
-});
+shapeStrokeWidth.onchange = function() {
+  window.currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
+};
 
 function colorPickedHandlerFill(color) {
   colorPickedHandler(color && color.toHexString(), "fill");

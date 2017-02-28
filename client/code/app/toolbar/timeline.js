@@ -1,6 +1,6 @@
 var now = document.getElementById("now");
 var timeLineSlide = document.getElementById("timelineslide");
-timeLineSlide.onchange = timeLineSlide.oninput = function(event) {
+timeLineSlide.onchange = timeLineSlide.oninput = function() {
   window.timestamp = minTime + (maxTime - minTime) * timeLineSlide.value / 100;
   now.textContent = new Date(timestamp);
   window.timeAnimation(false, true);
@@ -61,10 +61,7 @@ function startTimeAnimation() {
   );
   if (timestamp === maxTime || timestamp === minTime) {
     timeStep = -timeStep;
-    timeRange.slider(
-      "value",
-      Math.sign(timeStep) * Math.log(Math.abs(timeStep) + 1)
-    );
+    timeRange.value = Math.sign(timeStep) * Math.log(Math.abs(timeStep) + 1);
   }
   timeCallerTimeout = setInterval(timeCaller, 15);
 }

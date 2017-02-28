@@ -28,13 +28,6 @@
     text-align: center
 }
 
-#timelineslide,#timerange {
-    border: inherit;
-    height: inherit;
-    padding: 0;
-    max-width: 205px;
-}
-
 #timerange {
     margin-top: 12px;
 }

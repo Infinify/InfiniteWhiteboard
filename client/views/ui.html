@@ -89,13 +89,16 @@
               <option value="Butt">Butt</option>
             </select>
           </div>
-          <div id="pencilStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-            <span style="float:left; font-size:12px; margin-top:15px;">Width</span>
+          
+          <input type="range" min="1" max="50" value="10" id="pencilStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+          <div style="font-size:12px; margin-bottom: 10px;">Width</div>
+          
+          <div style="text-align: center">
+            <a class="toolActivator" id="colorPickerTool" onclick="window.colorPickerTool.activate()">Picker</a>
+            <a class="toolActivator" id="drawTool" onclick="window.drawTool.activate()">Draw</a>
+            <a onclick="var s = this.nextElementSibling.style;s.display = s.display === '' ? 'none' : ''">Palette</a>
+            <ul class="palette" style="display: none;"></ul>
           </div>
-          <a class="toolActivator" id="colorPickerTool" onclick="window.colorPickerTool.activate()">Picker</a>
-          <a class="toolActivator" id="drawTool" onclick="window.drawTool.activate()">Draw</a>
-          <a onclick="var s = this.nextElementSibling.style;s.display = s.display === '' ? 'none' : ''">Palette</a>
-          <ul class="palette" style="display: none;"></ul>
         </div>
       </div>
 
@@ -110,9 +113,9 @@
             <input type="text" id="currentShapeStrokeColor" title="Select stroke color for shape tools" style="display: none;">
             <input type="text" id="currentShapeFillColor" title="Select fill color for shape tools" style="display: none;">
           </div>
-          <div id="shapeStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-            <span style="float:left; font-size:12px; margin-top:15px;">Width</span>
-          </div>
+          
+          <input type="range" min="1" max="50" value="10" id="shapeStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+          <div style="font-size:12px; margin-bottom: 10px;">Width</div>
 
           <div id="paperToolsContainer">
             <a class="toolActivator" id="circleTool" onclick="window.circleTool.activate();">Circle</a>
@@ -212,8 +215,7 @@
           <div id="timeDiv">
             <div>&nbsp;</div>
             <span id="rtspeed">Reverse</span><span id="maxspeed">Forward</span>
-            <input type="range" id="timerange" min="-16" max="16" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-            </input>
+            <input type="range" id="timerange" min="-16" max="16" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
 
             <p id="controlButtons">
               <button id="firstPathButton" class="timemachineButton1" title="First path"><i class="icon-fast-backward"></i></button>
@@ -223,8 +225,7 @@
 
             <div id="now"></div>
 
-            <input type="range" id="timelineslide" min="0" max="100" value="0" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-            </input>
+            <input type="range" id="timelineslide" min="0" max="100" value="0" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
 
             <span id="timeLine">Timeline</span>
           </div>
@@ -269,8 +270,8 @@
     <div id="textPreviewWrapper" style="position: absolute; display:none;">
       <p class="error" style="color: red; display: none">Text limit reached (512 characters)</p>
       <textarea title="textPreview" id="textPreview" 
-                style="border: 1px dotted #808080; padding: 10px; width: 250px; resize: vertical; -webkit-border-radius: 3px; border-radius: 3px;">
-      </textarea>
+                style="border: 1px dotted #808080; padding: 10px; width: 250px; resize: vertical; -webkit-border-radius: 3px; border-radius: 3px;"
+      ></textarea>
 
       <select title="textFontSelection" id="textFontSelection" style="width:100%; margin-bottom:10px; -webkit-border-radius: 3px;
     border-radius: 3px; height: 30px;">
@@ -292,7 +293,7 @@
 
       <span>Text size <span id="currentFontSizeDisplay" style="font-weight:bold;">40px</span></span>
       <hr class="dottedHr">
-      <div id="textSizeSlider"></div>
+      <input type="range" min="10" max="250" value="40" id="textSizeSlider" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
 
       <button id="newTextOKButton" style="position:relative;">Ok!</button>
       <button id="newTextCancelButton" style="position:relative;">Cancel</button>

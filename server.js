@@ -40,7 +40,6 @@ module.exports = id => {
       "libs/jquery.js",
       "libs/polymaps.js",
       "libs/spin.js",
-      "libs/jquery-ui.js",
       "libs/jquery.ui.touch-punch.js",
       "libs/jquery.linkify-1.0-min.js",
       "libs/jquery.fastLiveFilter.js",

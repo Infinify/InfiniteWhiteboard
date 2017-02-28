@@ -57,22 +57,17 @@ $("#textFillColor").spectrum({
 });
 
 var currentFontSizeDisplay = document.getElementById("currentFontSizeDisplay");
-$("#textSizeSlider").slider({
-  range: "max",
-  min: 10,
-  max: 250,
-  value: 40,
-  step: 1,
-  slide: function(event, ui) {
-    textToolParams.textSize = ui.value;
-    currentFontSizeDisplay.textContent = ui.value + "px";
+var textSizeSlider = document.getElementById("textSizeSlider");
+textSizeSlider.onchange = textSizeSlider.oninput = function() {
+  var value = textSizeSlider.value;
+  textToolParams.textSize = value;
+  currentFontSizeDisplay.textContent = value + "px";
 
-    if (window.newTextItem) {
-      window.newTextItem.fontSize = ui.value;
-      window.newTextItem.leading = ui.value * 1.3;
-    }
+  if (window.newTextItem) {
+    window.newTextItem.fontSize = value;
+    window.newTextItem.leading = value * 1.3;
   }
-});
+};
 
 document.getElementById("textFontSelection").onchange = function(event) {
   textToolParams.fontFamily = event.target.value;

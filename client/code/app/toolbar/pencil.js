@@ -1,4 +1,5 @@
 var colorPickerToolButton = document.getElementById("colorPickerTool");
+var pencilStrokeWidth = document.getElementById("pencilStrokeWidth");
 var drawToolButton = document.getElementById("drawTool");
 var pencil = document.getElementById("pencil");
 pencil.querySelector(".toolHeader").onclick = function() {
@@ -7,9 +8,7 @@ pencil.querySelector(".toolHeader").onclick = function() {
     return;
   }
 
-  window.currentStrokeStyle.strokeWidth = $("#pencilStrokeWidth").slider(
-    "value"
-  );
+  window.currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
 
   var color = $("#currentFillColor").spectrum("get");
   color = color && color.toHexString();
@@ -56,25 +55,9 @@ function colorPickedHandler(color, which) {
 
 colorPickedHandler(window.initColor);
 
-$("#pencilStrokeWidth").slider({
-  range: "max",
-  min: 1,
-  max: 50,
-  value: window.currentStrokeStyle.strokeWidth || 10,
-  slide: function(event, ui) {
-    window.currentStrokeStyle.strokeWidth = ui.value;
-  }
-});
-
-$("#pencilSimplify").slider({
-  range: "max",
-  min: 0,
-  max: 20,
-  value: 1,
-  slide: function(event, ui) {
-    window.simplification = ui.value;
-  }
-});
+pencilStrokeWidth.onchange = function() {
+  window.currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
+};
 
 document.getElementById("miterSelector").onchange = function(event) {
   window.pencilCap = event.currentTarget.value.toLowerCase();

@@ -80,8 +80,18 @@
 
         <div class="toolContent">
           <div style="line-height:40px; border:0; text-align:center; vertical-align: middle;">
-            <input type="text" id="currentStrokeColor" title="Select stroke color for pencil" style="display: none;">
-            <input type="text" id="currentFillColor" title="Select fill color for pencil" style="display: none;">
+            <div class="colorPicker" id="currentFillColor" title="Select fill color for pencil">
+              <a class="color"><div class="colorInner"></div></a>
+              <div class="track"></div>
+              <ul class="dropdown"><li></li></ul>
+              <input type="hidden" class="colorInput"/>
+            </div>
+            <div class="colorPicker" id="currentStrokeColor" title="Select stroke color for pencil">
+              <a class="color"><div class="colorInner"></div></a>
+              <div class="track"></div>
+              <ul class="dropdown"><li></li></ul>
+              <input type="hidden" class="colorInput"/>
+            </div>
             <br>
             <label for="miterSelector">Cap</label>
             <select id="miterSelector" name="miterSelector">
@@ -110,8 +120,18 @@
 
         <div class="toolContent">
           <div style="line-height:40px; border:0; text-align:center; vertical-align: middle;">
-            <input type="text" id="currentShapeStrokeColor" title="Select stroke color for shape tools" style="display: none;">
-            <input type="text" id="currentShapeFillColor" title="Select fill color for shape tools" style="display: none;">
+            <div class="colorPicker" id="currentShapeFillColor" title="Select fill color for shape tools">
+              <a class="color"><div class="colorInner"></div></a>
+              <div class="track"></div>
+              <ul class="dropdown"><li></li></ul>
+              <input type="hidden" class="colorInput"/>
+            </div>
+            <div class="colorPicker" id="currentShapeStrokeColor" title="Select stroke color for shape tools">
+              <a class="color"><div class="colorInner"></div></a>
+              <div class="track"></div>
+              <ul class="dropdown"><li></li></ul>
+              <input type="hidden" class="colorInput"/>
+            </div>
           </div>
           
           <input type="range" min="1" max="50" value="10" id="shapeStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
@@ -281,7 +301,12 @@
         <option value="Helvetica">Helvetica</option>
       </select>
 
-      <input type="text" title="textFillColor" id="textFillColor" style="display:inline;"/>
+      <div class="colorPicker" id="textFillColor" title="Text fill color">
+        <a class="color"><div class="colorInner"></div></a>
+        <div class="track"></div>
+        <ul class="dropdown"><li></li></ul>
+        <input type="hidden" class="colorInput"/>
+      </div>
 
       <div id="emphasisButtons" style="display:inline;">
         <input type="checkbox" class="ui-helper-hidden-accessible" id="emphasisBold"><label for="emphasisBold"><i class="icon-bold-1"></i></label>

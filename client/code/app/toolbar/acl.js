@@ -137,17 +137,14 @@ document.getElementById("addUserButton").onclick = function() {
     ).selectedOptions[0].value;
 
     // add new permission
-    ss.rpc(
-      "acl.setUserRole",
-      whiteboard,
-      candidateUser,
-      permission,
-      function(err, res) {
-        if (err) {
-          console.log(arguments);
-        }
+    ss.rpc("acl.setUserRole", whiteboard, candidateUser, permission, function(
+      err,
+      res
+    ) {
+      if (err) {
+        console.log(arguments);
       }
-    );
+    });
 
     var data = { userName: candidateUser, userId: res._id };
 
@@ -155,9 +152,7 @@ document.getElementById("addUserButton").onclick = function() {
 
     aclUsers.push(candidateUser);
 
-    var html = htmlToElement(
-      ss.tmpl["sharingSettings-aclUser"].render(data)
-    );
+    var html = htmlToElement(ss.tmpl["sharingSettings-aclUser"].render(data));
 
     aclWrapper.appendChild(html);
 
@@ -175,7 +170,7 @@ document.addEventListener("click", function(event) {
   }
 });
 
-document.getElementById("closeAclDialogButton").onclick = function () {
+document.getElementById("closeAclDialogButton").onclick = function() {
   dialogStyle.display = "none";
 };
 

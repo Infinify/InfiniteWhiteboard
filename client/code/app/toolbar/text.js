@@ -29,32 +29,16 @@ textTool.querySelector(".toolHeader").onclick = function() {
   }
 };
 
-function colorPickedHandlerFill() {
-  var color = $("#textFillColor").spectrum("get").toRgb();
-  textToolParams.fillColor = new paper.Color(
-    color.r / 256,
-    color.g / 256,
-    color.b / 256
-  );
+var textFillColorDiv = document.getElementById("textFillColor");
+var textFillColor = tinycolorpicker(textFillColorDiv);
+textFillColorDiv.onchange = function colorPickedHandlerFill() {
+  var color = textFillColor.colorHex;
+  textToolParams.fillColor = new paper.Color(color);
 
   if (window.newTextItem) {
-    window.newTextItem.fillColor = new paper.Color(
-      color.r / 256,
-      color.g / 256,
-      color.b / 256
-    );
+    window.newTextItem.fillColor = new paper.Color(color);
   }
-}
-
-$("#textFillColor").spectrum({
-  color: "#000000",
-  showInitial: true,
-  showInput: true,
-  clickoutFiresChange: true,
-  change: colorPickedHandlerFill,
-  move: colorPickedHandlerFill,
-  allowEmpty: true
-});
+};
 
 var currentFontSizeDisplay = document.getElementById("currentFontSizeDisplay");
 var textSizeSlider = document.getElementById("textSizeSlider");
@@ -87,28 +71,30 @@ function onEmphasisButtonChange() {
 
   if (bold) {
     props.push("bold");
-    boldButton.add("ui-state-active")
+    boldButton.add("ui-state-active");
   } else {
     boldButton.remove("ui-state-active");
   }
 
   if (italic) {
     props.push("italic");
-    italicButton.add("ui-state-active")
+    italicButton.add("ui-state-active");
   } else {
     italicButton.remove("ui-state-active");
   }
-  
+
   var emphasis = props.join(" ");
   textToolParams.emphasis = emphasis;
   if (window.newTextItem) {
-    window.newTextItem.fontWeight = emphasis
+    window.newTextItem.fontWeight = emphasis;
   }
 }
 
-[].slice.call(document.querySelectorAll("#emphasisButtons input")).forEach(function (emphasisButton) {
-  emphasisButton.oninput = emphasisButton.onclick = onEmphasisButtonChange;
-});
+[].slice
+  .call(document.querySelectorAll("#emphasisButtons input"))
+  .forEach(function(emphasisButton) {
+    emphasisButton.oninput = emphasisButton.onclick = onEmphasisButtonChange;
+  });
 
 var textPreview = document.getElementById("textPreview");
 textPreview.onkeyup = function() {

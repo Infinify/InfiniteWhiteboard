@@ -1,6 +1,9 @@
 if (!org) var org = {};
 if (!org.polymaps) org.polymaps = {};
 (function (po) {
+    var matches = function(el, selector) {
+        return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+    };
 
     po.version = "2.5.1"; // semver.org
 
@@ -1773,7 +1776,7 @@ if (!org.polymaps) org.polymaps = {};
             if (e.ctrlKey || e.altKey || e.metaKey) return;
 
             // allow arrow keys to be used in the chat message field
-            if ($(document.activeElement).is('input, textarea, div[contenteditable]')) {
+            if (matches(document.activeElement, 'input, textarea, div[contenteditable]')) {
                 return;
             }
 
@@ -1826,7 +1829,7 @@ if (!org.polymaps) org.polymaps = {};
         }
 
         function keyup(e) {
-            if ($(document.activeElement).is('input, textarea')) {
+            if (matches(document.activeElement, 'input, textarea')) {
                 return;
             }
             last = Date.now();
@@ -1853,7 +1856,7 @@ if (!org.polymaps) org.polymaps = {};
         }
 
         function keypress(e) {
-            if ($(document.activeElement).is('input, textarea')) {
+            if (matches(document.activeElement, 'input, textarea')) {
                 return;
             }
             switch (e.charCode) {

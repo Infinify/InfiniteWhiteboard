@@ -33,6 +33,44 @@ function removeUser() {
   });
 }
 
+function aclUser(data) {
+  var userName = data.userName,
+    admin = data.admin,
+    edit = data.edit,
+    chat = data.chat,
+    view = data.view,
+    userId = data.userId;
+
+  return '<div class="aclRule" id="aclUser-' +
+    userName +
+    '">' +
+    '<div class="aclUsername">' +
+    userName +
+    "</div>" +
+    '<select class="aclSelect" data-username="' +
+    userName +
+    '">' +
+    '<option value="admin" ' +
+    admin +
+    ">admin (can invite)</option>" +
+    '<option value="edit" ' +
+    edit +
+    ">can edit and chat</option>" +
+    '<option value="chat" ' +
+    chat +
+    ">can view and chat</option>" +
+    '<option value="view" ' +
+    view +
+    ">can view</option>" +
+    "</select>" +
+    '<button class="removeUserButton" data-userid="' +
+    userId +
+    '" data-username="' +
+    userName +
+    '"> &ndash; </button>' +
+    "</div>";
+}
+
 aclUsers = [];
 var aclWrapper = document.getElementById("aclWrapper");
 var aclPublicAccess = document.getElementById("aclPublicAccess");
@@ -71,7 +109,7 @@ window.populateAcl = function populateAcl() {
 
       aclUsers.push(userName);
 
-      users += ss.tmpl["sharingSettings-aclUser"].render(data);
+      users += aclUser(data);
     }
     aclWrapper.innerHTML = users;
 

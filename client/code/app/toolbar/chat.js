@@ -48,6 +48,31 @@ function clickHandler(e) {
   return false;
 }
 
+function messageTemplate(data) {
+  var href = data.href,
+    user = data.user,
+    time = data.time,
+    message = data.message;
+
+  return '<div class="messageElement">' +
+    "<p>" +
+    '<a href="' +
+    href +
+    '" tabindex="-1" title="Jump to message origin"><span class="location"><i class="icon-target target"></i></span></a>' +
+    '<span class="user" title="Fly to message origin WITH ANIMATION =)">' +
+    user +
+    "</span>" +
+    '<span class="time" style="float: right;">' +
+    time +
+    "</span>" +
+    "</p>" +
+    '<p class="message">' +
+    message +
+    "</p>" +
+    '<p style="clear:both;"></p>' +
+    "</div>";
+}
+
 function renderMessage(messageContainer, message, pending) {
   var tm = new Date(
     message.timemachine || message.timestamp || message.timeStamp
@@ -55,9 +80,8 @@ function renderMessage(messageContainer, message, pending) {
   var d = new Date(message.timeStamp);
   var sender = message.sender;
   var messageElement = htmlToElement(
-    ss.tmpl["chat-message"].render({
+    messageTemplate({
       time: d.toString("d.M.yyyy hh:mm"),
-      timemachine: tm.toString("d.M.yyyy hh:mm"),
       message: message.message,
       href: message.location,
       user: sender
@@ -154,12 +178,51 @@ function updateCount(wb) {
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
 var chatLogs = document.getElementById("chatLogs");
 
+function chatTemplate(data) {
+  var chatlogId = data.chatlogId,
+    whiteboardOwner = data.whiteboardOwner,
+    chatlogDisplayName = data.chatlogDisplayName,
+    chatlogName = data.chatlogName,
+    owner = data.owner;
+
+  return '<div class="chatlog" id="chatlog-' +
+    chatlogId +
+    '">' +
+    '<div class="chatlogHeader">' +
+    '<div class="whiteboardOwner">' +
+    '<span style="font-size:10px">Owner</span><br>' +
+    whiteboardOwner +
+    "</div>" +
+    '<div class="chatlogName">' +
+    '<span style="font-size:10px">Whiteboard</span><br>' +
+    chatlogDisplayName +
+    "</div>" +
+    '<div class="onlineUsers">' +
+    '<span class="userCount">? User(s) online</span>' +
+    '<div class="userList" style="display: none"></div>' +
+    "</div>" +
+    (owner ? '<button id="sharingSettingsButton" class="whiteButton">Share</button>' : "") +
+    "</div>" +
+    '<div class="messageContainer scrollbarStyle1' +
+    (owner ? " sharedChatContainer" : "") +
+    '"></div>' +
+    '<div class="chatField">' +
+    '<textarea id="' +
+    chatlogName +
+    '-messageField" class="messageField" tabindex="1"></textarea>' +
+    '<a id="' +
+    chatlogName +
+    '-submitMessageButton" class="submitMessageButton" href="#" tabindex="2" data-fieldId="' +
+    chatlogName +
+    '"><i class="icon-ok-circled"></i></a>' +
+    "</div>" +
+    "</div>";
+}
+
 function initChat(whiteboard) {
-  var template = whiteboard &&
+  var isOwner = whiteboard &&
     (window.loggedInUserIsOwner(whiteboard) ||
-      window.userIsAdminOfCurrentWhiteboard(whiteboard))
-    ? "chat-chat_owner"
-    : "chat-chat";
+      window.userIsAdminOfCurrentWhiteboard(whiteboard));
 
   var comps = re.exec(whiteboard);
   var whiteboardName = comps[2];
@@ -171,7 +234,7 @@ function initChat(whiteboard) {
   }
 
   var currentChatLog = htmlToElement(
-    ss.tmpl[template].render({
+    chatTemplate({
       chatlogId: whiteboard,
       chatlogName: whiteboard,
       chatlogDisplayName: (
@@ -180,7 +243,7 @@ function initChat(whiteboard) {
           : decodeURIComponent(whiteboardName)
       ),
       whiteboardOwner: owner,
-      submitMessageIcon: "icon-ok-circled"
+      owner: isOwner
     })
   );
 

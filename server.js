@@ -94,13 +94,7 @@ module.exports = id => {
   ss.http.route("/", (req, res) => {
     res.serveClient("ui");
   });
-
-  // Code Formatters
-  ss.client.formatters.add(require("ss-stylus"));
-
-  // Use server-side compiled Hogan (Mustache) templates. Others engines available
-  ss.client.templateEngine.use(require("ss-hogan"));
-
+  
   if (SS_PACK) {
     setImmediate(() => {
       process.exit(0);

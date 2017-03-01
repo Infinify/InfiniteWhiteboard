@@ -19,8 +19,6 @@
     "log-buffer": "*",
     "mongodb": "^2.2.22",
     "redis": "^2.6.5",
-    "socketstream": "github:msand/socketstream#fix-transport-bundling",
-    "ss-hogan": "*",
-    "ss-stylus": "*"
+    "socketstream": "github:msand/socketstream#fix-transport-bundling"
   }
 }

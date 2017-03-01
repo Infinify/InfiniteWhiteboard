@@ -41,7 +41,6 @@ module.exports = id => {
       "libs/spin.js",
       "libs/jquery.linkify-1.0-min.js",
       "libs/jquery.fastLiveFilter.js",
-      "libs/load-image.all.min.js",
       "libs/paper.js",
       "libs/mordernizr.js",
       "libs/modernizr-pointerevents.min.js",

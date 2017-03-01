@@ -216,7 +216,7 @@
       }
       else {
         self.colorRGB = color;
-        self.colorHex = self.rgbToHex(self.colorRGB);
+        self.colorHex = color && self.rgbToHex(color);
       }
 
       $colorInner.style.backgroundColor = self.colorHex;

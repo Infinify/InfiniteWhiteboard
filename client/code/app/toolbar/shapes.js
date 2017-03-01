@@ -23,6 +23,7 @@ currentShapeStrokeColorDiv.onchange = function colorPickedHandlerStroke() {
   var color = currentShapeStrokeColor.colorHex;
   colorPickedHandler(color, "stroke");
 };
+currentShapeStrokeColor.setColor(window.initColor);
 
 var shapeStrokeWidth = document.getElementById("shapeStrokeWidth");
 shapeStrokeWidth.onchange = function() {
@@ -38,7 +39,9 @@ shapes.querySelector(".toolHeader").onclick = function() {
   window.currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
 
   var color = currentShapeFillColor.colorHex;
-  window.currentStrokeStyle.fillColor = color && new paper.Color(color);
+  window.currentStrokeStyle.fillColor = color
+    ? new paper.Color(color)
+    : undefined;
 
   color = currentShapeStrokeColor.colorHex;
   window.currentStrokeStyle.strokeColor = color && new paper.Color(color);

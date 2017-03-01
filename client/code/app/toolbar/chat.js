@@ -201,7 +201,9 @@ function chatTemplate(data) {
     '<span class="userCount">? User(s) online</span>' +
     '<div class="userList" style="display: none"></div>' +
     "</div>" +
-    (owner ? '<button id="sharingSettingsButton" class="whiteButton">Share</button>' : "") +
+    (owner
+      ? '<button class="sharingSettingsButton whiteButton">Share</button>'
+      : "") +
     "</div>" +
     '<div class="messageContainer scrollbarStyle1' +
     (owner ? " sharedChatContainer" : "") +

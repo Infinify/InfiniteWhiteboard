@@ -50,9 +50,9 @@ function loginSuccessHandler() {
   displayName.textContent = usernameField.value;
 
   newWhiteboardFieldText.textContent = "Create new personal whiteboard";
-  
+
   privateBoards.style.display = "";
-  
+
   sharedBoards.style.display = "";
 
   window.updateWhiteboardLists();

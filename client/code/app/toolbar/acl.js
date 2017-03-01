@@ -204,7 +204,7 @@ document.getElementById("addUserButton").onclick = function() {
 var dialog = document.getElementById("sharingSettingsDialog");
 var dialogStyle = dialog.style;
 document.addEventListener("click", function(event) {
-  if (event.target.id === "sharingSettingsButton") {
+  if (event.target.classList.contains("sharingSettingsButton")) {
     dialogStyle.display = "";
   }
 });

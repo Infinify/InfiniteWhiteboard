@@ -674,7 +674,7 @@ var tool;
     }
     var fill = hitResult && hitResult.item.fillColor;
     var stroke = hitResult && hitResult.item.strokeColor;
-    window.currentStrokeStyle.fillColor = fill || "";
+    window.currentStrokeStyle.fillColor = fill;
     window.currentStrokeStyle.strokeColor = stroke || "white";
     document.dispatchEvent(new CustomEvent("setColor"));
     changePos(event.point);

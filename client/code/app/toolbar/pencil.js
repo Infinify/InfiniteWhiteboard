@@ -16,45 +16,16 @@ function colorPickedHandler(color, which) {
   document.dispatchEvent(new CustomEvent("setColor"));
 }
 
-colorPickedHandler(window.initColor, "stroke");
-
 var currentFillColor = document.getElementById("currentFillColor");
-var fill = tinycolorpicker(currentFillColor, { color: window.initColor });
+var fill = tinycolorpicker(currentFillColor);
 currentFillColor.onchange = function colorPickedHandlerFill() {
   colorPickedHandler(fill.colorHex, "fill");
 };
 
 var currentStrokeColor = document.getElementById("currentStrokeColor");
-var stroke = tinycolorpicker(currentStrokeColor, { color: window.initColor });
+var stroke = tinycolorpicker(currentStrokeColor);
 currentStrokeColor.onchange = function colorPickedHandlerFill() {
   colorPickedHandler(stroke.colorHex, "stroke");
-};
-
-var colorPickerToolButton = document.getElementById("colorPickerTool");
-var drawToolButton = document.getElementById("drawTool");
-var pencil = document.getElementById("pencil");
-pencil.querySelector(".toolHeader").onclick = function() {
-  if (pencil.classList.contains("open")) {
-    nopTool.activate();
-    return;
-  }
-
-  window.currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
-
-  var color = fill.colorHex;
-  window.currentStrokeStyle.fillColor = color && new paper.Color(color);
-
-  color = stroke.colorHex;
-  window.currentStrokeStyle.strokeColor = color && new paper.Color(color);
-
-  if (
-    !colorPickerToolButton.classList.contains("active") &&
-      !drawToolButton.classList.contains("active")
-  ) {
-    window.drawTool.activate();
-  }
-  delete window.timestamp;
-  window.timeAnimation();
 };
 
 var palette = document.querySelector(".palette");
@@ -70,19 +41,19 @@ palette.onclick = function(event) {
   strokeColor = strokeColor && strokeColor.toCSS
     ? strokeColor.toCSS()
     : strokeColor;
-  fillColor && fill.setColor(fillColor);
-  strokeColor && stroke.setColor(strokeColor);
+  fill.setColor(fillColor);
+  stroke.setColor(strokeColor);
 };
 
 document.addEventListener("setColor", function() {
   var fillColor = currentStrokeStyle.fillColor;
-  fillColor = fillColor && fillColor.toCSS ? fillColor.toCSS() : fillColor;
+  fillColor = fillColor && fillColor.toCSS ? fillColor.toCSS() : "";
   var strokeColor = currentStrokeStyle.strokeColor;
   strokeColor = strokeColor && strokeColor.toCSS
     ? strokeColor.toCSS()
     : strokeColor;
-  fillColor && fill.setColor(fillColor);
-  strokeColor && stroke.setColor(strokeColor);
+  fill.setColor(fillColor);
+  stroke.setColor(strokeColor);
   palette.insertBefore(
     htmlToElement(
       "<li>" +
@@ -97,3 +68,34 @@ document.addEventListener("setColor", function() {
     palette.firstChild
   );
 });
+
+colorPickedHandler(window.initColor, "stroke");
+
+var colorPickerToolButton = document.getElementById("colorPickerTool");
+var drawToolButton = document.getElementById("drawTool");
+var pencil = document.getElementById("pencil");
+pencil.querySelector(".toolHeader").onclick = function() {
+  if (pencil.classList.contains("open")) {
+    nopTool.activate();
+    return;
+  }
+
+  window.currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
+
+  var color = fill.colorHex;
+  window.currentStrokeStyle.fillColor = color
+    ? new paper.Color(color)
+    : undefined;
+
+  color = stroke.colorHex;
+  window.currentStrokeStyle.strokeColor = color && new paper.Color(color);
+
+  if (
+    !colorPickerToolButton.classList.contains("active") &&
+      !drawToolButton.classList.contains("active")
+  ) {
+    window.drawTool.activate();
+  }
+  delete window.timestamp;
+  window.timeAnimation();
+};

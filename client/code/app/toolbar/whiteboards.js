@@ -26,7 +26,7 @@ var sharedBoardsListContainer = document.getElementById(
 );
 
 var initChat = require("./chat");
-var populateAcl = require('./acl');
+var populateAcl = require("./acl");
 var chatLogs = document.getElementById("chatLogs");
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
 window.updateWhiteboardLists = function updateWhiteboardLists() {
@@ -124,13 +124,13 @@ window.updateWhiteboardLists = function updateWhiteboardLists() {
     renderHtml(html, sharedBoardsListContainer);
 
     initChat(window.whiteboard);
-    
+
     populateAcl();
 
     var current = window.whiteboard;
     var hasAccess = anyone.some(function(acl) {
-        return acl.resource === current;
-      }) || publicBoards.some(function(board) {
+      return acl.resource === current;
+    }) || publicBoards.some(function(board) {
         return board.name === current;
       });
     if (!hasAccess) {
@@ -261,11 +261,9 @@ function changeWhiteboard(toWhiteboard) {
     err && console.log(err);
   });
 
-  [].slice
-    .call(chatLogs.children)
-    .forEach(function(log) {
-      log.style.display = "none";
-    });
+  [].slice.call(chatLogs.children).forEach(function(log) {
+    log.style.display = "none";
+  });
 
   if (!log) {
     initChat(toWhiteboard);
@@ -275,8 +273,8 @@ function changeWhiteboard(toWhiteboard) {
   log.style.display = "";
 
   document.dispatchEvent(new CustomEvent("clearCanvas"));
-  
-  loadWhiteboard(window.whiteboard);
+
+  loadWhiteboard(toWhiteboard);
 
   populateAcl();
 }
@@ -322,16 +320,16 @@ function parseUrl(url) {
   //noinspection JSUnusedAssignment
   if (
     path.length > 3 && (t = parseInt(path[3], 10)) ||
-    path.length > 2 && (t = parseInt(path[2], 10))
+      path.length > 2 && (t = parseInt(path[2], 10))
   ) {
     window.timestamp = t;
   }
   window.whiteboard = "_global";
   if (
     path.length > 2 &&
-    path[1].length > 1 &&
-    path[2].length > 0 &&
-    !parseInt(path[2], 10)
+      path[1].length > 1 &&
+      path[2].length > 0 &&
+      !parseInt(path[2], 10)
   ) {
     window.whiteboard = path[1] + "/" + path[2];
   } else if (path.length > 1 && path[1].length > 0) {

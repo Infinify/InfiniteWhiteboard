@@ -18,8 +18,8 @@ function initializeContentEditableUI(event) {
   var detail = event.detail;
   var html = detail.html;
   var edit = detail.edit;
+  var htmlElement = html.elem;
 
-  var htmlElement = document.getElementById(html.elemId);
   htmlElement.contentEditable = "true";
 
   function removeContentEditableUI() {

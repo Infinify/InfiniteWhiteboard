@@ -1,19 +1,3 @@
-window.cutHex = function cutHex(h) {
-  return h.charAt(0) === "#" ? h.substring(1, 7) : h;
-};
-
-window.hexToR = function hexToR(h) {
-  return parseInt(cutHex(h).substring(0, 2), 16);
-};
-
-window.hexToG = function hexToG(h) {
-  return parseInt(cutHex(h).substring(2, 4), 16);
-};
-
-window.hexToB = function hexToB(h) {
-  return parseInt(cutHex(h).substring(4, 6), 16);
-};
-
 /**
  * @param {String} html representing a single element
  * @return {Element}
@@ -54,7 +38,7 @@ require("/toolbar/acl");
 require("/toolbar/whiteboards");
 require("/toolbar/timeline");
 require("/toolbar/places");
-var drawToolHandler = require("/drawToolHandler");
+
 var tools = [
   "login",
   "pencil",
@@ -65,6 +49,7 @@ var tools = [
   "places",
   "interact"
 ];
+
 var toolClasses = tools.reduce(
   function(map, tool) {
     map[tool] = document.getElementById(tool).classList;
@@ -73,21 +58,25 @@ var toolClasses = tools.reduce(
   {}
 );
 
+var drawToolHandler = require("/drawToolHandler");
 document.getElementById("toolbarWrapper").onclick = function onToolClick(
   event
 ) {
   var target = event.target;
   var currentTarget = event.currentTarget;
+
   while (!target.classList.contains("toolHeader") && target !== currentTarget) {
     target = target.parentNode;
   }
+
   if (!target.classList.contains("toolHeader")) {
     return;
   }
+
   target = target.parentNode;
   target.classList.toggle("open");
-  var id = target.id;
 
+  var id = target.id;
   tools.forEach(function(tool) {
     if (id !== tool) {
       var classes = toolClasses[tool];
@@ -99,12 +88,14 @@ document.getElementById("toolbarWrapper").onclick = function onToolClick(
 
   drawToolHandler();
 };
+
 function onHeaderHover() {
   var toolIcon = this.querySelector(".toolIcon");
   if (toolIcon) {
     toolIcon.classList.toggle("iconHover");
   }
 }
+
 [].slice
   .call(document.querySelectorAll(".toolHeader"))
   .forEach(function(toolHeader) {

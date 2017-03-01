@@ -217,5 +217,3 @@ document.addEventListener("clearCanvas", function() {
   dialogStyle.display = "none";
   populateAcl();
 });
-
-populateAcl();

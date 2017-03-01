@@ -373,6 +373,8 @@ parseUrl();
 
 loadWhiteboard(window.whiteboard);
 
+populateAcl();
+
 ss.rpc("whiteboards.changeWhiteboard", !1, window.whiteboard, function(err) {
   if (err) {
     console.log(err);

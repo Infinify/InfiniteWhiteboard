@@ -128,9 +128,13 @@ window.updateWhiteboardLists = function updateWhiteboardLists() {
     populateAcl();
 
     var current = window.whiteboard;
-    var hasAccess = anyone.some(function(acl) {
+    var hasAccess = user.some(function(acl) {
       return acl.resource === current;
-    }) || publicBoards.some(function(board) {
+    }) || anyone.some(function(acl) {
+        return acl.resource === current;
+      }) || privateBoards.some(function(board) {
+        return board.name === current;
+      }) || publicBoards.some(function(board) {
         return board.name === current;
       });
     if (!hasAccess) {

@@ -3,7 +3,7 @@
  * @return {Element}
  */
 window.htmlToElement = function htmlToElement(html) {
-  var tmp = document.implementation.createHTMLDocument();
+  var tmp = document.implementation.createHTMLDocument("");
   tmp.body.innerHTML = html;
   return tmp.body.firstChild;
 };
@@ -13,7 +13,7 @@ window.htmlToElement = function htmlToElement(html) {
  * @return {NodeList}
  */
 window.htmlToElements = function htmlToElements(html) {
-  var tmp = document.implementation.createHTMLDocument();
+  var tmp = document.implementation.createHTMLDocument("");
   tmp.body.innerHTML = html;
   return tmp.body.childNodes;
 };

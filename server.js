@@ -35,7 +35,7 @@ module.exports = id => {
 
   ss.client.define("ui", {
     view: "ui.html",
-    css: ["style.css", "ui.css", "toolbar/", "libs/", "chat.css", "font.css"],
+    css: ["ui.css", "toolbar/", "libs/", "chat.css", "font.css"],
     code: [
       "libs/polymaps.js",
       "libs/spin.js",
@@ -59,6 +59,7 @@ module.exports = id => {
       "libs/indexeddbshim-UnicodeIdentifiers.js",
       "libs/dexie.js",
       "libs/classList.js",
+      "libs/custom-event-polyfill.js",
       "libs/tinycolorpicker.js",
       "app/toolbar/acl.js",
       "app/toolbar/chat.js",

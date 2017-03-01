@@ -12,11 +12,10 @@
     -moz-box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
     box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
     border: 1px solid #ccc;
-    font-family: 'Helvetica',Helvetica,Arial,sans-serif;
-    font-size: 13px;
     color: #666;
     text-decoration: none;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d3d3d', endColorstr='#212121', GradientType=0)
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d3d3d",endColorstr="#212121",GradientType=0);
+    font: 13px "Helvetica",Helvetica,Arial,sans-serif
 }
 
 .chatlogHeader {
@@ -35,7 +34,7 @@
 
 .messageContainer {
     right: 0;
-    top: 124px;
+    top: 135px;
     bottom: 49px;
     width: 240px;
     position: absolute;
@@ -183,7 +182,7 @@
     background: -o-linear-gradient(top,#fff 5%,#f6f6f6 100%);
     background: -ms-linear-gradient(top,#fff 5%,#f6f6f6 100%);
     background: linear-gradient(to bottom,#fff 5%,#f6f6f6 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#f6f6f6",GradientType=0);
     background-color: #fff;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -191,10 +190,9 @@
     border: 1px solid #dcdcdc;
     cursor: pointer;
     color: #666;
-    font-family: arial,sans-serif;
-    font-size: 15px;
     padding: 6px 37px;
-    text-shadow: 0 1px 0 #fff
+    text-shadow: 0 1px 0 #fff;
+    font: 15px arial,sans-serif
 }
 
 .whiteButton:hover {
@@ -204,7 +202,7 @@
     background: -o-linear-gradient(top,#f6f6f6 5%,#fff 100%);
     background: -ms-linear-gradient(top,#f6f6f6 5%,#fff 100%);
     background: linear-gradient(to bottom,#f6f6f6 5%,#fff 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff',GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f6f6f6",endColorstr="#ffffff",GradientType=0);
     background-color: #f6f6f6
 }
 

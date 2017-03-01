@@ -1,8 +1,88 @@
+#mfsb,body {
+    background: #fff
+}
+
 body {
-    font-family: 'Ubuntu',Helvetica,Arial,sans-serif;
-    background: #fff;
+    font-family: "Ubuntu",Helvetica,Arial,sans-serif;
     overflow: hidden;
     outline: none
+}
+
+#chat,#html,#map,#toolbarWrapper,#uiWrapper,.canvas,.htmlItem,svg.map {
+    position: absolute
+}
+
+#mfsb {
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 5px 6px;
+    margin: 4px 0
+}
+
+#now {
+    display: inline-block
+}
+
+#html,#map,#uiWrapper,.canvas {
+    left: 0;
+    top: 0
+}
+
+#html,#map,#uiWrapper,.canvas,.map,body,html {
+    height: 100%;
+    width: 100%
+}
+
+#html,.canvas {
+    overflow: hidden
+}
+
+#html,#map,.canvas,svg.map.drawingMode {
+    pointer-events: none
+}
+
+.compass .back {
+    fill: #fff;
+    fill-opacity: .8
+}
+
+.compass .fore {
+    stroke: #999;
+    stroke-width: 1px
+}
+
+.compass rect.back.fore {
+    fill: #999;
+    fill-opacity: .3;
+    stroke: #eee;
+    stroke-width: 1px;
+    shape-rendering: crispEdges
+}
+
+.compass .direction {
+    fill: none
+}
+
+.compass .chevron {
+    fill: none;
+    stroke: #999;
+    stroke-width: 5px
+}
+
+.compass .zoom .chevron {
+    stroke-width: 4px
+}
+
+.compass .active .chevron,.compass .chevron.active {
+    stroke: #333
+}
+
+.compass.active .active .direction {
+    fill: #999
+}
+
+:focus {
+    outline: 0
 }
 
 .clear {
@@ -12,29 +92,29 @@ body {
     padding: 0
 }
 
-#html.active {
-    pointer-events: all;
+#html.active,g.zoom {
+    pointer-events: all
 }
 
 .toolActivator.active {
-    font-weight: bold;
+    font-weight: 700
 }
 
 .active #htmlContainer {
-    z-index: 1;
+    z-index: 1
 }
 
 #paperToolsContainer {
     text-align: center;
     line-height: 1.5;
-    clear: both;
+    clear: both
 }
 
 .cursor-move {
     cursor: move
 }
 
-.toolContent {
+.no-pointer-events svg.map.drawingMode,.toolContent,svg.map.drawingMode>rect {
     display: none
 }
 
@@ -87,29 +167,24 @@ body {
 li,ul {
     position: relative;
     display: inline;
-    -webkit-margin-before: 0;
-    -webkit-margin-after: 0;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
-    -webkit-padding-start: 0
 }
 
 .scrollbarStyle1::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     border-radius: 10px;
-    background-color: #fff
+    background: #fff
 }
 
 .scrollbarStyle1::-webkit-scrollbar {
     width: 7px;
-    background-color: #e4e4e4;
-    border-radius: 10px
+    border-radius: 10px;
+    background: #e4e4e4
 }
 
 .scrollbarStyle1::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color: #3d3d3d
+    background: #3d3d3d
 }
 
 #connectionDialogSpinner {
@@ -117,7 +192,7 @@ li,ul {
 }
 
 #reloadWarning {
-    color: lightcoral
+    color: #f08080
 }
 
 #reconnectHeader {
@@ -125,34 +200,29 @@ li,ul {
 }
 
 .dialog {
-  position: absolute;
-  z-index: 100;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%,-50%)
 }
 
 .connectionDialog {
-    font-family: 'Ubuntu',Helvetica,Arial,sans-serif;
     padding: 10px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    background-color: #fff;
     box-shadow: 1px 0 15px 0 rgba(50,50,50,.5);
     border: 1px solid #bdbdbd;
     text-align: center;
-    font-size: 12px;
     max-width: 280px;
+    font: 12px "Ubuntu",Helvetica,Arial,sans-serif;
+    background: #fff
 }
 
 .connectionDialog p {
     margin: 10px
-}
-
-.no-pointer-events svg.map.drawingMode,svg.map.drawingMode>rect {
-    display: none
 }
 
 .ui-widget-overlay {
@@ -164,8 +234,4 @@ li,ul {
     height: 100%;
     background: #aaa;
     opacity: .3
-}
-
-g.zoom {
-    pointer-events: all
 }

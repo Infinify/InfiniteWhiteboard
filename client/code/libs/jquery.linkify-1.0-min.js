@@ -71,7 +71,7 @@
     return Object.prototype.toString.call(obj).replace(/^\[object (.+)\]$/, '$1').toLowerCase();
   }
   var parseHTML = function(str) {
-    var tmp = document.implementation.createHTMLDocument();
+    var tmp = document.implementation.createHTMLDocument("");
     tmp.body.innerHTML = str;
     return tmp.body;
   };
@@ -122,7 +122,7 @@
               preHtml,
               parent,
               ref;
-            tmpCont = tmpCont || document.implementation.createHTMLDocument().body;
+            tmpCont = tmpCont || document.implementation.createHTMLDocument("").body;
             tmpCont.innerHTML = '';
             tmpCont.appendChild(node.cloneNode(false));
             var tmpContNodes = tmpCont.childNodes;

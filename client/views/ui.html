@@ -100,7 +100,7 @@
             </select>
           </div>
           
-          <input type="range" min="1" max="50" value="10" id="pencilStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+          <input type="range" min="1" max="50" value="10" id="pencilStrokeWidth" />
           <div style="font-size:12px; margin-bottom: 10px;">Width</div>
           
           <div style="text-align: center">
@@ -134,7 +134,7 @@
             </div>
           </div>
           
-          <input type="range" min="1" max="50" value="10" id="shapeStrokeWidth" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+          <input type="range" min="1" max="50" value="10" id="shapeStrokeWidth" />
           <div style="font-size:12px; margin-bottom: 10px;">Width</div>
 
           <div id="paperToolsContainer">
@@ -235,7 +235,7 @@
           <div id="timeDiv">
             <div>&nbsp;</div>
             <span id="rtspeed">Reverse</span><span id="maxspeed">Forward</span>
-            <input type="range" id="timerange" min="-16" max="16" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+            <input type="range" id="timerange" min="-16" max="16" />
 
             <p id="controlButtons">
               <button id="firstPathButton" class="timemachineButton1" title="First path"><i class="icon-fast-backward"></i></button>
@@ -245,7 +245,7 @@
 
             <div id="now"></div>
 
-            <input type="range" id="timelineslide" min="0" max="100" value="0" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+            <input type="range" id="timelineslide" min="0" max="100" value="0" />
 
             <span id="timeLine">Timeline</span>
           </div>
@@ -266,7 +266,8 @@
       
       <div id="interact" class="tool">
         <h3 class="toolHeader">
-          <svg class="toolIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30px" style="margin-left: 2px;margin-right: 5px;top: inherit;transform: translateY(8px);">
+          <svg class="toolIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30px" height="30px" 
+               style="margin-left: 2px;margin-right: 5px;top: inherit;transform: translateY(8px);">
             <title>HTML5 Logo Badge</title>
             <path fill="#E34F26" d="M71,460 L30,0 481,0 440,460 255,512"></path>
             <path fill="#EF652A" d="M256,472 L405,431 440,37 256,37"></path>
@@ -308,9 +309,9 @@
         <input type="hidden" class="colorInput"/>
       </div>
 
-      <div id="emphasisButtons" style="display:inline;">
-        <input type="checkbox" class="ui-helper-hidden-accessible" id="emphasisBold"><label for="emphasisBold"><i class="icon-bold-1"></i></label>
-        <input type="checkbox" class="ui-helper-hidden-accessible" id="emphasisItalic"><label for="emphasisItalic"><i class="icon-italic"></i></label>
+      <div id="emphasisButtons">
+        <input type="checkbox" class="emphasisButtons" id="emphasisBold"><label for="emphasisBold"><i class="icon-bold-1"></i></label>
+        <input type="checkbox" class="emphasisButtons" id="emphasisItalic"><label for="emphasisItalic"><i class="icon-italic"></i></label>
       </div>  
 
       <br />
@@ -318,7 +319,7 @@
 
       <span>Text size <span id="currentFontSizeDisplay" style="font-weight:bold;">40px</span></span>
       <hr class="dottedHr">
-      <input type="range" min="10" max="250" value="40" id="textSizeSlider" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" />
+      <input type="range" min="10" max="250" value="40" id="textSizeSlider" />
 
       <button id="newTextOKButton" style="position:relative;">Ok!</button>
       <button id="newTextCancelButton" style="position:relative;">Cancel</button>

@@ -105,6 +105,13 @@ function findScreenCoords(mouseEvent) {
 }
 var indexInX, indexInY;
 var mfsb = document.getElementById("mfsb");
+if (
+  /mobi/.test(
+    (navigator.userAgent || navigator.vendor || window.opera).toLowerCase()
+  )
+) {
+  mfsb.style.display = "none";
+}
 
 window.toggleMFS = function(event) {
   var old = localStorage.mfs && JSON.parse(localStorage.mfs) ||

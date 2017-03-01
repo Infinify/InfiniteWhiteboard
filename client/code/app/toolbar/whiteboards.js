@@ -25,11 +25,15 @@ var sharedBoardsListContainer = document.getElementById(
   "sharedBoardsListContainer"
 );
 
+var initChat = require("./chat");
+var populateAcl = require('./acl');
+var chatLogs = document.getElementById("chatLogs");
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
-window.updateWhiteboardLists = function(callback, checkAccess) {
+window.updateWhiteboardLists = function updateWhiteboardLists() {
   sharedBoardsListContainer.innerHTML = "";
   privateBoardsContainer.innerHTML = "";
   publicBoardsContainer.innerHTML = "";
+  chatLogs.innerHTML = "";
 
   ss.rpc("whiteboards.getWhiteboardNames", function(err, response) {
     if (err || !response) {
@@ -119,29 +123,21 @@ window.updateWhiteboardLists = function(callback, checkAccess) {
     }
     renderHtml(html, sharedBoardsListContainer);
 
-    callback(response);
+    initChat(window.whiteboard);
+    
+    populateAcl();
 
-    if (checkAccess) {
-      var current = window.whiteboard;
-      var hasAccess = anyone.some(function(acl) {
-          return acl.resource === current;
-        }) || publicBoards.some(function(board) {
-          return board.name === current;
-        });
-      if (!hasAccess) {
-        // subscribe to global chat and pubsub
-        document.getElementById("chatLogs").innerHTML = "";
-        changeWhiteboard("_global");
-      }
+    var current = window.whiteboard;
+    var hasAccess = anyone.some(function(acl) {
+        return acl.resource === current;
+      }) || publicBoards.some(function(board) {
+        return board.name === current;
+      });
+    if (!hasAccess) {
+      changeWhiteboard("_global");
     }
   });
 };
-
-var initChat = require("./chat");
-window.updateWhiteboardLists(function() {
-  // Update whiteboard ownership and admin access data before initializing chat
-  initChat(window.whiteboard);
-});
 
 var newWhiteboardNameField = document.getElementById("newWhiteboardNameField");
 var whiteboardsHeader = document
@@ -168,9 +164,8 @@ function newWhiteboard() {
     );
 
     if (!err) {
-      window.updateWhiteboardLists(function() {
-        window.changeWhiteboard(name);
-      });
+      changeWhiteboard(name);
+      updateWhiteboardLists();
     }
   });
 }
@@ -267,7 +262,7 @@ function changeWhiteboard(toWhiteboard) {
   });
 
   [].slice
-    .call(document.getElementById("chatLogs").children)
+    .call(chatLogs.children)
     .forEach(function(log) {
       log.style.display = "none";
     });
@@ -282,6 +277,8 @@ function changeWhiteboard(toWhiteboard) {
   document.dispatchEvent(new CustomEvent("clearCanvas"));
   
   loadWhiteboard(window.whiteboard);
+
+  populateAcl();
 }
 
 function whiteboardListClickHandler() {
@@ -309,7 +306,6 @@ window.userIsAdminOfCurrentWhiteboard = function() {
     return whiteboard.resource === name;
   });
 };
-
 
 function parseUrl(url) {
   var query, pairs, path, tmp, il, i, t;
@@ -371,9 +367,9 @@ window.onpopstate = function() {
 
 parseUrl();
 
-loadWhiteboard(window.whiteboard);
+updateWhiteboardLists();
 
-populateAcl();
+loadWhiteboard(window.whiteboard);
 
 ss.rpc("whiteboards.changeWhiteboard", !1, window.whiteboard, function(err) {
   if (err) {

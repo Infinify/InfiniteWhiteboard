@@ -76,7 +76,7 @@ function aclUser(data) {
 aclUsers = [];
 var aclPublicAccess = document.getElementById("aclPublicAccess");
 var noPublicAccessOption = aclPublicAccess.querySelector("option[value=none]");
-window.populateAcl = function populateAcl() {
+module.exports = function populateAcl() {
   aclWrapper.innerHTML = "";
 
   document.getElementById("shareLinkURL").value = location.origin +
@@ -215,5 +215,4 @@ document.getElementById("closeAclDialogButton").onclick = function() {
 
 document.addEventListener("clearCanvas", function() {
   dialogStyle.display = "none";
-  populateAcl();
 });

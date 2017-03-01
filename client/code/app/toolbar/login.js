@@ -1,5 +1,3 @@
-var initChat = require("./chat");
-
 var loginSpinner = document.getElementById("loginSpinner");
 var spinnerText = loginSpinner.querySelector(".spinnerText");
 
@@ -30,7 +28,6 @@ var privateBoards = document.getElementById("privateBoards");
 var sharedBoards = document.getElementById("sharedBoards");
 var logoutButton = document.getElementById("logoutButton");
 var displayName = document.getElementById("displayName");
-var chatLogs = document.getElementById("chatLogs");
 var loginTool = document.getElementById("login");
 
 function loginSuccessHandler() {
@@ -53,15 +50,12 @@ function loginSuccessHandler() {
   displayName.textContent = usernameField.value;
 
   newWhiteboardFieldText.textContent = "Create new personal whiteboard";
+  
+  privateBoards.style.display = "";
+  
+  sharedBoards.style.display = "";
 
-  window.updateWhiteboardLists(function() {
-    privateBoards.style.display = "";
-    sharedBoards.style.display = "";
-    chatLogs.innerHTML = "";
-
-    initChat(window.whiteboard);
-    populateAcl();
-  });
+  window.updateWhiteboardLists();
 
   setTimeout(
     function() {
@@ -163,7 +157,7 @@ logoutButton.onclick = function() {
 
     userObject.hash = userObject.id = userObject.username = null;
 
-    window.updateWhiteboardLists(function(boards) {}, true);
+    window.updateWhiteboardLists();
   });
 };
 

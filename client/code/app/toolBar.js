@@ -3,9 +3,9 @@
  * @return {Element}
  */
 window.htmlToElement = function htmlToElement(html) {
-  var template = document.createElement("template");
-  template.innerHTML = html;
-  return template.content.firstChild;
+  var tmp = document.implementation.createHTMLDocument();
+  tmp.body.innerHTML = html;
+  return tmp.body.firstChild;
 };
 
 /**
@@ -13,9 +13,9 @@ window.htmlToElement = function htmlToElement(html) {
  * @return {NodeList}
  */
 window.htmlToElements = function htmlToElements(html) {
-  var template = document.createElement("template");
-  template.innerHTML = html;
-  return template.content.childNodes;
+  var tmp = document.implementation.createHTMLDocument();
+  tmp.body.innerHTML = html;
+  return tmp.body.childNodes;
 };
 
 /**

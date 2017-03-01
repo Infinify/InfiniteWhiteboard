@@ -26,7 +26,7 @@ var sharedBoardsListContainer = document.getElementById(
 );
 
 var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
-window.updateWhiteboardLists = function(callback) {
+window.updateWhiteboardLists = function(callback, checkAccess) {
   sharedBoardsListContainer.innerHTML = "";
   privateBoardsContainer.innerHTML = "";
   publicBoardsContainer.innerHTML = "";
@@ -120,6 +120,20 @@ window.updateWhiteboardLists = function(callback) {
     renderHtml(html, sharedBoardsListContainer);
 
     callback(response);
+
+    if (checkAccess) {
+      var current = window.whiteboard;
+      var hasAccess = anyone.some(function(acl) {
+          return acl.resource === current;
+        }) || publicBoards.some(function(board) {
+          return board.name === current;
+        });
+      if (!hasAccess) {
+        // subscribe to global chat and pubsub
+        document.getElementById("chatLogs").innerHTML = "";
+        changeWhiteboard("_global");
+      }
+    }
   });
 };
 
@@ -221,7 +235,9 @@ fastLiveFilter(search_input_public, publicBoardsContainer);
 fastLiveFilter(search_input_private, privateBoardsContainer);
 fastLiveFilter(search_input_shared, sharedBoardsListContainer);
 
-window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
+var loadWhiteboard = require("../loadWhiteboard");
+
+function changeWhiteboard(toWhiteboard) {
   toWhiteboard = toWhiteboard || "_global";
   if (window.whiteboard === toWhiteboard) {
     return;
@@ -264,7 +280,9 @@ window.changeWhiteboard = function changeWhiteboard(toWhiteboard) {
   log.style.display = "";
 
   document.dispatchEvent(new CustomEvent("clearCanvas"));
-};
+  
+  loadWhiteboard(window.whiteboard);
+}
 
 function whiteboardListClickHandler() {
   var style = this.nextElementSibling.style;
@@ -291,3 +309,73 @@ window.userIsAdminOfCurrentWhiteboard = function() {
     return whiteboard.resource === name;
   });
 };
+
+
+function parseUrl(url) {
+  var query, pairs, path, tmp, il, i, t;
+
+  if (url) {
+    query = url.substring(url.indexOf("?") + 1);
+    query = query.substring(0, query.indexOf("#"));
+  } else {
+    query = location.search.slice(1);
+  }
+
+  path = location.pathname.split("/");
+
+  //noinspection JSUnusedAssignment
+  if (
+    path.length > 3 && (t = parseInt(path[3], 10)) ||
+    path.length > 2 && (t = parseInt(path[2], 10))
+  ) {
+    window.timestamp = t;
+  }
+  window.whiteboard = "_global";
+  if (
+    path.length > 2 &&
+    path[1].length > 1 &&
+    path[2].length > 0 &&
+    !parseInt(path[2], 10)
+  ) {
+    window.whiteboard = path[1] + "/" + path[2];
+  } else if (path.length > 1 && path[1].length > 0) {
+    window.whiteboard = path[1];
+  }
+
+  pairs = query.split("&");
+  for (i = 0, il = pairs.length; i < il; i++) {
+    tmp = pairs[i].split("=");
+    switch (tmp[0]) {
+      case "whiteboard":
+        window.whiteboard = tmp[1];
+        break;
+
+      case "time":
+        window.timestamp = +tmp[1];
+        break;
+    }
+  }
+}
+
+window.onpopstate = function() {
+  var returnLocation = history.location || document.location;
+
+  var current = window.whiteboard;
+  parseUrl(returnLocation.href);
+  if (window.whiteboard === current) {
+    return;
+  }
+
+  changeWhiteboard(window.whiteboard);
+};
+
+parseUrl();
+
+loadWhiteboard(window.whiteboard);
+
+ss.rpc("whiteboards.changeWhiteboard", !1, window.whiteboard, function(err) {
+  if (err) {
+    console.log(err);
+    // TODO notification with retry button
+  }
+});

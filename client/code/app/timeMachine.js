@@ -25,7 +25,6 @@ document.addEventListener("clearCanvas", function() {
   }
 
   prevTime = 0;
-  window.loadWhiteboard(window.whiteboard);
 });
 
 /**

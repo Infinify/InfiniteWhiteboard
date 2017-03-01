@@ -163,21 +163,7 @@ logoutButton.onclick = function() {
 
     userObject.hash = userObject.id = userObject.username = null;
 
-    window.updateWhiteboardLists(function(boards) {
-      var current = window.whiteboard;
-      var hasAccess = boards.anyone.some(function(acl) {
-        return acl.resource === current;
-      }) || boards.publicBoards.some(function(board) {
-          return board.name === current;
-        });
-      if (!hasAccess) {
-        // subscribe to global chat and pubsub
-        chatLogs.innerHTML = "";
-        changeWhiteboard("_global");
-      }
-    });
-
-    window.populateAcl();
+    window.updateWhiteboardLists(function(boards) {}, true);
   });
 };
 

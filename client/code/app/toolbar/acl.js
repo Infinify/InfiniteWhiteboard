@@ -1,5 +1,7 @@
 var aclUsers = [];
+var aclWrapper = document.getElementById("aclWrapper");
 document.getElementById("logoutButton").addEventListener("click", function() {
+  aclWrapper.innerHTML = "";
   aclUsers = [];
 });
 
@@ -72,7 +74,6 @@ function aclUser(data) {
 }
 
 aclUsers = [];
-var aclWrapper = document.getElementById("aclWrapper");
 var aclPublicAccess = document.getElementById("aclPublicAccess");
 var noPublicAccessOption = aclPublicAccess.querySelector("option[value=none]");
 window.populateAcl = function populateAcl() {

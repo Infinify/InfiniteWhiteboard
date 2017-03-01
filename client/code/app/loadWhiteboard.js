@@ -256,5 +256,4 @@ function loadWhiteboard(whiteboard) {
     });
 }
 
-window.loadWhiteboard = loadWhiteboard;
-loadWhiteboard(window.whiteboard);
+module.exports = loadWhiteboard;

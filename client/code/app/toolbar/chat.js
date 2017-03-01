@@ -128,7 +128,7 @@ function send() {
   };
 
   var messageContainer = document
-    .getElementById("chatlog-" + message.whiteboard)
+    .getElementById("chatlog-" + whiteboard)
     .querySelector(".messageContainer");
 
   var element = renderMessage(messageContainer, message, true);

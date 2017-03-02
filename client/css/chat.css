@@ -93,7 +93,7 @@
     color: green
 }
 
-#chatlogs .sent {
+#chatLogs .sent {
     padding-right: 10px;
     display: inline-block;
     float: right

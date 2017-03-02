@@ -1,11 +1,37 @@
-.userPermissionModal {
-    width: 300px;
-    margin: 30px auto;
-    position: relative;
-    font-family: 'Helvetica',Helvetica,Arial,sans-serif
+#sharingSettingsDialog {
+    padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 1px 0 15px 0 rgba(50,50,50,.5);
+    border: 1px solid #bdbdbd;
+    position: absolute;
+    width: 421px;
+    top: 50vh;
+    left: 50vw;
 }
 
-.userPermissionModal td,.userPermissionModal th {
-    margin: 3px;
-    padding: 3px
+#shareLinkURL {
+    width: 92%;
+    max-width: 92%;
+}
+
+.aclUsername {
+    font-family: helvetica,serif;
+    min-width: 210px;
+    display: inline-block;
+    font-size: 14px
+}
+
+#aclUsernameField {
+    width: 205px;
+}
+
+#closeAclDialogButton {
+    float: right;
+}
+
+.anyoneRule, .linkDescription {
+    margin-bottom: 30px;
 }

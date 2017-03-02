@@ -20,11 +20,6 @@
     font-size: 15px
 }
 
-.loginIcon.iconHover,.open .loginIcon {
-    color: #07f;
-    -webkit-text-stroke: 1px #9b9b9b
-}
-
 #loginDiv,.clearButton {
     margin: 0;
     padding: 0

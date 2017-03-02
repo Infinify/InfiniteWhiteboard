@@ -155,7 +155,7 @@ function userCreator(map, name) {
   }
   var div = document.createElement("div");
   div.textContent = name;
-  div.class = "userItem";
+  div.className = "userItem";
   var user = map.users[name] = { name: name, div: div };
   div.onclick = function() {
     if (user.pos) {

@@ -128,20 +128,13 @@ body {
     transform-origin: left top 0
 }
 
-#langopts {
-    bottom: 3px
-}
-
-#langopts li+li:before {
-    content: "|";
-    padding: 0 1px
-}
-
 .htmlTool {
     position: fixed;
     bottom: 1em;
     left: 50%;
-    z-index: 2
+    z-index: 2;
+    margin-right: -50%;
+    transform: translate(-50%,0)
 }
 
 .htmlTool button {
@@ -151,17 +144,6 @@ body {
     border-color: #ddd;
     border-radius: 3px;
     margin: .5em
-}
-
-.htmlTool>div {
-    position: relative;
-    left: -50%
-}
-
-#editable {
-    width: 512px;
-    left: 0;
-    top: 0
 }
 
 li,ul {

@@ -1,6 +1,7 @@
 .dottedHr {
     border: 1px dotted;
-    color: #ccc
+    color: #ccc;
+    width: 100%
 }
 
 #textPreviewWrapper {

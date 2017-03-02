@@ -33,11 +33,6 @@
     padding-bottom: 5px
 }
 
-.toolBar.open {
-    border-top: 1px solid #fff;
-    margin-bottom: 10px
-}
-
 .toolBar .open {
     border-bottom: 1px solid #d8d8d8;
     background: #fff

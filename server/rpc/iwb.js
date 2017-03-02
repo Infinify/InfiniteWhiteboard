@@ -40,14 +40,13 @@ exports.actions = (req, res, ss, stream) => {
     getNumObjects(whiteboard) {
       db(db => db.collection(whiteboard).find().count(), res);
     },
-    streamObjects(whiteboard, begin, end) {
+    streamObjects(whiteboard, begin) {
       db(
         db => new Promise((resolve, reject) => {
           const cursorStream = db
             .collection(whiteboard)
             .find()
             .skip(begin)
-            .limit(end - begin)
             .stream();
           cursorStream.pipe(stream);
           cursorStream.on("end", resolve);

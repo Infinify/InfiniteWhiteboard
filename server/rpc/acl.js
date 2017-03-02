@@ -4,6 +4,7 @@ const { setUserRole, removeUserRoles, getUsersAndPermissions } = require(
 
 exports.actions = (req, res) => {
   req.use("session");
+  req.use("rate.limit");
   req.use("authorized.check");
 
   return {

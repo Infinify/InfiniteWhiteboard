@@ -3,6 +3,7 @@ const { ObjectID } = require("mongodb");
 
 exports.actions = (req, res, ss, stream) => {
   req.use("session");
+  req.use("rate.limit");
   req.use("authorized.check");
 
   function stamp(iwb) {

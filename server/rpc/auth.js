@@ -49,6 +49,7 @@ function checkHash(credentials, user) {
 
 exports.actions = (req, res) => {
   req.use("session");
+  req.use("rate.limit");
 
   function setUserData(user) {
     const session = req.session;

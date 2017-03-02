@@ -91,6 +91,7 @@ module.exports = id => {
   });
 
   ss.http.middleware.append("/_wes", require("./server/whiteboardEventStore"));
+  ss.http.middleware.append(require('./server/middleware/rate').limit());
 
   ss.http.route("/", (req, res) => {
     res.serveClient("ui");

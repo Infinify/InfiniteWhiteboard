@@ -25,6 +25,7 @@ client.config("set", "notify-keyspace-events", "Ex", logErr);
 const underscoreRegEx = /^_/;
 exports.actions = (req, res, ss) => {
   req.use("session");
+  req.use("rate.limit");
 
   return {
     getWhiteboardNames() {

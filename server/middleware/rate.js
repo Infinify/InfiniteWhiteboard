@@ -16,17 +16,24 @@ setInterval(
   60 * 1000
 );
 
-// Limit to ten rps
-var maxRequestsPerSecond = 10;
+var msg = "Too Many Requests";
+
+var maxRequestsPerSecond = 100;
 function check(id, res) {
   if (id) {
     if (!rps[id]) rps[id] = 0;
-    if (++rps[id] > maxRequestsPerSecond) {
+    var count = ++rps[id]; 
+    if (count > maxRequestsPerSecond) {
       if (!warned[id]) {
         warned[id] = true;
-        res = res.end || res;
-        res("Request dropped by rate limiter");
+        if (res.end) {
+          res.statusCode = 429;
+          res.end(msg)
+        } else {
+          res(msg);
+        }
       }
+      console.log(msg, id, count);
       return false;
     }
   }

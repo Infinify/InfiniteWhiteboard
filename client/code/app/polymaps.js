@@ -13,7 +13,7 @@ var map = window.map = po
 
 var compassStyle = document.querySelector(".compass").style;
 document.getElementById("compassToggle").onclick = function() {
-  compassStyle.display = compassStyle.display === "none" ? "" : "none";
+  compassStyle.display = compassStyle.display === "" ? "none" : "";
 };
 
 function iwbData() {

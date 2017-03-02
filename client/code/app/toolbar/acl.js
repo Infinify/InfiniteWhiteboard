@@ -191,7 +191,7 @@ document.getElementById("addUserButton").onclick = function() {
 
     aclUsers.push(candidateUser);
 
-    var html = htmlToElement(ss.tmpl["sharingSettings-aclUser"].render(data));
+    var html = htmlToElement(aclUser(data));
 
     aclWrapper.appendChild(html);
 

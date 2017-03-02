@@ -19,7 +19,7 @@ function fastLiveFilter(input, list, options) {
 	var oldDisplay = len > 0 ? lis[0].style.display : "block";
 	callback(len); // do a one-time callback on initialization to make sure everything's in sync
 	
-	input.onchange = function onChange() {
+	var onChange = input.onchange = function onChange() {
 		// var startTime = new Date().getTime();
 		var filter = input.value.toLowerCase();
 		var li;

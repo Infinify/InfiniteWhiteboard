@@ -90,13 +90,20 @@ module.exports = id => {
     res.end();
   });
 
+  ss.http.middleware.prepend("/robots.txt", (req, res) => {
+    res.end(
+      `User-agent: Twitterbot
+Disallow:`
+    );
+  });
+
   ss.http.middleware.append("/_wes", require("./server/whiteboardEventStore"));
 
   ss.http.middleware.append("/_screen", require("./screen"));
 
   ss.http.middleware.append("/", require("./social"));
 
-  ss.http.middleware.append(require('./server/middleware/rate').limit());
+  ss.http.middleware.append(require("./server/middleware/rate").limit());
 
   ss.http.route("/", (req, res) => {
     res.serveClient("ui");

@@ -1,7 +1,7 @@
 const Chrome = require("chrome-remote-interface");
 
 module.exports = (req, res) => {
-  Chrome.New(function(err, tab) {
+  Chrome.New((err, tab) => {
     Chrome(chromeInstance => {
       const { Page, DOMStorage } = chromeInstance;
 
@@ -14,7 +14,7 @@ module.exports = (req, res) => {
           () => {
             Page
               .captureScreenshot()
-              .then(function({ data }) {
+              .then(({ data }) => {
                 const img = new Buffer(data, "base64");
 
                 res.writeHead(200, {
@@ -26,15 +26,15 @@ module.exports = (req, res) => {
                 let endTime = Date.now();
                 console.log("success in: " + (+endTime - (+now)) + "ms");
 
-                Chrome.Close(tab).catch((err) => {
+                Chrome.Close(tab).catch(err => {
                   console.log(err);
                 });
 
-                chromeInstance.close().catch((err) => {
+                chromeInstance.close().catch(err => {
                   console.log(err);
                 });
               })
-              .catch((err) => {
+              .catch(err => {
                 console.log(err);
               });
           },

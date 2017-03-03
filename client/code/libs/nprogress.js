@@ -70,38 +70,18 @@
       bar      = progress.querySelector(Settings.barSelector),
       speed    = Settings.speed,
       ease     = Settings.easing;
+    
+    // Set positionUsing if it hasn't already been set
+    if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
 
+    // Add transition
+    css(bar, barPositionCSS(n, speed, ease));
+    
     progress.offsetWidth; /* Repaint */
 
-    queue(function(next) {
-      // Set positionUsing if it hasn't already been set
-      if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
-
-      // Add transition
-      css(bar, barPositionCSS(n, speed, ease));
-
-      if (n === 1) {
-        // Fade out
-        css(progress, {
-          transition: 'none',
-          opacity: 1
-        });
-        progress.offsetWidth; /* Repaint */
-
-        setTimeout(function() {
-          css(progress, {
-            transition: 'all ' + speed + 'ms linear',
-            opacity: 0
-          });
-          setTimeout(function() {
-            NProgress.remove();
-            next();
-          }, speed);
-        }, speed);
-      } else {
-        setTimeout(next, speed);
-      }
-    });
+    if (n === 1) {
+      NProgress.remove();
+    }
 
     return this;
   };
@@ -340,26 +320,6 @@
   }
 
   /**
-   * (Internal) Queues a function to be executed.
-   */
-
-  var queue = (function() {
-    var pending = [];
-
-    function next() {
-      var fn = pending.shift();
-      if (fn) {
-        fn(next);
-      }
-    }
-
-    return function(fn) {
-      pending.push(fn);
-      if (pending.length == 1) next();
-    };
-  })();
-
-  /**
    * (Internal) Applies css properties to an element, similar to the jQuery
    * css method.
    *
@@ -419,26 +379,11 @@
   })();
 
   /**
-   * (Internal) Determines if an element or space separated list of class names contains a class name.
-   */
-
-  function hasClass(element, name) {
-    var list = typeof element == 'string' ? element : classList(element);
-    return list.indexOf(' ' + name + ' ') >= 0;
-  }
-
-  /**
    * (Internal) Adds a class to an element.
    */
 
   function addClass(element, name) {
-    var oldList = classList(element),
-      newList = oldList + name;
-
-    if (hasClass(oldList, name)) return;
-
-    // Trim the opening space.
-    element.className = newList.substring(1);
+    element.classList.add(name);
   }
 
   /**
@@ -446,26 +391,7 @@
    */
 
   function removeClass(element, name) {
-    var oldList = classList(element),
-      newList;
-
-    if (!hasClass(element, name)) return;
-
-    // Replace the class name.
-    newList = oldList.replace(' ' + name + ' ', ' ');
-
-    // Trim the opening and closing spaces.
-    element.className = newList.substring(1, newList.length - 1);
-  }
-
-  /**
-   * (Internal) Gets a space separated list of the class names on the element.
-   * The list is wrapped with a single space on each end to facilitate finding
-   * matches within the list.
-   */
-
-  function classList(element) {
-    return (' ' + (element && element.className || '') + ' ').replace(/\s+/gi, ' ');
+    element.classList.remove(name);
   }
 
   /**

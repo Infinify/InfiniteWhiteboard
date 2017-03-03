@@ -95,7 +95,7 @@ NProgress.configure({ trickle: false, showSpinner: false });
 
 function objectsReady() {
   document.dispatchEvent(new CustomEvent("timeAnimation"));
-  NProgress.done();
+  NProgress.remove();
 }
 
 var throttle = new Throttle({
@@ -236,6 +236,13 @@ function loadWhiteboard(whiteboard) {
         var length = wb.length;
         if (length === count) {
           objectsReady();
+          // Issue domStorageItemUpdated event to trigger screenshot readiness 
+          try {
+            localStorage.removeItem(root);
+            localStorage.setItem(root, length);
+          } catch (err) {
+            console.log(err);
+          }
           return;
         }
 

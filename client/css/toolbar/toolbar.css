@@ -135,24 +135,13 @@
     color: #000
 }
 
-#betaFlag {
-    color: rgba(255,0,0,.8);
-    top: 25px;
-    left: 125px;
-    font-family: 'Special Elite',Georgia,Times,serif;
-    font-size: 15px;
-    margin: 10px;
-    float: left
-}
-
 .iconButton#compassToggle {
     float: right;
     color: #3d3d3d;
     font-size: 25px;
-    top: 0;
-    left: 0;
+    top: 3px;
+    left: 6px;
     padding: 0;
-    margin: 0 3px 0 0
 }
 
 input[type=range] {

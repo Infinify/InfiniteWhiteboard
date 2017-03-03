@@ -2,10 +2,23 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta property="og:title" content="Infinite Whiteboard"/>
-  <meta property="og:site_name" content="Infinite Whiteboard"/>
-  <meta property="og:description" content="Infinite Whiteboard"/>
-  <meta property="fb:app_id" content="388710587926740"/>
+  <meta property="og:url" content="https://iws.nu">
+  <meta property="og:title" content="Infinite Whiteboard">
+  <meta property="og:site_name" content="Infinite Whiteboard">
+  <meta property="og:description" content="Infinite Whiteboard">
+  <meta property="og:image" content="http://iws.nu/_screen/">
+  <meta property="og:image:secure_url" content="https://iws.nu/_screen/">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1013">
+  <meta property="og:type" content="website">
+  <meta property="fb:app_id" content="388710587926740">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@infinify">
+  <meta name="twitter:creator" content="@infinify">
+  <meta name="twitter:title" content="Infinite Whiteboard">
+  <meta name="twitter:description" content="Infinite Whiteboard - The real-time collaboration space">
+  <meta name="twitter:image:alt" content="Infinite Whiteboard - The real-time collaboration space">
+  <meta name="twitter:image" content="https://iws.nu/_screen/">
   <meta name="viewport" content="user-scalable=yes, initial-scale=0.75, width=device-width">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -282,11 +295,12 @@
         </div>
       </div>
     </div>
-    <div class="clear"></div>
-    <div class="elementWrapper" id="betaFlag">BETA</div>
-    <button id="mfsb" title="Multi-FullScreen mode, use several browser windows as one surface">MFS</button>
-    <button id="compassToggle" class="iconButton icon-compass-circled" tabindex="-1" title="Show / Hide Compass"></button>
-    <div class="clear"></div>
+    
+    <div class="toolbar-footer">
+      <a class="github-button" href="https://github.com/Infinify/InfiniteWhiteboard" data-style="mega" aria-label="Star Infinify/InfiniteWhiteboard on GitHub">Star</a>
+      <button id="mfsb" title="Multi-FullScreen mode, use several browser windows as one surface">MFS</button>
+      <button id="compassToggle" class="iconButton icon-compass-circled" tabindex="-1" title="Show / Hide Compass"></button>
+    </div>
     
     <div id="textPreviewWrapper" style="position: absolute; display:none;">
       <p class="error" style="color: red; display: none">Text limit reached (512 characters)</p>
@@ -383,6 +397,6 @@
 </div>
 
 <div class="ui-widget-overlay"></div>
-
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>

@@ -91,12 +91,17 @@ module.exports = id => {
   });
 
   ss.http.middleware.append("/_wes", require("./server/whiteboardEventStore"));
+
+  ss.http.middleware.append("/_screen", require("./screen"));
+
+  ss.http.middleware.append("/", require("./social"));
+
   ss.http.middleware.append(require('./server/middleware/rate').limit());
 
   ss.http.route("/", (req, res) => {
     res.serveClient("ui");
   });
-  
+
   if (SS_PACK) {
     setImmediate(() => {
       process.exit(0);

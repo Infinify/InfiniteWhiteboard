@@ -35,8 +35,8 @@ window.updateWhiteboardLists = function updateWhiteboardLists() {
   publicBoardsContainer.innerHTML = "";
   chatLogs.innerHTML = "";
 
-  ss.rpc("whiteboards.getWhiteboardNames", function(err, response) {
-    if (err || !response) {
+  return ss.rpc("whiteboards.getWhiteboardNames").then(function(response) {
+    if (!response) {
       console.log(arguments);
       return;
     }
@@ -123,10 +123,6 @@ window.updateWhiteboardLists = function updateWhiteboardLists() {
     }
     renderHtml(html, sharedBoardsListContainer);
 
-    initChat(window.whiteboard);
-
-    populateAcl();
-
     var current = window.whiteboard;
     var hasAccess = user.some(function(acl) {
       return acl.resource === current;
@@ -138,7 +134,9 @@ window.updateWhiteboardLists = function updateWhiteboardLists() {
         return board.name === current;
       });
     if (!hasAccess) {
-      changeWhiteboard("_global");
+      return changeWhiteboard("_global");
+    } else {
+      return Promise.all([populateAcl(), initChat(current)]);
     }
   });
 };
@@ -238,24 +236,24 @@ var loadWhiteboard = require("../loadWhiteboard");
 
 function changeWhiteboard(toWhiteboard) {
   toWhiteboard = toWhiteboard || "_global";
-  if (window.whiteboard === toWhiteboard) {
+
+  var fromWhiteboard = window.whiteboard;
+  if (fromWhiteboard === toWhiteboard) {
     return;
   }
 
-  ss.rpc(
-    "whiteboards.changeWhiteboard",
-    window.whiteboard,
-    toWhiteboard,
-    function(err, result) {
-      if (err) {
-        console.log(arguments);
-        return;
-      }
-      window.location.href = "#0/0/0";
-    }
-  );
-
   window.whiteboard = toWhiteboard;
+
+  ss.rpc("whiteboards.changeWhiteboard", fromWhiteboard, toWhiteboard, function(
+    err,
+    result
+  ) {
+    if (err) {
+      console.log(arguments);
+      return;
+    }
+    window.location.href = "#0/0/0";
+  });
 
   var url = toWhiteboard === "_global" ? "/" : "/" + toWhiteboard + "/";
   var log = document.getElementById("chatlog-" + toWhiteboard);
@@ -269,8 +267,9 @@ function changeWhiteboard(toWhiteboard) {
     log.style.display = "none";
   });
 
+  var chatPromise;
   if (!log) {
-    initChat(toWhiteboard);
+    chatPromise = initChat(toWhiteboard);
     log = document.getElementById("chatlog-" + toWhiteboard);
   }
 
@@ -278,9 +277,11 @@ function changeWhiteboard(toWhiteboard) {
 
   document.dispatchEvent(new CustomEvent("clearCanvas"));
 
-  loadWhiteboard(toWhiteboard);
-
-  populateAcl();
+  return Promise.all([
+    loadWhiteboard(toWhiteboard),
+    populateAcl(),
+    chatPromise
+  ]);
 }
 
 function whiteboardListClickHandler() {
@@ -360,20 +361,30 @@ window.onpopstate = function() {
 
   var current = window.whiteboard;
   parseUrl(returnLocation.href);
-  if (window.whiteboard === current) {
+  var whiteboard = window.whiteboard;
+  if (whiteboard === current) {
     return;
   }
 
-  changeWhiteboard(window.whiteboard);
+  changeWhiteboard(whiteboard);
 };
 
 parseUrl();
 
-updateWhiteboardLists();
+var whiteboard = window.whiteboard;
 
-loadWhiteboard(window.whiteboard);
+Promise
+  .all([updateWhiteboardLists(), loadWhiteboard(whiteboard)])
+  .then(function() {
+    // Issue domStorageItemAdded event to trigger screenshot readiness
+    localStorage.removeItem("_screen");
+    localStorage.setItem("_screen", new Date());
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
 
-ss.rpc("whiteboards.changeWhiteboard", !1, window.whiteboard, function(err) {
+ss.rpc("whiteboards.changeWhiteboard", !1, whiteboard, function(err) {
   if (err) {
     console.log(err);
     // TODO notification with retry button

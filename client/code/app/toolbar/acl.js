@@ -83,8 +83,8 @@ module.exports = function populateAcl() {
     "/" +
     window.whiteboard;
 
-  ss.rpc("acl.getUsersAndPermissions", whiteboard, function(err, res) {
-    if (err || !res) {
+  return ss.rpc("acl.getUsersAndPermissions", whiteboard).then(function(res) {
+    if (!res) {
       console.log(arguments);
       return;
     }

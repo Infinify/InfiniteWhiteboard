@@ -50,9 +50,9 @@ function handleUpdate(iwb) {
 }
 
 ss.event.on("newObject", function(iwb, channelName) {
+  var whiteboard = window.whiteboard;
   if (
-    iwb.whiteboard === window.whiteboard ||
-      channelName === "_global" && !window.whiteboard
+    iwb.whiteboard === whiteboard || channelName === "_global" && !whiteboard
   ) {
     var tmp = window.paperToolsProject.activeLayer.children;
     for (var i = 0; i < tmp.length; i++) {
@@ -68,9 +68,9 @@ ss.event.on("newObject", function(iwb, channelName) {
 });
 
 ss.event.on("updateObject", function(iwb, channelName) {
+  var whiteboard = window.whiteboard;
   if (
-    iwb.whiteboard === window.whiteboard ||
-      channelName === "_global" && !window.whiteboard
+    iwb.whiteboard === whiteboard || channelName === "_global" && !whiteboard
   ) {
     // Keep parent in time machine project but remove from user project
     window.timeMachineProject.activeLayer.children.forEach(function(t) {
@@ -105,7 +105,7 @@ var throttle = new Throttle({
   concurrent: 100 // how many requests can be sent concurrently
 });
 
-function loadWhiteboard(whiteboard) {
+function loadWhiteboard(whiteboard, resolve, reject) {
   NProgress.start();
   minTime = +new Date();
   maxTime = 0;
@@ -152,7 +152,7 @@ function loadWhiteboard(whiteboard) {
   } catch (err) {
   }
 
-  function onData(err, object) {
+  function onData(err, object, fromCache) {
     if (err) {
       console.log(arguments);
       return;
@@ -172,8 +172,8 @@ function loadWhiteboard(whiteboard) {
 
     prepareObject(object);
 
-    if (finished) {
-      objectsReady();
+    if (finished && !fromCache) {
+      resolve();
       try {
         localStorage.setItem(root, length);
       } catch (err) {
@@ -222,27 +222,21 @@ function loadWhiteboard(whiteboard) {
       if (result === undefined) {
         items.forEach(function(item) {
           if (!wb.hasOwnProperty(item._id)) {
-            onData(null, item);
+            onData(null, item, true);
           }
         });
       }
       ss.rpc("iwb.getNumObjects", whiteboard, function(err, count) {
         if (err) {
           console.log(arguments);
+          reject();
           return;
         }
 
         wb.count = count;
         var length = wb.length;
         if (length === count) {
-          objectsReady();
-          // Issue domStorageItemUpdated event to trigger screenshot readiness 
-          try {
-            localStorage.removeItem(root);
-            localStorage.setItem(root, length);
-          } catch (err) {
-            console.log(err);
-          }
+          resolve();
           return;
         }
 
@@ -263,4 +257,8 @@ function loadWhiteboard(whiteboard) {
     });
 }
 
-module.exports = loadWhiteboard;
+module.exports = function(whiteboard) {
+  return new Promise(function(resolve, reject) {
+    loadWhiteboard(whiteboard, resolve, reject);
+  }).then(objectsReady);
+};

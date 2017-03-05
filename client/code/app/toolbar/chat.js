@@ -23,7 +23,7 @@ function clickHandler(e) {
       break;
 
     case "location":
-    case "icon-target-3 target":
+    case "icon-target target":
       // Jump to position directly when clicking the cross-hair icon
       window.location.href = href;
       break;
@@ -92,16 +92,15 @@ function renderMessage(messageContainer, message, pending) {
 
   messageElement.dataset["timemachine"] = +tm;
 
-  if (
-    sender === window.userObject.username ||
-      sender === window.userObject.anonymous
-  ) {
-    messageElement.classList.add("sent");
-    if (pending) {
-      messageElement.classList.add("pending");
-    }
+  var userObject = window.userObject;
+  var classList = messageElement.classList;
+  if (sender === userObject.username || sender === userObject.anonymous) {
+    classList.add("sent");
   } else {
-    messageElement.classList.add("recieved");
+    classList.add("recieved");
+  }
+  if (pending) {
+    classList.add("pending");
   }
 
   return messageElement;
@@ -117,11 +116,12 @@ function send() {
   messageField.value = "";
   messageField.focus();
 
+  var userObject = window.userObject;
   var message = {
     message: val,
     timeStamp: new Date(),
     timemachine: window.timestamp,
-    sender: window.userObject.username || window.userObject.anonymous,
+    sender: userObject.username || userObject.anonymous,
     location: window.location.hash,
     whiteboard: whiteboard,
     uuid: window.name

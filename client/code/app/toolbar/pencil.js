@@ -71,28 +71,28 @@ document.addEventListener("setColor", function() {
 
 colorPickedHandler(window.initColor, "stroke");
 
-var colorPickerToolButton = document.getElementById("colorPickerTool");
-var drawToolButton = document.getElementById("drawTool");
+var colorPickerClasses = document.getElementById("colorPickerTool").classList;
+var drawToolClasses = document.getElementById("drawTool").classList;
 var pencil = document.getElementById("pencil");
+var pencilClasses = pencil.classList;
 pencil.querySelector(".toolHeader").onclick = function() {
-  if (pencil.classList.contains("open")) {
+  if (pencilClasses.contains("open")) {
     nopTool.activate();
     return;
   }
 
-  window.currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
+  var currentStrokeStyle = window.currentStrokeStyle;
+  currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
 
   var color = fill.colorHex;
-  window.currentStrokeStyle.fillColor = color
-    ? new paper.Color(color)
-    : undefined;
+  currentStrokeStyle.fillColor = color ? new paper.Color(color) : undefined;
 
   color = stroke.colorHex;
-  window.currentStrokeStyle.strokeColor = color && new paper.Color(color);
+  currentStrokeStyle.strokeColor = color && new paper.Color(color);
 
   if (
-    !colorPickerToolButton.classList.contains("active") &&
-      !drawToolButton.classList.contains("active")
+    !colorPickerClasses.contains("active") &&
+      !drawToolClasses.contains("active")
   ) {
     window.drawTool.activate();
   }

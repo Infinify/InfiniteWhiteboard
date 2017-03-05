@@ -28,8 +28,11 @@
     margin-top: 12px;
 }
 
-#rtspeed,#timeLine {
+#rtspeed {
     float: left;
+}
+
+#rtspeed,#timeLine {
     font-size: 12px;
     margin-top: 5px
 }

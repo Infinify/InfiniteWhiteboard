@@ -1,7 +1,7 @@
-function bot(url, name) {
+function bot(url) {
   const d = +new Date();
   const img = `https://iws.nu/_screen${url}?d=${d}`;
-  name = name || "Global whiteboard";
+  const name = url.slice(1) || "Global whiteboard";
   return `<!DOCTYPE html><html><head>
 <meta charset="utf-8">
 <meta property="og:url" content="https://iws.nu${url}">
@@ -32,7 +32,7 @@ module.exports = (req, res, next) => {
     )
   ) {
     res.writeHead(200, { "content-type": "text/html; charset=UTF-8" });
-    res.end(bot(req.url, req.url.slice(1)));
+    res.end(bot(req.url));
   } else {
     next();
   }

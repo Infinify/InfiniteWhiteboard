@@ -1,9 +1,6 @@
-#mfsb,body {
-    background: #fff
-}
-
 body {
-    font-family: "Ubuntu",Helvetica,Arial,sans-serif;
+    font-family: "Helvetica",Helvetica,Arial,sans-serif;
+    background: #fff;
     overflow: hidden;
     outline: none
 }
@@ -13,15 +10,12 @@ body {
 }
 
 #mfsb {
-    border-radius: 5px;
-    border-width: 1px;
-    padding: 5px 6px;
-    vertical-align: bottom;
-    margin: 3px;
+    margin: 0
 }
 
 .toolbar-footer {
-    margin: 3px 8px;
+    margin: 3px 0 3px 8px;
+    line-height: 0;
 }
 
 #now {
@@ -146,7 +140,7 @@ body {
 
 li,ul {
     position: relative;
-    display: inline;
+    display: inline
 }
 
 .scrollbarStyle1::-webkit-scrollbar-track {
@@ -197,7 +191,7 @@ li,ul {
     border: 1px solid #bdbdbd;
     text-align: center;
     max-width: 280px;
-    font: 12px "Ubuntu",Helvetica,Arial,sans-serif;
+    font-size: 12px;
     background: #fff
 }
 

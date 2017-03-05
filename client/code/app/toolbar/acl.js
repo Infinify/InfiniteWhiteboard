@@ -48,7 +48,7 @@ function aclUser(data) {
     '">' +
     '<div class="aclUsername">' +
     userName +
-    "</div>" +
+    "</div> " +
     '<select class="aclSelect" data-username="' +
     userName +
     '">' +
@@ -64,8 +64,8 @@ function aclUser(data) {
     '<option value="view" ' +
     view +
     ">can view</option>" +
-    "</select>" +
-    '<button class="removeUserButton" data-userid="' +
+    "</select> " +
+    '<button class="removeUserButton whiteButton" data-userid="' +
     userId +
     '" data-username="' +
     userName +
@@ -161,7 +161,7 @@ document.getElementById("addUserButton").onclick = function() {
     return;
   }
 
-  // does uer exist
+  // does user exist
   ss.rpc("auth.getUserByName", candidateUser, function(err, res) {
     if (err) {
       console.log(arguments);

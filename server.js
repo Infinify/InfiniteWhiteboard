@@ -35,7 +35,7 @@ module.exports = id => {
 
   ss.client.define("ui", {
     view: "ui.html",
-    css: ["ui.css", "toolbar/", "libs/", "chat.css", "font.css"],
+    css: ["*"],
     code: [
       "libs/polymaps.js",
       "libs/spin.js",
@@ -61,24 +61,7 @@ module.exports = id => {
       "libs/classList.js",
       "libs/custom-event-polyfill.js",
       "libs/tinycolorpicker.js",
-      "app/toolbar/acl.js",
-      "app/toolbar/chat.js",
-      "app/toolbar/login.js",
-      "app/toolbar/whiteboards.js",
-      "app/toolbar/timeline.js",
-      "app/toolbar/pencil.js",
-      "app/toolbar/shapes.js",
-      "app/toolbar/places.js",
-      "app/toolbar/text.js",
-      "app/toolBar.js",
-      "app/contentEditable.js",
-      "app/drawToolHandler.js",
-      "app/loadWhiteboard.js",
-      "app/timeMachine.js",
-      "app/paperTools.js",
-      "app/polymaps.js",
-      "app/mfs.js",
-      "app/entry.js"
+      "app"
     ],
     tmpl: "*"
   });

@@ -181,6 +181,7 @@ window.drawObject = function(iwb, reRender) {
   }
 
   var paperItem,
+    map = window.map,
     currentZoom = map ? map.zoom() : 0,
     currRound = Math.round(currentZoom),
     zoomFraction,

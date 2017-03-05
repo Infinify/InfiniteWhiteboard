@@ -1,8 +1,10 @@
-#chat {
-    z-index: 2;
-    display: block;
+#chat,#showChatButton {
     position: absolute;
-    right: 0;
+    right: 0
+}
+
+#chat {
+    display: block;
     padding: 2px;
     width: 240px;
     height: 100%;
@@ -12,10 +14,10 @@
     -moz-box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
     box-shadow: 1px 0 15px 0 rgba(40,40,40,.5);
     border: 1px solid #ccc;
-    color: #666;
-    text-decoration: none;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d3d3d",endColorstr="#212121",GradientType=0);
-    font: 13px "Helvetica",Helvetica,Arial,sans-serif
+    z-index: 2;
+    color: #666;
+    font-size: 13px
 }
 
 .chatlogHeader {
@@ -28,8 +30,7 @@
 }
 
 .sharingSettingsButton {
-    margin-top: 20px;
-    margin-bottom: 10px
+    margin: 10px 0;
 }
 
 .messageContainer {
@@ -64,7 +65,7 @@
 }
 
 .sharedChatContainer {
-    top: 195px
+    top: 165px
 }
 
 #chat .messageElement {
@@ -77,7 +78,7 @@
     color: #000
 }
 
-.messageElement a:link,.messageElement a:visited {
+#chat,.messageElement a:link,.messageElement a:visited {
     text-decoration: none
 }
 
@@ -159,8 +160,6 @@
 
 #showChatButton {
     z-index: 1;
-    position: absolute;
-    right: 0;
     top: 10px;
     font-size: 40px;
     color: #3d3d3d
@@ -173,37 +172,27 @@
 }
 
 .whiteButton {
-    -moz-box-shadow: inset 0 1px 0 0 #fff;
-    -webkit-box-shadow: inset 0 1px 0 0 #fff;
-    box-shadow: inset 0 1px 0 0 #fff;
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(.05,#fff),color-stop(1,#f6f6f6));
-    background: -moz-linear-gradient(top,#fff 5%,#f6f6f6 100%);
-    background: -webkit-linear-gradient(top,#fff 5%,#f6f6f6 100%);
-    background: -o-linear-gradient(top,#fff 5%,#f6f6f6 100%);
-    background: -ms-linear-gradient(top,#fff 5%,#f6f6f6 100%);
-    background: linear-gradient(to bottom,#fff 5%,#f6f6f6 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#f6f6f6",GradientType=0);
-    background-color: #fff;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-    border: 1px solid #dcdcdc;
+    color: #333;
+    height: 28px;
     cursor: pointer;
-    color: #666;
-    padding: 6px 37px;
-    text-shadow: 0 1px 0 #fff;
-    font: 15px arial,sans-serif
+    vertical-align: top;
+    border: 1px solid #d5d5d5;
+    border-radius: 3px;
+    background-color: #eee;
+    background-image: -webkit-linear-gradient(top,#fcfcfc,#eee);
+    background-image: -moz-linear-gradient(top,#fcfcfc,#eee);
+    background-image: linear-gradient(to bottom,#fcfcfc,#eee);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#eeeeee')";
+    font: 600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif
 }
 
 .whiteButton:hover {
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(.05,#f6f6f6),color-stop(1,#fff));
-    background: -moz-linear-gradient(top,#f6f6f6 5%,#fff 100%);
-    background: -webkit-linear-gradient(top,#f6f6f6 5%,#fff 100%);
-    background: -o-linear-gradient(top,#f6f6f6 5%,#fff 100%);
-    background: -ms-linear-gradient(top,#f6f6f6 5%,#fff 100%);
-    background: linear-gradient(to bottom,#f6f6f6 5%,#fff 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f6f6f6",endColorstr="#ffffff",GradientType=0);
-    background-color: #f6f6f6
+    background-color: #ddd;
+    background-image: -webkit-linear-gradient(top,#eee,#ddd);
+    background-image: -moz-linear-gradient(top,#eee,#ddd);
+    background-image: linear-gradient(to bottom,#eee,#ddd);
+    border-color: #ccc;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#dddddd')"
 }
 
 .whiteButton:active {

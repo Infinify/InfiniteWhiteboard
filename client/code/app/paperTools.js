@@ -59,7 +59,7 @@ function deactivate(tool) {
 window.nopTool = new Tool();
 var tool;
 (function() {
-  window.drawTool = tool = new Tool();
+  var drawTool = window.drawTool = tool = new Tool();
   tool.onActivate = activate("drawTool");
   tool.onDeactivate = deactivate("drawTool");
 
@@ -107,7 +107,7 @@ var tool;
     }
   };
 
-  window.drawTool.onMouseDown = function onMouseDown(event, mfs) {
+  drawTool.onMouseDown = function onMouseDown(event, mfs) {
     onMouseDowns(event, mfs);
   };
 
@@ -141,7 +141,7 @@ var tool;
     console.log("drag", mfs);
   };
 
-  window.drawTool.onMouseDrag = function onMouseDrag(event, mfs) {
+  drawTool.onMouseDrag = function onMouseDrag(event, mfs) {
     onMouseDrags(event, mfs);
   };
 
@@ -189,15 +189,15 @@ var tool;
     }
   };
 
-  window.drawTool.onMouseUp = function onMouseUp(event, mfs) {
+  drawTool.onMouseUp = function onMouseUp(event, mfs) {
     onMouseUps(event, mfs);
   };
 
-  window.drawTool.activate();
+  drawTool.activate();
 })();
 
 (function() {
-  window.textTool = tool = new Tool();
+  var textTool = window.textTool = tool = new Tool();
   tool.onActivate = activate("textTool");
   tool.onDeactivate = deactivate("textTool");
 
@@ -206,27 +206,28 @@ var tool;
   function showTextPreview(point) {
     var style = document.getElementById("textPreviewWrapper").style;
     style.top = point.y - 20 + "px";
-    style.left = point.x - 300 + "px";
+    style.left = point.x - 340 + "px";
     style.display = "";
   }
 
-  window.textTool.edit = function edit(path) {
+  textTool.edit = function edit(path) {
     showTextPreview(path.point);
     document.getElementById("textPreview").value = path.content;
     window.newTextItem = path;
   };
 
-  window.textTool.onMouseDown = function(event) {
+  textTool.onMouseDown = function(event) {
     var textToolParams = window.textToolParams;
 
     var moveWrapper = false;
 
-    if (window.newTextItem) {
-      window.newTextItem.point = event.point;
-      window.newTextItem.startedDragging = true;
+    var newTextItem = window.newTextItem;
+    if (newTextItem) {
+      newTextItem.point = event.point;
+      newTextItem.startedDragging = true;
       moveWrapper = true;
     } else {
-      window.newTextItem = new PointText({
+      newTextItem = window.newTextItem = new PointText({
         content: "",
         point: event.point,
         fillColor: textToolParams.fillColor || "black",
@@ -256,7 +257,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.textTool.onMouseDrag = function(event) {
+  textTool.onMouseDrag = function(event) {
     var hitResult = project.hitTest(event.point, hitOptions);
     var newItem = window.newTextItem;
     if (
@@ -273,35 +274,32 @@ var tool;
     changePos(event.point);
   };
 
-  window.textTool.onMouseUp = function() {
+  textTool.onMouseUp = function() {
     if (window.newTextItem) {
       window.newTextItem.startedDragging = false;
     }
   };
 })();
 (function() {
-  window.imageTool = tool = new Tool();
+  var imageTool = window.imageTool = tool = new Tool();
   tool.onActivate = activate("imageTool");
   tool.onDeactivate = deactivate("imageTool");
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
-  window.imageTool.onMouseDown = function(event) {
+  imageTool.onMouseDown = function(event) {
     var hitResult = project.hitTest(event.point, hitOptions);
-    if (
-      window.newRasterItem &&
-        hitResult &&
-        hitResult.item === window.newRasterItem
-    ) {
-      window.newRasterItem.point = event.point;
-      window.newRasterItem.startedDragging = true;
+    var newRasterItem = window.newRasterItem;
+    if (newRasterItem && hitResult && hitResult.item === newRasterItem) {
+      newRasterItem.point = event.point;
+      newRasterItem.startedDragging = true;
     } else {
       var url = prompt("Enter url");
       if (!url) return;
       if (url.slice(-4) === ".svg") {
-        window.newRasterItem = project.importSVG(url);
+        newRasterItem = window.newRasterItem = project.importSVG(url);
       } else {
-        window.newRasterItem = new Raster(url, event.point);
+        newRasterItem = window.newRasterItem = new Raster(url, event.point);
       }
       newRasterItem.selected = true;
       newRasterItem.startedDragging = true;
@@ -311,7 +309,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.imageTool.onMouseDrag = function(event) {
+  imageTool.onMouseDrag = function(event) {
     var newItem = window.newRasterItem;
     if (newItem) {
       newItem.position = newItem.position.__add(event.delta);
@@ -319,7 +317,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.imageTool.onMouseUp = function() {
+  imageTool.onMouseUp = function() {
     if (window.newRasterItem) {
       if (confirm("Use this position?")) {
         window.send(newRasterItem);
@@ -329,10 +327,10 @@ var tool;
   };
 })();
 (function() {
-  window.htmlTool = tool = new Tool();
+  var htmlTool = window.htmlTool = tool = new Tool();
   tool.onActivate = activate("htmlTool");
   tool.onDeactivate = deactivate("htmlTool");
-  window.htmlTool.onMouseDown = function(event) {
+  htmlTool.onMouseDown = function(event) {
     document.dispatchEvent(new CustomEvent("html", { detail: event.point }));
     nopTool.activate();
     changePos(event.point);
@@ -341,20 +339,21 @@ var tool;
 
 (function() {
   var path;
-  window.circleTool = tool = new Tool();
+  var circleTool = window.circleTool = tool = new Tool();
   tool.onActivate = activate("circleTool");
   tool.onDeactivate = deactivate("circleTool");
 
-  window.circleTool.onMouseDrag = function onMouseDrag(event) {
+  circleTool.onMouseDrag = function onMouseDrag(event) {
     // The radius is the distance between the position
     // where the user clicked and the current position
     // of the mouse.
+    var currentStrokeStyle = window.currentStrokeStyle;
     path = new Path.Circle({
       center: event.downPoint,
       radius: event.downPoint.__subtract(event.point).length,
-      fillColor: window.currentStrokeStyle.fillColor,
-      strokeColor: window.currentStrokeStyle.strokeColor,
-      strokeWidth: window.currentStrokeStyle.strokeWidth
+      fillColor: currentStrokeStyle.fillColor,
+      strokeColor: currentStrokeStyle.strokeColor,
+      strokeWidth: currentStrokeStyle.strokeWidth
     });
 
     // Remove this path on the next drag event:
@@ -362,19 +361,19 @@ var tool;
     changePos(event.point);
   };
 
-  window.circleTool.onMouseUp = function() {
+  circleTool.onMouseUp = function() {
     if (window.send) {
       send(path);
     }
   };
 })();
 (function() {
-  window.rectangleTool = tool = new Tool();
+  var rectangleTool = window.rectangleTool = tool = new Tool();
   tool.onActivate = activate("rectangleTool");
   tool.onDeactivate = deactivate("rectangleTool");
   var rect;
 
-  window.rectangleTool.onMouseDrag = function onMouseDrag(event) {
+  rectangleTool.onMouseDrag = function onMouseDrag(event) {
     // The radius is the distance between the position
     // where the user clicked and the current position
     // of the mouse.
@@ -412,28 +411,29 @@ var tool;
     }
 
     rect = new Path.Rectangle(topLeft, size);
-    rect.strokeWidth = window.currentStrokeStyle.strokeWidth;
-    rect.strokeColor = window.currentStrokeStyle.strokeColor;
-    rect.fillColor = window.currentStrokeStyle.fillColor;
+    var currentStrokeStyle = window.currentStrokeStyle;
+    rect.strokeWidth = currentStrokeStyle.strokeWidth;
+    rect.strokeColor = currentStrokeStyle.strokeColor;
+    rect.fillColor = currentStrokeStyle.fillColor;
 
     // Remove this path on the next drag event:
     rect.removeOnDrag();
     changePos(event.point);
   };
 
-  window.rectangleTool.onMouseUp = function() {
+  rectangleTool.onMouseUp = function() {
     if (window.send) {
       send(rect);
     }
   };
 })();
 (function() {
-  window.ellipseTool = tool = new Tool();
+  var ellipseTool = window.ellipseTool = tool = new Tool();
   tool.onActivate = activate("ellipseTool");
   tool.onDeactivate = deactivate("ellipseTool");
   var ellipse;
 
-  window.ellipseTool.onMouseDrag = function onMouseDrag(event) {
+  ellipseTool.onMouseDrag = function onMouseDrag(event) {
     var topLeft = {
       x: Math.min(event.downPoint.x, event.point.x),
       y: Math.min(event.downPoint.y, event.point.y)
@@ -467,12 +467,13 @@ var tool;
       size.height *= 2;
     }
 
+    var currentStrokeStyle = window.currentStrokeStyle;
     ellipse = new Path.Ellipse({
       point: [topLeft.x, topLeft.y],
       size: [size.width, size.height],
-      fillColor: window.currentStrokeStyle.fillColor,
-      strokeColor: window.currentStrokeStyle.strokeColor,
-      strokeWidth: window.currentStrokeStyle.strokeWidth
+      fillColor: currentStrokeStyle.fillColor,
+      strokeColor: currentStrokeStyle.strokeColor,
+      strokeWidth: currentStrokeStyle.strokeWidth
     });
 
     // Remove this path on the next drag event:
@@ -480,7 +481,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.ellipseTool.onMouseUp = function() {
+  ellipseTool.onMouseUp = function() {
     if (window.send) {
       window.send(ellipse);
     }
@@ -489,7 +490,7 @@ var tool;
 
 (function() {
   var path;
-  window.bezierTool = tool = new Tool();
+  var bezierTool = window.bezierTool = tool = new Tool();
   tool.onActivate = activate("bezierTool");
   tool.onDeactivate = deactivate("bezierTool");
 
@@ -514,15 +515,16 @@ var tool;
 
   var currentSegment, mode, type;
 
-  window.bezierTool.onMouseDown = function onMouseDown(event) {
+  bezierTool.onMouseDown = function onMouseDown(event) {
     if (currentSegment) currentSegment.selected = false;
     mode = type = currentSegment = null;
 
     if (!path) {
       path = new Path();
-      path.fillColor = window.currentStrokeStyle.fillColor;
-      path.strokeColor = window.currentStrokeStyle.strokeColor;
-      path.strokeWidth = window.currentStrokeStyle.strokeWidth;
+      var currentStrokeStyle = window.currentStrokeStyle;
+      path.fillColor = currentStrokeStyle.fillColor;
+      path.strokeColor = currentStrokeStyle.strokeColor;
+      path.strokeWidth = currentStrokeStyle.strokeWidth;
     }
 
     var result = findHandle(event.point);
@@ -552,7 +554,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.bezierTool.onMouseDrag = function onMouseDrag(event) {
+  bezierTool.onMouseDrag = function onMouseDrag(event) {
     if (mode == "move" && type == "point") {
       currentSegment.point = event.point;
     } else if (mode != "close") {
@@ -565,7 +567,7 @@ var tool;
   };
 })();
 (function() {
-  window.editTool = tool = new Tool();
+  var editTool = editTool = tool = new Tool();
   tool.onActivate = activate("editTool");
   tool.onDeactivate = deactivate("editTool");
 
@@ -573,7 +575,7 @@ var tool;
 
   var segment, path;
   var movePath = false;
-  window.editTool.onMouseDown = function onMouseDown(event) {
+  editTool.onMouseDown = function onMouseDown(event) {
     segment = path = null;
     var hitResult = project.hitTest(event.point, hitOptions);
     if (!hitResult) {
@@ -610,7 +612,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.editTool.onMouseMove = function onMouseMove(event) {
+  editTool.onMouseMove = function onMouseMove(event) {
     var hitResult = project.hitTest(event.point, hitOptions);
     if (!hitResult) {
       hitResult = window.timeMachineProject.hitTest(event.point, hitOptions);
@@ -626,7 +628,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.editTool.onMouseDrag = function onMouseDrag(event) {
+  editTool.onMouseDrag = function onMouseDrag(event) {
     if (segment) {
       segment.point = event.point;
       path.smooth();
@@ -640,7 +642,7 @@ var tool;
     changePos(event.point);
   };
 
-  window.editTool.onMouseUp = function() {
+  editTool.onMouseUp = function() {
     if (!path) {
       return;
     }
@@ -650,7 +652,7 @@ var tool;
     path.selected = true;
   };
 
-  window.editTool.onKeyUp = function(event) {
+  editTool.onKeyUp = function(event) {
     if (event.key === "delete") {
       path.visible = false;
       path.deleted = true;
@@ -661,47 +663,49 @@ var tool;
   };
 })();
 (function() {
-  window.colorPickerTool = tool = new Tool();
+  var colorPickerTool = window.colorPickerTool = tool = new Tool();
   tool.onActivate = activate("colorPickerTool");
   tool.onDeactivate = deactivate("colorPickerTool");
 
   var hitOptions = { segments: true, stroke: true, fill: true, tolerance: 5 };
 
-  window.colorPickerTool.onMouseDown = function onMouseDown(event) {
+  colorPickerTool.onMouseDown = function onMouseDown(event) {
     var hitResult = project.hitTest(event.point, hitOptions);
     if (!hitResult) {
       hitResult = window.timeMachineProject.hitTest(event.point, hitOptions);
     }
     var fill = hitResult && hitResult.item.fillColor;
     var stroke = hitResult && hitResult.item.strokeColor;
-    window.currentStrokeStyle.fillColor = fill;
-    window.currentStrokeStyle.strokeColor = stroke || "white";
+    var currentStrokeStyle = window.currentStrokeStyle;
+    currentStrokeStyle.fillColor = fill;
+    currentStrokeStyle.strokeColor = stroke || "white";
     document.dispatchEvent(new CustomEvent("setColor"));
     changePos(event.point);
   };
 })();
 (function() {
   var path;
-  window.starTool = tool = new Tool();
+  var starTool = window.starTool = tool = new Tool();
   tool.onActivate = activate("starTool");
   tool.onDeactivate = deactivate("starTool");
 
-  window.starTool.onMouseDown = function onMouseDown(event) {
+  starTool.onMouseDown = function onMouseDown(event) {
     changePos(event.point);
   };
 
-  window.starTool.onMouseDrag = function onMouseDrag(event) {
+  starTool.onMouseDrag = function onMouseDrag(event) {
     var delta = event.point.__subtract(event.downPoint);
     var radius = delta.length;
     var points = 5 + Math.round(radius / 50);
+    var currentStrokeStyle = window.currentStrokeStyle;
     path = new Path.Star({
       center: event.downPoint,
       points: points,
       radius1: radius / 2,
       radius2: radius,
-      fillColor: window.currentStrokeStyle.fillColor,
-      strokeColor: window.currentStrokeStyle.strokeColor,
-      strokeWidth: window.currentStrokeStyle.strokeWidth
+      fillColor: currentStrokeStyle.fillColor,
+      strokeColor: currentStrokeStyle.strokeColor,
+      strokeWidth: currentStrokeStyle.strokeWidth
     });
     path.rotate(delta.angle);
     // Remove the path automatically before the next mouse drag
@@ -709,7 +713,7 @@ var tool;
     path.removeOnDrag();
     changePos(event.point);
   };
-  window.starTool.onMouseUp = function() {
+  starTool.onMouseUp = function() {
     if (window.send) {
       window.send(path);
     }

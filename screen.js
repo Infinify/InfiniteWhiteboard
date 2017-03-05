@@ -6,9 +6,9 @@ module.exports = (req, res) => {
   Chrome.New((err, tab) => {
     Chrome(chromeInstance => {
       const { Page, DOMStorage } = chromeInstance;
-
       const start = Date.now();
-      function takeScreenshot({ storageId, key }) {
+
+      DOMStorage.domStorageItemAdded(({ storageId, key }) => {
         if (storageId.securityOrigin !== origin || key !== "_screen") return;
         Page
           .captureScreenshot()
@@ -24,20 +24,13 @@ module.exports = (req, res) => {
             let end = Date.now();
             console.log("screenshot: " + (end - start) + "ms");
 
-            Chrome.Close(tab).catch(err => {
-              console.log(err);
-            });
-
-            chromeInstance.close().catch(err => {
-              console.log(err);
-            });
+            return Promise.all([Chrome.Close(tab), chromeInstance.close()]);
           })
           .catch(err => {
             console.log(err);
           });
-      }
+      });
 
-      DOMStorage.domStorageItemAdded(takeScreenshot);
       DOMStorage.enable();
       Page.enable();
 

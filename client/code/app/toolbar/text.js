@@ -12,18 +12,19 @@ var textTool = document.getElementById("textTool");
 var textPreviewWrapper = document.getElementById("textPreviewWrapper");
 
 textTool.querySelector(".toolHeader").onclick = function() {
+  var newTextItem = window.newTextItem;
   if (!textTool.classList.contains("open")) {
     window.textTool.activate();
     delete window.timestamp;
     window.timeAnimation();
-    if (window.newTextItem) {
-      window.newTextItem.visible = true;
+    if (newTextItem) {
+      newTextItem.visible = true;
       textPreviewWrapper.style.display = "block";
     }
   } else {
     nopTool.activate();
-    if (window.newTextItem) {
-      window.newTextItem.visible = false;
+    if (newTextItem) {
+      newTextItem.visible = false;
     }
     textPreviewWrapper.style.display = "none";
   }
@@ -35,8 +36,9 @@ textFillColorDiv.onchange = function colorPickedHandlerFill() {
   var color = textFillColor.colorHex;
   textToolParams.fillColor = new paper.Color(color);
 
-  if (window.newTextItem) {
-    window.newTextItem.fillColor = new paper.Color(color);
+  var newTextItem = window.newTextItem;
+  if (newTextItem) {
+    newTextItem.fillColor = new paper.Color(color);
   }
 };
 
@@ -47,17 +49,17 @@ textSizeSlider.onchange = textSizeSlider.oninput = function() {
   textToolParams.textSize = value;
   currentFontSizeDisplay.textContent = value + "px";
 
-  if (window.newTextItem) {
-    window.newTextItem.fontSize = value;
-    window.newTextItem.leading = value * 1.3;
+  var newTextItem = window.newTextItem;
+  if (newTextItem) {
+    newTextItem.fontSize = value;
+    newTextItem.leading = value * 1.3;
   }
 };
 
 document.getElementById("textFontSelection").onchange = function(event) {
   textToolParams.fontFamily = event.target.value;
-  window.newTextItem
-    ? window.newTextItem.fontFamily = event.target.value
-    : null;
+  var newTextItem = window.newTextItem;
+  newTextItem ? newTextItem.fontFamily = event.target.value : null;
 };
 
 var emphasisBold = document.getElementById("emphasisBold");
@@ -85,8 +87,9 @@ function onEmphasisButtonChange() {
 
   var emphasis = props.join(" ");
   textToolParams.emphasis = emphasis;
-  if (window.newTextItem) {
-    window.newTextItem.fontWeight = emphasis;
+  var newTextItem = window.newTextItem;
+  if (newTextItem) {
+    newTextItem.fontWeight = emphasis;
   }
 }
 
@@ -99,31 +102,33 @@ function onEmphasisButtonChange() {
 var textPreview = document.getElementById("textPreview");
 textPreview.onkeyup = function() {
   var error = textPreviewWrapper.querySelector("p.error");
+  var newTextItem = window.newTextItem;
   var newVal = textPreview.value;
   if (newVal.length > 512) {
     error.style.display = "block";
-    textPreview.value = window.newTextItem.content;
+    textPreview.value = newTextItem.content;
     return;
   } else if (newVal.length === 512) {
     error.style.display = "block";
   } else {
     error.style.display = "none";
   }
-  window.newTextItem.content = newVal;
+  newTextItem.content = newVal;
 };
 
 document.getElementById("newTextOKButton").onclick = function() {
-  if (window.newTextItem.content.length > 512) {
+  var newTextItem = window.newTextItem;
+  if (newTextItem.content.length > 512) {
     return;
   }
-  if (!window.newTextItem.iwb && window.send) {
-    window.send(window.newTextItem);
-  } else if (window.updateObject) {
-    window.updateObject(window.newTextItem);
+  if (!newTextItem.iwb) {
+    window.send(newTextItem);
+  } else {
+    window.updateObject(newTextItem);
   }
-  window.newTextItem.content = "";
-  window.newTextItem.selected = false;
-  window.newTextItem.remove();
+  newTextItem.content = "";
+  newTextItem.selected = false;
+  newTextItem.remove();
   delete window.newTextItem;
   textPreview.value = "";
   textPreviewWrapper.style.display = "none";
@@ -131,9 +136,10 @@ document.getElementById("newTextOKButton").onclick = function() {
 };
 
 document.getElementById("newTextCancelButton").onclick = function() {
-  window.newTextItem.content = "";
-  window.newTextItem.selected = false;
-  window.newTextItem.remove();
+  var newTextItem = window.newTextItem;
+  newTextItem.content = "";
+  newTextItem.selected = false;
+  newTextItem.remove();
   delete window.newTextItem;
   textPreview.value = "";
   textPreviewWrapper.style.display = "none";

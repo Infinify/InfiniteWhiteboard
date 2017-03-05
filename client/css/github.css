@@ -1,0 +1,72 @@
+@font-face {
+  font-family: Octicons;
+  src: url(https://buttons.github.io/components/octicons/build/font/octicons.eot?ef21c39f0ca9b1b5116e5eb7ac5eabe6);
+  src: url(https://buttons.github.io/components/octicons/build/font/octicons.eot?#iefix) format("embedded-opentype"), url(https://buttons.github.io/components/octicons/build/font/octicons.woff2?ef21c39f0ca9b1b5116e5eb7ac5eabe6) format("woff2"), url(https://buttons.github.io/components/octicons/build/font/octicons.woff?ef21c39f0ca9b1b5116e5eb7ac5eabe6) format("woff"), url(https://buttons.github.io/components/octicons/build/font/octicons.ttf?ef21c39f0ca9b1b5116e5eb7ac5eabe6) format("truetype"), url(https://buttons.github.io/components/octicons/build/font/octicons.svg?ef21c39f0ca9b1b5116e5eb7ac5eabe6#octicons) format("svg");
+  font-weight: 400;
+  font-style: normal
+}
+
+.octicon-mark-github:before {
+  content: "\f00a"
+}
+
+.button span {
+  font-weight: 600;
+  font-size: 12px
+}
+
+.button i {
+  font-size: 16px
+}
+
+.button i, .button span {
+  line-height: 26px;
+  color: #333
+}
+
+.octicon-mark-github {
+  width: 1em
+}
+
+.octicon {
+  _overflow: hidden
+}
+
+.octicon {
+  font: 16px/1 Octicons;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  speak: none
+}
+
+.button {
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #eee);
+  background-image: -moz-linear-gradient(top, #fcfcfc, #eee);
+  background-image: linear-gradient(to bottom, #fcfcfc, #eee);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#eeeeee')";
+  display: inline-block;
+  height: 26px;
+  padding: 0 10px;
+  color: #333;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #d5d5d5;
+  border-radius: 3px;
+  font: 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif
+}
+
+.button:hover {
+  background-color: #ddd;
+  background-image: -webkit-linear-gradient(top, #eee, #ddd);
+  background-image: -moz-linear-gradient(top, #eee, #ddd);
+  background-image: linear-gradient(to bottom, #eee, #ddd);
+  border-color: #ccc;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#dddddd')";
+}

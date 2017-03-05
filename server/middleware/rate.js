@@ -22,13 +22,13 @@ var maxRequestsPerSecond = 100;
 function check(id, res) {
   if (id) {
     if (!rps[id]) rps[id] = 0;
-    var count = ++rps[id]; 
+    var count = ++rps[id];
     if (count > maxRequestsPerSecond) {
       if (!warned[id]) {
         warned[id] = true;
         if (res.end) {
           res.statusCode = 429;
-          res.end(msg)
+          res.end(msg);
         } else {
           res(msg);
         }
@@ -42,7 +42,11 @@ function check(id, res) {
 
 exports.limit = function rateLimit() {
   return function checkRateLimit(req, res, next) {
-    if (check(req.sessionID, res) && check(req.socketId, res) && check(req.sessionId, res)) {
+    if (
+      check(req.sessionID, res) &&
+        check(req.socketId, res) &&
+        check(req.sessionId, res)
+    ) {
       next();
     }
   };

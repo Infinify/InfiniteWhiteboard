@@ -243,7 +243,7 @@ function loadWhiteboard(whiteboard, resolve, reject) {
         NProgress.set(count ? length / count : 1);
 
         if (result === false || result === null) {
-          ss.rpc("iwb.streamObjects", whiteboard, length, count, cacheOnData);
+          ss.rpc("iwb.streamObjects", whiteboard, length, cacheOnData);
         } else {
           chunkedRequest({
             url: "/_wes/" + whiteboard,

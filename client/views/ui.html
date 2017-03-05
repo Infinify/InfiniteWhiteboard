@@ -246,7 +246,6 @@
         </h3>
         <div class="toolContent">
           <div id="timeDiv">
-            <div>&nbsp;</div>
             <span id="rtspeed">Reverse</span><span id="maxspeed">Forward</span>
             <input type="range" id="timerange" min="-16" max="16" />
 
@@ -260,7 +259,7 @@
 
             <input type="range" id="timelineslide" min="0" max="100" value="0" />
 
-            <span id="timeLine">Timeline</span>
+            <div id="timeLine">Timeline</div>
           </div>
         </div>
       </div>
@@ -297,15 +296,15 @@
     </div>
     
     <div class="toolbar-footer">
-      <a class="github-button" href="https://github.com/Infinify/InfiniteWhiteboard" data-style="mega" aria-label="Star Infinify/InfiniteWhiteboard on GitHub">Star</a>
-      <button id="mfsb" title="Multi-FullScreen mode, use several browser windows as one surface">MFS</button>
+      <a href="https://github.com/Infinify/InfiniteWhiteboard" class="button" aria-label="Star Infinify/InfiniteWhiteboard on GitHub"><i class="octicon octicon-mark-github" aria-hidden="true"></i> <span>Star</span></a>
+      <button id="mfsb" class="whiteButton" title="Multi-FullScreen mode, use several browser windows as one surface">MFS</button>
       <button id="compassToggle" class="iconButton icon-compass-circled" tabindex="-1" title="Show / Hide Compass"></button>
     </div>
     
     <div id="textPreviewWrapper" style="position: absolute; display:none;">
       <p class="error" style="color: red; display: none">Text limit reached (512 characters)</p>
       <textarea title="textPreview" id="textPreview" 
-                style="border: 1px dotted #808080; padding: 10px; width: 250px; resize: vertical; -webkit-border-radius: 3px; border-radius: 3px;"
+                style="border: 1px dotted #808080; padding: 10px; width: 290px; resize: vertical; -webkit-border-radius: 3px; border-radius: 3px;"
       ></textarea>
 
       <select title="textFontSelection" id="textFontSelection" style="width:100%; margin-bottom:10px; -webkit-border-radius: 3px;
@@ -323,20 +322,22 @@
         <input type="hidden" class="colorInput"/>
       </div>
 
-      <div id="emphasisButtons">
-        <input type="checkbox" class="emphasisButtons" id="emphasisBold"><label for="emphasisBold"><i class="icon-bold-1"></i></label>
-        <input type="checkbox" class="emphasisButtons" id="emphasisItalic"><label for="emphasisItalic"><i class="icon-italic"></i></label>
-      </div>  
-
+      <br />
       <br />
       <br />
 
       <span>Text size <span id="currentFontSizeDisplay" style="font-weight:bold;">40px</span></span>
-      <hr class="dottedHr">
       <input type="range" min="10" max="250" value="40" id="textSizeSlider" />
 
-      <button id="newTextOKButton" style="position:relative;">Ok!</button>
-      <button id="newTextCancelButton" style="position:relative;">Cancel</button>
+      <div id="emphasisButtons">
+        <input type="checkbox" class="emphasisButtons" id="emphasisBold"><label for="emphasisBold"><i class="icon-bold-1"></i></label>
+        <input type="checkbox" class="emphasisButtons" id="emphasisItalic"><label for="emphasisItalic"><i class="icon-italic"></i></label>
+      </div>
+      
+      <hr class="dottedHr">
+
+      <button id="newTextOKButton" class="whiteButton">Save</button>
+      <button id="newTextCancelButton" class="whiteButton">Cancel</button>
     </div>
 
     <div tabindex="-1" role="dialog"
@@ -345,10 +346,10 @@
          aria-describedby="sharingSettingsDialog"
          style="display: none;">
 
-      <button id="closeAclDialogButton">Close</button>
+      <button id="closeAclDialogButton" class="whiteButton">Close</button>
 
-      <h2>Public access</h2>
-      <hr>
+      <h2 class="aclHeader">Public access</h2>
+      <hr class="dottedHr">
       <div class="anyoneRule">
         <select title="Access type" id="aclPublicAccess">
           <option value="none">No public access</option>
@@ -363,21 +364,23 @@
       <div class="linkDescription">Share this link to give others access to your whiteboard.</div>
 
       <h2>Who has access</h2>
-      <hr>
+      <hr class="dottedHr">
 
       <div id="aclWrapper">
       </div>
 
       <div id="addUserWrapper">
-        <input title="Username" id="aclUsernameField" type="text" placeholder="Enter username to add...">
-        <select title="User permissions" id="newUserPermission">
-          <option disabled="">Select permission</option>
-          <option value="admin">is admin</option>
-          <option value="edit">can edit and chat</option>
-          <option value="chat">can view and chat</option>
-          <option value="view">can view</option>
-        </select>
-        <button id="addUserButton">+</button>
+        <div class="aclRule">
+          <input title="Username" id="aclUsernameField" type="text" placeholder="Enter username to add...">
+          <select title="User permissions" id="newUserPermission" class="aclSelect">
+            <option disabled="">Select permission</option>
+            <option value="admin">is admin</option>
+            <option value="edit">can edit and chat</option>
+            <option value="chat">can view and chat</option>
+            <option value="view">can view</option>
+          </select>
+          <button id="addUserButton" class="whiteButton">+</button>
+        </div>
       </div>
     </div>
   </div>
@@ -397,6 +400,5 @@
 </div>
 
 <div class="ui-widget-overlay"></div>
-<script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>

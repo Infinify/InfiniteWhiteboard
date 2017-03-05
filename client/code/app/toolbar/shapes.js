@@ -36,15 +36,15 @@ shapes.querySelector(".toolHeader").onclick = function() {
     nopTool.activate();
     return;
   }
-  window.currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
+
+  var currentStrokeStyle = window.currentStrokeStyle;
+  currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
 
   var color = currentShapeFillColor.colorHex;
-  window.currentStrokeStyle.fillColor = color
-    ? new paper.Color(color)
-    : undefined;
+  currentStrokeStyle.fillColor = color ? new paper.Color(color) : undefined;
 
   color = currentShapeStrokeColor.colorHex;
-  window.currentStrokeStyle.strokeColor = color && new paper.Color(color);
+  currentStrokeStyle.strokeColor = color && new paper.Color(color);
 
   delete window.timestamp;
   window.timeAnimation();

@@ -131,12 +131,14 @@ exports.actions = (req, res, ss) => {
       let user = req.session.userData && req.session.userData.username ||
         req.session.anonymousUser;
       if (from) {
-        ss.publish.channel(from, "unsub", { user });
         req.session.channel.unsubscribe(from);
-        from = encodeURIComponent(from);
-        user = encodeURIComponent(user);
-        client.setex(`iwb|${from}|${user}`, 1, "false", logErr);
-        client.srem(`iwb|${from}`, user, logErr);
+        if (user) {
+          ss.publish.channel(from, "unsub", { user });
+          from = encodeURIComponent(from);
+          user = encodeURIComponent(user);
+          client.setex(`iwb|${from}|${user}`, 1, "false", logErr);
+          client.srem(`iwb|${from}`, user, logErr);
+        }
       }
       if (to) {
         Promise
@@ -145,12 +147,14 @@ exports.actions = (req, res, ss) => {
           )
           .then(allowed => {
             if (allowed) {
-              ss.publish.channel(to, "sub", { user });
               req.session.channel.subscribe(to);
-              to = encodeURIComponent(to);
-              user = encodeURIComponent(user);
-              client.setex(`iwb|${to}|${user}`, 10 * 60, "true", logErr);
-              client.sadd(`iwb|${to}`, user, logErr);
+              if (user) {
+                ss.publish.channel(to, "sub", { user });
+                to = encodeURIComponent(to);
+                user = encodeURIComponent(user);
+                client.setex(`iwb|${to}|${user}`, 10 * 60, "true", logErr);
+                client.sadd(`iwb|${to}`, user, logErr);
+              }
             }
             res(null, allowed);
           })

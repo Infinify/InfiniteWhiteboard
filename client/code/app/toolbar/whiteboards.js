@@ -12,8 +12,11 @@ function onSelectWhiteboard(event) {
   if (name) {
     changeWhiteboard(name);
     event.stopPropagation();
+    event.preventDefault();
   }
-  event.preventDefault();
+  if (tmp.nodeName === "A") {
+    event.preventDefault();
+  }
 }
 var whiteboardToolContent = document.querySelector("#whiteboards .toolContent");
 whiteboardToolContent.onclick = onSelectWhiteboard;
@@ -373,20 +376,23 @@ parseUrl();
 
 var whiteboard = window.whiteboard;
 
-Promise
-  .all([updateWhiteboardLists(), loadWhiteboard(whiteboard)])
-  .then(function() {
-    // Issue domStorageItemAdded event to trigger screenshot readiness
-    localStorage.removeItem("_screen");
-    localStorage.setItem("_screen", new Date());
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+document.addEventListener("userObject", function() {
+  Promise
+    .all([updateWhiteboardLists(), loadWhiteboard(whiteboard)])
+    .then(function() {
+      // Issue domStorageItemAdded event to trigger screenshot readiness
+      localStorage.removeItem("_screen");
+      localStorage.setItem("_screen", new Date());
+      document.dispatchEvent(new CustomEvent("finishedRender"));
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
 
-ss.rpc("whiteboards.changeWhiteboard", !1, whiteboard, function(err) {
-  if (err) {
-    console.log(err);
-    // TODO notification with retry button
-  }
+  ss.rpc("whiteboards.changeWhiteboard", !1, whiteboard, function(err) {
+    if (err) {
+      console.log(err);
+      // TODO notification with retry button
+    }
+  });
 });

@@ -55,8 +55,9 @@ exports.actions = (req, res) => {
     const session = req.session;
     session.authenticated = true;
     session.userData = user;
-    session.setUserId(user._id);
-    session.save();
+    return new Promise((resolve) => {
+      session.setUserId(user._id, () => resolve(true));
+    })
   }
 
   return {
@@ -64,13 +65,13 @@ exports.actions = (req, res) => {
       const session = req.session;
       session.authenticated = false;
       session.userData = false;
-      session.setUserId(null);
       session.anonymousUser = `user_${Math
         .random()
         .toString(36)
         .substring(12)}`;
-      session.save();
-      res();
+      session.setUserId(session.anonymousUser, function () {
+        res();
+      });
     },
     login(credentials) {
       db(
@@ -86,7 +87,7 @@ exports.actions = (req, res) => {
               const user = users[0];
               return checkHash(credentials, user).then(isMatch => {
                 if (isMatch) {
-                  setUserData(user);
+                  return setUserData(user);
                 }
                 return isMatch;
               });
@@ -154,9 +155,12 @@ exports.actions = (req, res) => {
             .random()
             .toString(36)
             .substring(12)}`;
-          session.save();
+          session.setUserId(session.anonymousUser, () => {
+            res(null, { anonymous: session.anonymousUser, sessionId: session.id });
+          });
+        } else {
+          res(null, { anonymous: session.anonymousUser, sessionId: session.id });
         }
-        res(null, { anonymous: session.anonymousUser, sessionId: session.id });
       }
     }
   };

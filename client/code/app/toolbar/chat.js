@@ -1,9 +1,9 @@
 function clickHandler(e) {
   var msgDiv = e.target;
-  while (!msgDiv.classList.contains("messageElement")) {
+  while (msgDiv && msgDiv.classList && !msgDiv.classList.contains("messageElement")) {
     msgDiv = msgDiv.parentNode;
   }
-  if (!msgDiv.classList.contains("messageElement")) {
+  if (!msgDiv || !msgDiv.classList || !msgDiv.classList.contains("messageElement")) {
     return;
   }
 
@@ -147,7 +147,7 @@ function send() {
     element.classList.remove("pending");
   });
 }
-
+var following = null;
 var whiteboardUsers = {};
 function userCreator(map, name) {
   if (map.users[name]) {
@@ -161,6 +161,7 @@ function userCreator(map, name) {
     if (user.pos) {
       window.location = user.pos;
     }
+    following = following === user ? null : user;
   };
   map.userListDiv.appendChild(div);
   return map;
@@ -315,8 +316,12 @@ ss.event.on("newPos", function(newPos, channel) {
   var wb = whiteboardUsers[channel];
   var user = wb && wb.users[newPos.user];
   if (!user) return;
-  user.pos = newPos.url;
+  var url = newPos.url;
+  user.pos = url;
   user.offset = newPos.offset;
+  if (following === user) {
+    window.location = url;
+  }
 });
 ss.event.on("sub", function(sub, channel) {
   var wb = whiteboardUsers[channel];

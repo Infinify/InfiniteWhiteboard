@@ -188,4 +188,6 @@ ss.rpc("auth.getUserObject", function(err, userObject) {
     privateBoards.style.display = "none";
     sharedBoards.style.display = "none";
   }
+
+  document.dispatchEvent(new CustomEvent("userObject"));
 });

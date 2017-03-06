@@ -104,6 +104,17 @@ var tool;
     path.fullySelected = false;
     if (mfs) {
       paper.project.view.update();
+      return path;
+    } else {
+      var uid = window.getUID();
+      path.uid = uid;
+      window.stream("down", {
+        point: { x: event.point.x, y: event.point.y },
+        modifiers: event.modifiers,
+        style: window.currentStrokeStyle,
+        strokeCap: window.pencilCap,
+        id: uid
+      });
     }
   };
 
@@ -111,7 +122,11 @@ var tool;
     onMouseDowns(event, mfs);
   };
 
-  var onMouseDrags = window.onMouseDrags = function(event, mfs) {
+  var onMouseDrags = window.onMouseDrags = function(
+    event,
+    mfs,
+    realTimeObject
+  ) {
     if (!mfs && propagatingEventsToOtherViews) {
       localStorage.setItem(
         "storage-event-drag",
@@ -126,19 +141,25 @@ var tool;
       );
     }
 
+    var paperItem = realTimeObject || path;
     if (event.modifiers.shift) {
-      path.lastSegment.point = event.point;
+      paperItem.lastSegment.point = event.point;
     } else {
-      path.add(event.point);
+      paperItem.add(event.point);
 
       if (window.smoothing) {
-        path.smooth();
+        paperItem.smooth();
       }
     }
     if (mfs) {
       paper.project.view.update(true);
+    } else {
+      window.stream("drag", {
+        point: { x: event.point.x, y: event.point.y },
+        modifiers: event.modifiers,
+        id: paperItem.uid
+      });
     }
-    console.log("drag", mfs);
   };
 
   drawTool.onMouseDrag = function onMouseDrag(event, mfs) {
@@ -148,8 +169,9 @@ var tool;
   window.simplification = 1;
   window.smoothing = 0;
 
-  var onMouseUps = window.onMouseUps = function(event, mfs) {
-    if (!path) {
+  var onMouseUps = window.onMouseUps = function(event, mfs, realTimeObject) {
+    var paperItem = realTimeObject || path;
+    if (!paperItem) {
       return;
     }
     if (!mfs && propagatingEventsToOtherViews) {
@@ -168,24 +190,30 @@ var tool;
 
     if (!event.modifiers.shift) {
       if (window.simplification) {
-        path.simplify(window.simplification);
+        paperItem.simplify(window.simplification);
       }
 
       if (window.smoothing) {
-        path.smooth();
+        paperItem.smooth();
       }
     }
 
-    path.fullySelected = false;
+    paperItem.fullySelected = false;
 
     if (!mfs && window.send) {
-      send(path);
+      send(paperItem);
     }
 
     changePos(event.point);
 
     if (mfs) {
       paper.project.view.update();
+    } else {
+      window.stream("up", {
+        point: { x: event.point.x, y: event.point.y },
+        modifiers: event.modifiers,
+        id: paperItem.uid
+      });
     }
   };
 
@@ -567,7 +595,7 @@ var tool;
   };
 })();
 (function() {
-  var editTool = editTool = tool = new Tool();
+  var editTool = window.editTool = tool = new Tool();
   tool.onActivate = activate("editTool");
   tool.onDeactivate = deactivate("editTool");
 

@@ -20,6 +20,7 @@
     "log-buffer": "*",
     "mongodb": "^2.2.22",
     "redis": "^2.6.5",
+    "rtc-switch": "^1.3.0",
     "socketstream": "github:msand/socketstream#fix-transport-bundling"
   }
 }

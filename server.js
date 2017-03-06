@@ -61,6 +61,7 @@ module.exports = id => {
       "libs/classList.js",
       "libs/custom-event-polyfill.js",
       "libs/tinycolorpicker.js",
+      "libs/quickconnect.js",
       "app"
     ],
     tmpl: "*"
@@ -101,9 +102,17 @@ Disallow:`
   // Start web server
   const server = Server(ss.http.middleware);
 
+  var port = PORT || (NODE_PORT || 3000) + id * 10;
+
   // TCP/IP socket IO
-  server.listen(PORT || (NODE_PORT || 3000) + id * 10, NODE_IP || "localhost");
+  server.listen(port, NODE_IP || "localhost");
 
   // Start SocketStream
   ss.start(server);
+
+  const rtcServer = Server();
+
+  rtcServer.listen(port + 100, NODE_IP || "localhost");
+
+  require("./rtc")({ server: rtcServer, path: "/_rtc/" });
 };

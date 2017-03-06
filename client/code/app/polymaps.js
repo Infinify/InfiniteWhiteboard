@@ -16,18 +16,18 @@ document.getElementById("compassToggle").onclick = function() {
   compassStyle.display = compassStyle.display === "" ? "none" : "";
 };
 
-function iwbData() {
+window.mapData = function mapData() {
   return {
-    whiteboard: window.whiteboard,
-    data: {
-      mapZoom: map.zoom(),
-      c0: map.pointCoordinate(map.locationCoordinate(map.center()), {
-        x: 0,
-        y: 0
-      })
-    },
-    sid: getId()
+    mapZoom: map.zoom(),
+    c0: map.pointCoordinate(map.locationCoordinate(map.center()), {
+      x: 0,
+      y: 0
+    })
   };
+};
+
+function iwbData() {
+  return { whiteboard: window.whiteboard, data: mapData(), sid: getId() };
 }
 
 window.send = function(paperItem) {

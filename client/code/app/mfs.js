@@ -27,6 +27,11 @@ window.getId = function() {
   return getCookie("connect.sid") + window.name;
 };
 
+var unique = 0;
+window.getUID = function() {
+  return getId() + unique++;
+};
+
 function findPos(obj) {
   var curleft = 0, curtop = 0;
   if (obj.offsetParent) {

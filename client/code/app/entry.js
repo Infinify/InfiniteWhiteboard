@@ -64,4 +64,5 @@ require("/contentEditable");
 require("/timeMachine");
 require("/paperTools");
 require("/mfs");
+require("/rtc");
 require("/toolBar");

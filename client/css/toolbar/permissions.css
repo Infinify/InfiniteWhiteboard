@@ -18,26 +18,30 @@
 }
 
 .aclUsername {
-    min-width: 193px;
+    min-width: 185px;
     display: inline-block;
     border: 1px solid #bdbdbd;
     outline: none;
     background: rgba(0,0,0,0);
     color: #949494;
     font-size: 15px;
-    max-width: 176px;
+    max-width: 185px;
     height: 37px;
     line-height: 37px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     vertical-align: middle;
-    padding: 0 15px 0 15px;
+    padding: 0 6px;
     margin-bottom: 10px;
 }
 
 .aclRule button {
     vertical-align: baseline;
+    height: 28px;
+    width: 28px;
+    padding: 0;
+    margin: 0;
 }
 
 .aclHeader {
@@ -45,8 +49,8 @@
 }
 
 #aclUsernameField {
-    width: 193px;
-    max-width: 193px;
+    width: 185px;
+    max-width: 185px;
 }
 
 #closeAclDialogButton {

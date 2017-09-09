@@ -39,20 +39,28 @@ exports.actions = (req, res, ss, stream) => {
       });
     },
     getNumObjects(whiteboard) {
-      db(db => db.collection(whiteboard).find().count(), res);
+      db(
+        db =>
+          db
+            .collection(whiteboard)
+            .find()
+            .count(),
+        res
+      );
     },
     streamObjects(whiteboard, begin) {
       db(
-        db => new Promise((resolve, reject) => {
-          const cursorStream = db
-            .collection(whiteboard)
-            .find()
-            .skip(begin)
-            .stream();
-          cursorStream.pipe(stream);
-          cursorStream.on("end", resolve);
-          cursorStream.on("error", reject);
-        })
+        db =>
+          new Promise((resolve, reject) => {
+            const cursorStream = db
+              .collection(whiteboard)
+              .find()
+              .skip(begin)
+              .stream();
+            cursorStream.pipe(stream);
+            cursorStream.on("end", resolve);
+            cursorStream.on("error", reject);
+          })
       );
     },
     sendMessage(message) {

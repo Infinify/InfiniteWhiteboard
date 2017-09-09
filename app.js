@@ -4,11 +4,16 @@ if (isWorker) {
   process.on("message", require("./worker"));
 }
 
-require("./boardCache.js").init().then(() => {
-  if (isMaster) {
-    require("./master");
-  }
-}, err => {
-  console.log(err);
-  process.exit(1);
-});
+require("./boardCache.js")
+  .init()
+  .then(
+    () => {
+      if (isMaster) {
+        require("./master");
+      }
+    },
+    err => {
+      console.log(err);
+      process.exit(1);
+    }
+  );

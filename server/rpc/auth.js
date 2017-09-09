@@ -55,9 +55,9 @@ exports.actions = (req, res) => {
     const session = req.session;
     session.authenticated = true;
     session.userData = user;
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       session.setUserId(user._id, () => resolve(true));
-    })
+    });
   }
 
   return {
@@ -65,36 +65,32 @@ exports.actions = (req, res) => {
       const session = req.session;
       session.authenticated = false;
       session.userData = false;
-      session.anonymousUser = `user_${Math
-        .random()
+      session.anonymousUser = `user_${Math.random()
         .toString(36)
         .substring(12)}`;
-      session.setUserId(session.anonymousUser, function () {
+      session.setUserId(session.anonymousUser, function() {
         res();
       });
     },
     login(credentials) {
-      db(
-        db => {
-          return db
-            .collection("_users")
-            .find({ username: credentials.username })
-            .toArray()
-            .then(users => {
-              if (users.length < 1) {
-                throw new Error("No user found");
+      db(db => {
+        return db
+          .collection("_users")
+          .find({ username: credentials.username })
+          .toArray()
+          .then(users => {
+            if (users.length < 1) {
+              throw new Error("No user found");
+            }
+            const user = users[0];
+            return checkHash(credentials, user).then(isMatch => {
+              if (isMatch) {
+                return setUserData(user);
               }
-              const user = users[0];
-              return checkHash(credentials, user).then(isMatch => {
-                if (isMatch) {
-                  return setUserData(user);
-                }
-                return isMatch;
-              });
+              return isMatch;
             });
-        },
-        res
-      );
+          });
+      }, res);
     },
     getUserByName(username) {
       db(
@@ -115,30 +111,27 @@ exports.actions = (req, res) => {
         return res("userExists");
       }
 
-      db(
-        db => {
-          return db
-            .collection("_users")
-            .find({ username })
-            .count()
-            .then(count => {
-              if (count > 0) {
-                throw new Error("userExists");
-              }
+      db(db => {
+        return db
+          .collection("_users")
+          .find({ username })
+          .count()
+          .then(count => {
+            if (count > 0) {
+              throw new Error("userExists");
+            }
 
-              return hash(credentials)
-                .then(hash => {
-                  return db
-                    .collection("_users")
-                    .insertOne({ username, hash, bcrypt: true });
-                })
-                .then(result => {
-                  setUserData((result.ops || result)[0]);
-                });
-            });
-        },
-        res
-      );
+            return hash(credentials)
+              .then(hash => {
+                return db
+                  .collection("_users")
+                  .insertOne({ username, hash, bcrypt: true });
+              })
+              .then(result => {
+                setUserData((result.ops || result)[0]);
+              });
+          });
+      }, res);
     },
     getUserObject() {
       const session = req.session;
@@ -151,15 +144,20 @@ exports.actions = (req, res) => {
         });
       } else {
         if (!session.anonymousUser) {
-          session.anonymousUser = `user_${Math
-            .random()
+          session.anonymousUser = `user_${Math.random()
             .toString(36)
             .substring(12)}`;
           session.setUserId(session.anonymousUser, () => {
-            res(null, { anonymous: session.anonymousUser, sessionId: session.id });
+            res(null, {
+              anonymous: session.anonymousUser,
+              sessionId: session.id
+            });
           });
         } else {
-          res(null, { anonymous: session.anonymousUser, sessionId: session.id });
+          res(null, {
+            anonymous: session.anonymousUser,
+            sessionId: session.id
+          });
         }
       }
     }

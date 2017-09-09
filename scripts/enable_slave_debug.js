@@ -1,7 +1,8 @@
 const cluster = require("cluster");
 
 if (cluster.isMaster) {
-  const DEBUG_BRK = "--debug-brk=", fixedExecArgv = [];
+  const DEBUG_BRK = "--debug-brk=";
+  const fixedExecArgv = [];
 
   let modified = false;
 

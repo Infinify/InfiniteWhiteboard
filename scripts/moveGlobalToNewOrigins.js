@@ -1,7 +1,8 @@
 require("../config").db(async db => {
-  const names = (await db.collection("_whiteboards").find().toArray()).map(
-    w => w.name
-  );
+  const names = (await db
+    .collection("_whiteboards")
+    .find()
+    .toArray()).map(w => w.name);
 
   let i = 1;
   while (names.indexOf(`Origins${i}`) !== -1) {

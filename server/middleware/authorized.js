@@ -1,5 +1,5 @@
-const { boards, needsToCheckAccessControl } = require("../../boardCache"),
-  { isAllowed } = require("../auth");
+const { boards, needsToCheckAccessControl } = require("../../boardCache");
+const { isAllowed } = require("../auth");
 
 const role = {
   "iwb.send": "edit",
@@ -22,11 +22,10 @@ exports.check = () => (req, res, next) => {
     return res("404 Not Found");
   }
 
-  Promise
-    .resolve(
-      !needsToCheckAccessControl(whiteboard, req) ||
-        isAllowed(whiteboard, req, role[req.method])
-    )
+  Promise.resolve(
+    !needsToCheckAccessControl(whiteboard, req) ||
+      isAllowed(whiteboard, req, role[req.method])
+  )
     .then(allowed => {
       if (allowed) {
         next();

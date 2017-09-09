@@ -34,12 +34,9 @@ if (NODE_ENV === "production") {
   buffer(4096, () => {
     return `${new Date().toISOString()}: `;
   });
-  setInterval(
-    () => {
-      buffer.flush();
-    },
-    5000
-  );
+  setInterval(() => {
+    buffer.flush();
+  }, 5000);
 } else {
   require("./scripts/enable_slave_debug");
   process.on("uncaughtException", e => {

@@ -1,6 +1,8 @@
-const { setUserRole, removeUserRoles, getUsersAndPermissions } = require(
-  "../auth.js"
-);
+const {
+  setUserRole,
+  removeUserRoles,
+  getUsersAndPermissions
+} = require("../auth.js");
 
 exports.actions = (req, res) => {
   req.use("session");

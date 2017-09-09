@@ -1,7 +1,9 @@
 const { db } = require("../../config.js");
-const { createWhiteboard, boards, needsToCheckAccessControl } = require(
-  "../../boardCache.js"
-);
+const {
+  createWhiteboard,
+  boards,
+  needsToCheckAccessControl
+} = require("../../boardCache.js");
 const { getAccessibleWhiteboardsForUser, isAllowed } = require("../auth.js");
 const { isWorker } = require("cluster");
 const redis = require("redis");
@@ -14,7 +16,7 @@ const noop = () => {};
 pubsub.on("pmessage", function(pattern, channel, message) {
   if (message.slice(0, 4) === "iwb|") {
     const parts = message.split("|");
-    const [iwb, whiteboard, user] = parts;
+    const [, whiteboard, user] = parts;
     client.srem(`iwb|${whiteboard}`, user, noop);
   }
 });
@@ -29,7 +31,9 @@ exports.actions = (req, res, ss) => {
 
   return {
     getWhiteboardNames() {
-      const publicBoards = [], privateBoards = [], user = req.session.userId;
+      const publicBoards = [];
+      const privateBoards = [];
+      const user = req.session.userId;
 
       for (const board of Object.values(boards)) {
         const { owner } = board;
@@ -40,13 +44,12 @@ exports.actions = (req, res, ss) => {
         }
       }
 
-      Promise
-        .all([
-          getAccessibleWhiteboardsForUser("anyone"),
-          getAccessibleWhiteboardsForUser(
-            req.session.userData && req.session.userData.username
-          )
-        ])
+      Promise.all([
+        getAccessibleWhiteboardsForUser("anyone"),
+        getAccessibleWhiteboardsForUser(
+          req.session.userData && req.session.userData.username
+        )
+      ])
         .then(([anyone, user]) => {
           res(null, { publicBoards, privateBoards, anyone, user });
         })
@@ -55,9 +58,9 @@ exports.actions = (req, res, ss) => {
     createWhiteboard(name) {
       if (
         name === undefined ||
-          name === null ||
-          name === "" ||
-          underscoreRegEx.test(name)
+        name === null ||
+        name === "" ||
+        underscoreRegEx.test(name)
       ) {
         return res("Invalid name");
       }
@@ -71,50 +74,49 @@ exports.actions = (req, res, ss) => {
 
       const board = { name, owner };
 
-      db(
-        db => {
-          return Promise
-            .all([
-              name in boards,
-              db.listCollections({ name }).toArray(),
-              db.collection("_whiteboards").find({ name }).count()
-            ])
-            .then(p => {
-              if (p[0] || p[1].length || p[2]) {
-                throw new Error("Whiteboard exists");
-              }
+      db(db => {
+        return Promise.all([
+          name in boards,
+          db.listCollections({ name }).toArray(),
+          db
+            .collection("_whiteboards")
+            .find({ name })
+            .count()
+        ])
+          .then(p => {
+            if (p[0] || p[1].length || p[2]) {
+              throw new Error("Whiteboard exists");
+            }
 
-              return Promise.all([
-                db.collection("_whiteboards").insertOne(board),
-                db.createCollection(`chatlog_${name}`),
-                db.createCollection(name)
-              ]);
-            })
-            .then(() => {
-              if (isWorker) {
-                process.send(board);
-              } else {
-                createWhiteboard(board);
-              }
-              return name;
-            });
-        },
-        res
-      );
+            return Promise.all([
+              db.collection("_whiteboards").insertOne(board),
+              db.createCollection(`chatlog_${name}`),
+              db.createCollection(name)
+            ]);
+          })
+          .then(() => {
+            if (isWorker) {
+              process.send(board);
+            } else {
+              createWhiteboard(board);
+            }
+            return name;
+          });
+      }, res);
     },
     changePosition(whiteboard, url, offset) {
-      const user = req.session.userData && req.session.userData.username ||
+      const user =
+        (req.session.userData && req.session.userData.username) ||
         req.session.anonymousUser;
       client.setex(`iwb|${whiteboard}|${user}`, 10 * 60, url, noop);
       ss.publish.channel(whiteboard, "newPos", { user, url, offset });
       res();
     },
     getOnlineUsers(whiteboard) {
-      Promise
-        .resolve(
-          !needsToCheckAccessControl(whiteboard, req) ||
-            isAllowed(whiteboard, req, "view")
-        )
+      Promise.resolve(
+        !needsToCheckAccessControl(whiteboard, req) ||
+          isAllowed(whiteboard, req, "view")
+      )
         .then(allowed => {
           if (allowed) {
             whiteboard = encodeURIComponent(whiteboard);
@@ -128,7 +130,8 @@ exports.actions = (req, res, ss) => {
         });
     },
     changeWhiteboard(from, to) {
-      let user = req.session.userData && req.session.userData.username ||
+      let user =
+        (req.session.userData && req.session.userData.username) ||
         req.session.anonymousUser;
       if (from) {
         req.session.channel.unsubscribe(from);
@@ -141,10 +144,9 @@ exports.actions = (req, res, ss) => {
         }
       }
       if (to) {
-        Promise
-          .resolve(
-            !needsToCheckAccessControl(to, req) || isAllowed(to, req, "view")
-          )
+        Promise.resolve(
+          !needsToCheckAccessControl(to, req) || isAllowed(to, req, "view")
+        )
           .then(allowed => {
             if (allowed) {
               req.session.channel.subscribe(to);

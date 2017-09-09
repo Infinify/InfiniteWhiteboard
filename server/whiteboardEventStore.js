@@ -17,7 +17,7 @@ module.exports = (req, res) => {
     return;
   }
 
-  let [_match, username, whiteboard, id] = e;
+  let [, username, whiteboard, id] = e;
 
   if (!whiteboard) {
     whiteboard = "_global";
@@ -33,24 +33,21 @@ module.exports = (req, res) => {
     return;
   }
 
-  Promise
-    .resolve(
-      !needsToCheckAccessControl(whiteboard, req) ||
-        isAllowed(whiteboard, req, "view")
-    )
+  Promise.resolve(
+    !needsToCheckAccessControl(whiteboard, req) ||
+      isAllowed(whiteboard, req, "view")
+  )
     .then(allowed => {
       if (allowed) {
         if (id) {
           return db(db =>
-            db
-              .collection(whiteboard)
-              .findOne({ _id: new ObjectID(id) })).then(result => {
-            const json = JSON
-              .stringify(result)
-              .replace(/[\u007f-\uffff]/g, function(c) {
-                return "\\u" +
-                  ("0000" + c.charCodeAt(0).toString(16)).slice(-4);
-              });
+            db.collection(whiteboard).findOne({ _id: new ObjectID(id) })
+          ).then(result => {
+            const json = JSON.stringify(
+              result
+            ).replace(/[\u007f-\uffff]/g, function(c) {
+              return "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4);
+            });
             res.writeHead(200, {
               "Cache-Control": "public, max-age=31536000",
               "Content-type": "application/json",
@@ -60,22 +57,23 @@ module.exports = (req, res) => {
           });
         } else {
           return db(
-            db => new Promise((resolve, reject) => {
-              const cursorStream = db
-                .collection(whiteboard)
-                .find({}, { _id: 1 })
-                .stream();
+            db =>
+              new Promise((resolve, reject) => {
+                const cursorStream = db
+                  .collection(whiteboard)
+                  .find({}, { _id: 1 })
+                  .stream();
 
-              res.writeHead(200);
-              cursorStream.on("error", reject);
-              cursorStream.on("data", function(data) {
-                res.write(`"${data._id}"\n`);
-              });
-              cursorStream.on("end", function() {
-                res.end();
-                resolve();
-              });
-            })
+                res.writeHead(200);
+                cursorStream.on("error", reject);
+                cursorStream.on("data", function(data) {
+                  res.write(`"${data._id}"\n`);
+                });
+                cursorStream.on("end", function() {
+                  res.end();
+                  resolve();
+                });
+              })
           );
         }
       } else {

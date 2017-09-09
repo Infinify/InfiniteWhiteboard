@@ -8,7 +8,14 @@ const allowedRoles = {
 };
 
 function acl(query, res) {
-  return db(db => db.collection("_acl").find(query).toArray(), res);
+  return db(
+    db =>
+      db
+        .collection("_acl")
+        .find(query)
+        .toArray(),
+    res
+  );
 }
 
 function isAllowed(username, resource, requestedRole) {
@@ -23,28 +30,28 @@ module.exports = {
     if (!allowedRoles.hasOwnProperty(role)) {
       return res(`Unrecognized role: ${role}`);
     }
-    db(
-      db => {
-        return Promise
-          .resolve(
-            username === "anyone" ||
-              db.collection("_users").find({ username }).count()
-          )
-          .then(user => {
-            if (!user) {
-              throw new Error(`User does not exist ${username}`);
-            }
+    db(db => {
+      return Promise.resolve(
+        username === "anyone" ||
+          db
+            .collection("_users")
+            .find({ username })
+            .count()
+      ).then(user => {
+        if (!user) {
+          throw new Error(`User does not exist ${username}`);
+        }
 
-            return db
-              .collection("_acl")
-              .updateOne({ username, resource }, { username, resource, role }, {
-                safe: true,
-                upsert: true
-              });
-          });
-      },
-      res
-    );
+        return db.collection("_acl").updateOne(
+          { username, resource },
+          { username, resource, role },
+          {
+            safe: true,
+            upsert: true
+          }
+        );
+      });
+    }, res);
   },
   removeUserRoles(resource, username, res) {
     db(db => db.collection("_acl").deleteOne({ username, resource }), res);
@@ -53,8 +60,9 @@ module.exports = {
     if (!allowedRoles.hasOwnProperty(role)) {
       throw new Error(`Unrecognized role: ${role}`);
     }
-    return Promise
-      .resolve(req.session.userData && req.session.userData.username)
+    return Promise.resolve(
+      req.session.userData && req.session.userData.username
+    )
       .then(username => {
         return username && isAllowed(username, resource, role);
       })

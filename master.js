@@ -34,12 +34,6 @@ if (production) {
   });
 }
 
-if (!workers) {
-  return require("./server")(0);
-}
-
-console.log(`Starting server with ${workers} workers`);
-
 function messageHandler(msg) {
   for (const worker of Object.values(cluster.workers)) {
     worker.send(msg);
@@ -54,11 +48,17 @@ function setupWorker(worker, id) {
   worker.send({ id });
 }
 
-for (let i = 0; i < workers; i++) {
-  setupWorker(cluster.fork(), i);
-}
+if (!workers) {
+  require("./server")(0);
+} else {
+  console.log(`Starting server with ${workers} workers`);
 
-cluster.on("exit", (worker, code, signal) => {
-  console.log(`worker exit code: ${code} signal: ${signal}`);
-  setupWorker(cluster.fork(), workerIdToPid.indexOf(worker.process.pid));
-});
+  for (let i = 0; i < workers; i++) {
+    setupWorker(cluster.fork(), i);
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`worker exit code: ${code} signal: ${signal}`);
+    setupWorker(cluster.fork(), workerIdToPid.indexOf(worker.process.pid));
+  });
+}

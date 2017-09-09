@@ -1,28 +1,22 @@
-var rps = {};
+let rps = {};
 // Reset request per second tracking every second
-setInterval(
-  function resetTrackers() {
-    rps = {};
-  },
-  1000
-);
+setInterval(function resetTrackers() {
+  rps = {};
+}, 1000);
 
-var warned = {};
+let warned = {};
 // Reset warned connections every minute
-setInterval(
-  function resetWarned() {
-    warned = {};
-  },
-  60 * 1000
-);
+setInterval(function resetWarned() {
+  warned = {};
+}, 60 * 1000);
 
-var msg = "Too Many Requests";
+const msg = "Too Many Requests";
 
-var maxRequestsPerSecond = 100;
+const maxRequestsPerSecond = 100;
 function check(id, res) {
   if (id) {
     if (!rps[id]) rps[id] = 0;
-    var count = ++rps[id];
+    const count = ++rps[id];
     if (count > maxRequestsPerSecond) {
       if (!warned[id]) {
         warned[id] = true;
@@ -44,8 +38,8 @@ exports.limit = function rateLimit() {
   return function checkRateLimit(req, res, next) {
     if (
       check(req.sessionID, res) &&
-        check(req.socketId, res) &&
-        check(req.sessionId, res)
+      check(req.socketId, res) &&
+      check(req.sessionId, res)
     ) {
       next();
     }

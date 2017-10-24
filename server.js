@@ -60,7 +60,6 @@ module.exports = id => {
       "libs/dexie.js",
       "libs/classList.js",
       "libs/custom-event-polyfill.js",
-      "libs/tinycolorpicker.js",
       "libs/quickconnect.js",
       "app"
     ],

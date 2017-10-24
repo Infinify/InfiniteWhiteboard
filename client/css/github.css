@@ -1,48 +1,9 @@
-@font-face {
-  font-family: Octicons;
-  src: url(https://buttons.github.io/components/octicons/build/font/octicons.eot?ef21c39f0ca9b1b5116e5eb7ac5eabe6);
-  src: url(https://buttons.github.io/components/octicons/build/font/octicons.eot?#iefix) format("embedded-opentype"), url(https://buttons.github.io/components/octicons/build/font/octicons.woff2?ef21c39f0ca9b1b5116e5eb7ac5eabe6) format("woff2"), url(https://buttons.github.io/components/octicons/build/font/octicons.woff?ef21c39f0ca9b1b5116e5eb7ac5eabe6) format("woff"), url(https://buttons.github.io/components/octicons/build/font/octicons.ttf?ef21c39f0ca9b1b5116e5eb7ac5eabe6) format("truetype"), url(https://buttons.github.io/components/octicons/build/font/octicons.svg?ef21c39f0ca9b1b5116e5eb7ac5eabe6#octicons) format("svg");
-  font-weight: 400;
-  font-style: normal
-}
-
-.octicon-mark-github:before {
-  content: "\f00a"
-}
-
 .button span {
+  vertical-align: top;
   font-weight: 600;
-  font-size: 12px
-}
-
-.button i {
-  font-size: 16px
-}
-
-.button i, .button span {
+  font-size: 12px;
   line-height: 26px;
   color: #333
-}
-
-.octicon-mark-github {
-  width: 1em
-}
-
-.octicon {
-  _overflow: hidden
-}
-
-.octicon {
-  font: 16px/1 Octicons;
-  display: inline-block;
-  text-decoration: none;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  speak: none
 }
 
 .button {
@@ -52,7 +13,7 @@
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#eeeeee')";
   display: inline-block;
   height: 26px;
-  padding: 0 10px;
+  padding: 1px 6px;
   color: #333;
   vertical-align: middle;
   cursor: pointer;

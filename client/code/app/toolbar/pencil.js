@@ -1,6 +1,11 @@
+var hexToRgbA = require('./hexToRgbA.js');
+
 var pencilStrokeWidth = document.getElementById("pencilStrokeWidth");
-pencilStrokeWidth.onchange = function() {
-  window.currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
+var pencilStrokeWidthValue = document.getElementById("pencilStrokeWidthValue");
+pencilStrokeWidth.oninput = function() {
+  var value = pencilStrokeWidth.value;
+  window.currentStrokeStyle.strokeWidth = value;
+  pencilStrokeWidthValue.textContent = value;
 };
 
 document.getElementById("miterSelector").onchange = function(event) {
@@ -16,52 +21,57 @@ function colorPickedHandler(color, which) {
   document.dispatchEvent(new CustomEvent("setColor"));
 }
 
-var currentFillColor = document.getElementById("currentFillColor");
-var fill = tinycolorpicker(currentFillColor);
-currentFillColor.onchange = function colorPickedHandlerFill() {
-  colorPickedHandler(fill.colorHex, "fill");
+var fillColor = document.getElementById("currentFillColor");
+var fillAlpha = document.getElementById("pencilFillAlpha");
+fillAlpha.onchange = fillColor.onchange = function colorPickedHandlerFill() {
+  colorPickedHandler(hexToRgbA(fillColor.value, fillAlpha.value), "fill");
+};
+fillAlpha.oninput = function updateOpacity() {
+  fillColor.style.opacity = fillAlpha.value;
 };
 
-var currentStrokeColor = document.getElementById("currentStrokeColor");
-var stroke = tinycolorpicker(currentStrokeColor);
-currentStrokeColor.onchange = function colorPickedHandlerFill() {
-  colorPickedHandler(stroke.colorHex, "stroke");
+var strokeColor = document.getElementById("currentStrokeColor");
+var strokeAlpha = document.getElementById("pencilStrokeAlpha");
+strokeAlpha.onchange = strokeColor.onchange = function colorPickedHandlerStroke() {
+  colorPickedHandler(hexToRgbA(strokeColor.value, strokeAlpha.value), "stroke");
+};
+strokeAlpha.oninput = function updateOpacity() {
+  strokeColor.style.opacity = strokeAlpha.value;
 };
 
 var palette = document.querySelector(".palette");
 palette.onclick = function(event) {
   var parent = event.target.parentElement;
-  var fillColor = parent.querySelector(".fill").style.backgroundColor;
-  var strokeColor = parent.querySelector(".stroke").style.backgroundColor;
-  currentStrokeStyle.fillColor = fillColor;
-  currentStrokeStyle.strokeColor = strokeColor;
-  fillColor = currentStrokeStyle.fillColor;
-  fillColor = fillColor && fillColor.toCSS ? fillColor.toCSS() : fillColor;
-  strokeColor = currentStrokeStyle.strokeColor;
-  strokeColor = strokeColor && strokeColor.toCSS
-    ? strokeColor.toCSS()
-    : strokeColor;
-  fill.setColor(fillColor);
-  stroke.setColor(strokeColor);
+  var li = parent === palette ? event.target : parent;
+  var fill = new paper.Color(li.querySelector(".fill").style.backgroundColor);
+  var stroke = new paper.Color(li.querySelector(".stroke").style.backgroundColor);
+  currentStrokeStyle.fillColor = fill;
+  currentStrokeStyle.strokeColor = stroke;
+  fillAlpha.value = fill && fill._alpha ? fill._alpha : 1;
+  strokeAlpha.value = stroke && stroke._alpha ? stroke._alpha : 1;
+  fillColor.value = fill.toCSS(true);
+  strokeColor.value = stroke.toCSS(true);
 };
 
 document.addEventListener("setColor", function() {
-  var fillColor = currentStrokeStyle.fillColor;
-  fillColor = fillColor && fillColor.toCSS ? fillColor.toCSS() : "";
-  var strokeColor = currentStrokeStyle.strokeColor;
-  strokeColor = strokeColor && strokeColor.toCSS
-    ? strokeColor.toCSS()
-    : strokeColor;
-  fill.setColor(fillColor);
-  stroke.setColor(strokeColor);
+  var fill = currentStrokeStyle.fillColor;
+  fillAlpha.value = fill ? fill._alpha : 0;
+  fill = fill && fill.toCSS ? fill.toCSS(true) : "";
+  var stroke = currentStrokeStyle.strokeColor;
+  strokeAlpha.value = stroke && stroke._alpha ? stroke._alpha : 1;
+  stroke = stroke && stroke.toCSS
+    ? stroke.toCSS(true)
+    : stroke;
+  fillColor.value = fill;
+  strokeColor.value = stroke;
   palette.insertBefore(
     htmlToElement(
       "<li>" +
         '<div class="stroke" style="background-color: ' +
-        strokeColor +
+        hexToRgbA(strokeColor.value, strokeAlpha.value) +
         '"></div>' +
         '<div class="fill" style="background-color: ' +
-        fillColor +
+        hexToRgbA(fillColor.value, fillAlpha.value) +
         '"></div>' +
         "</li>"
     ),
@@ -84,11 +94,9 @@ pencil.querySelector(".toolHeader").onclick = function() {
   var currentStrokeStyle = window.currentStrokeStyle;
   currentStrokeStyle.strokeWidth = pencilStrokeWidth.value;
 
-  var color = fill.colorHex;
-  currentStrokeStyle.fillColor = color ? new paper.Color(color) : undefined;
+  currentStrokeStyle.fillColor = new paper.Color(hexToRgbA(fillColor.value, fillAlpha.value));
 
-  color = stroke.colorHex;
-  currentStrokeStyle.strokeColor = color && new paper.Color(color);
+  currentStrokeStyle.strokeColor = new paper.Color(hexToRgbA(strokeColor.value, strokeAlpha.value));
 
   if (
     !colorPickerClasses.contains("active") &&

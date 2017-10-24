@@ -93,28 +93,25 @@
 
         <div class="toolContent">
           <div style="line-height:40px; border:0; text-align:center; vertical-align: middle;">
-            <div class="colorPicker" id="currentFillColor" title="Select fill color for pencil">
-              <a class="color"><div class="colorInner"></div></a>
-              <div class="track"></div>
-              <ul class="dropdown"><li></li></ul>
-              <input type="hidden" class="colorInput"/>
-            </div>
-            <div class="colorPicker" id="currentStrokeColor" title="Select stroke color for pencil">
-              <a class="color"><div class="colorInner"></div></a>
-              <div class="track"></div>
-              <ul class="dropdown"><li></li></ul>
-              <input type="hidden" class="colorInput"/>
-            </div>
+            <label>Fill<input type="color" class="colorPicker" id="currentFillColor" title="Select fill color for pencil" style="opacity: 0"/></label>
+            <input type="range" class="alphaSlider" id="pencilFillAlpha" min="0" max="1" step="any" value="0" title="Select fill alpha transparency for pencil" />
+
+            <label>Stroke<input type="color" class="colorPicker" id="currentStrokeColor" title="Select stroke color for pencil" /></label>
+            <input type="range" class="alphaSlider" id="pencilStrokeAlpha" min="0" max="1" step="any" value="1" title="Select stroke alpha transparency for pencil" />
             <br>
+            
             <label for="miterSelector">Cap</label>
             <select id="miterSelector" name="miterSelector">
               <option value="Round" selected="">Round</option>
               <option value="Butt">Butt</option>
             </select>
+            <br>
+
+            <label>
+              <input type="range" min="1" max="50" value="10" id="pencilStrokeWidth" title="Select pencil stroke width in pixels"/>
+              <span id="pencilStrokeWidthValue">10</span>px Width
+            </label>
           </div>
-          
-          <input type="range" min="1" max="50" value="10" id="pencilStrokeWidth" />
-          <div style="font-size:12px; margin-bottom: 10px;">Width</div>
           
           <div style="text-align: center">
             <a class="toolActivator" id="colorPickerTool" onclick="window.colorPickerTool.activate()">Picker</a>
@@ -133,22 +130,17 @@
 
         <div class="toolContent">
           <div style="line-height:40px; border:0; text-align:center; vertical-align: middle;">
-            <div class="colorPicker" id="currentShapeFillColor" title="Select fill color for shape tools">
-              <a class="color"><div class="colorInner"></div></a>
-              <div class="track"></div>
-              <ul class="dropdown"><li></li></ul>
-              <input type="hidden" class="colorInput"/>
-            </div>
-            <div class="colorPicker" id="currentShapeStrokeColor" title="Select stroke color for shape tools">
-              <a class="color"><div class="colorInner"></div></a>
-              <div class="track"></div>
-              <ul class="dropdown"><li></li></ul>
-              <input type="hidden" class="colorInput"/>
-            </div>
+            <label>Fill<input type="color" class="colorPicker" id="shapeFillColor" title="Select fill color for shape tools" /></label>
+            <input type="range" class="alphaSlider" id="shapeFillAlpha" min="0" max="1" step="any" value="1" title="Select fill alpha transparency for shape tools" />
+
+            <label>Stroke<input type="color" class="colorPicker" id="shapeStrokeColor" title="Select stroke color for shape tools" /></label>
+            <input type="range" class="alphaSlider" id="shapeStrokeAlpha" min="0" max="1" step="any" value="1" title="Select stroke alpha transparency for shape tools" />
+
+            <label>
+              <span id="shapeStrokeWidthValue">10</span>px Width
+              <input type="range" min="1" max="50" value="10" id="shapeStrokeWidth" title="Select shape stroke width in pixels"/>
+            </label>
           </div>
-          
-          <input type="range" min="1" max="50" value="10" id="shapeStrokeWidth" />
-          <div style="font-size:12px; margin-bottom: 10px;">Width</div>
 
           <div id="paperToolsContainer">
             <a class="toolActivator" id="circleTool" onclick="window.circleTool.activate();">Circle</a>
@@ -296,7 +288,14 @@
     </div>
     
     <div class="toolbar-footer">
-      <a href="https://github.com/Infinify/InfiniteWhiteboard" class="button" aria-label="Star Infinify/InfiniteWhiteboard on GitHub"><i class="octicon octicon-mark-github" aria-hidden="true"></i> <span>Star</span></a>
+      <a href="https://github.com/Infinify/InfiniteWhiteboard" class="button"
+         aria-label="Star Infinify/InfiniteWhiteboard on GitHub">
+        <svg aria-labelledby="simpleicons-github-icon" role="img" width="24px" height="26px" viewBox="0 -1 24 26" xmlns="http://www.w3.org/2000/svg">
+          <title id="simpleicons-github-icon">GitHub icon</title>
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path>
+        </svg>
+        <span>Github</span>
+      </a>
       <button id="mfsb" class="whiteButton" title="Multi-FullScreen mode, use several browser windows as one surface">MFS</button>
       <button id="compassToggle" class="iconButton icon-compass-circled" tabindex="-1" title="Show / Hide Compass"></button>
     </div>
@@ -315,12 +314,8 @@
         <option value="Helvetica">Helvetica</option>
       </select>
 
-      <div class="colorPicker" id="textFillColor" title="Text fill color">
-        <a class="color"><div class="colorInner"></div></a>
-        <div class="track"></div>
-        <ul class="dropdown"><li></li></ul>
-        <input type="hidden" class="colorInput"/>
-      </div>
+      <label>Text fill color<input type="color" class="colorPicker" id="textFillColor" title="Select fill color for text tool" /></label>
+      <input type="range" class="alphaSlider" id="textFillAlpha" min="0" max="1" step="any" value="1" title="Select fill alpha transparency for text tool" />
 
       <br />
       <br />

@@ -4,7 +4,14 @@ document.addEventListener("finishedRender", function() {
     ? location.hostname + ":" + (+location.port + 100)
     : location.host;
   var quickConnectObj = quickconnect("//" + host + "/_rtc", {
-    room: window.whiteboard
+    room: window.whiteboard,
+    iceServers: [
+      { url: 'stun:stun.l.google.com:19302' },
+      { url: 'stun:stun1.l.google.com:19302' },
+      { url: 'stun:stun2.l.google.com:19302' },
+      { url: 'stun:stun3.l.google.com:19302' },
+      { url: 'stun:stun4.l.google.com:19302' }
+    ]
   });
 
   quickConnectObj.createDataChannel("shared-drawing");

@@ -23,3 +23,12 @@
     border: 1px solid;
     display: inline-block
 }
+
+.palette li:hover div {
+    border-color: transparent;
+}
+
+.colorPicker {
+    margin-left: 1em;
+    vertical-align: middle
+}

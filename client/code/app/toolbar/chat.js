@@ -161,7 +161,16 @@ function userCreator(map, name) {
     if (user.pos) {
       window.location = user.pos;
     }
-    following = following === user ? null : user;
+    if (following === user) {
+      following.div.style.fontWeight = 400;
+      following = null;
+    } else {
+      if (following) {
+        following.div.style.fontWeight = 400;
+      }
+      following = user;
+      following.div.style.fontWeight = 700;
+    }
   };
   map.userListDiv.appendChild(div);
   return map;

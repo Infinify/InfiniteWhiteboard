@@ -1,3 +1,5 @@
+var hexToRgbA = require('./hexToRgbA.js');
+
 function colorPickedHandler(color, which) {
   if (color) {
     window.currentStrokeStyle[which + "Color"] = new paper.Color(color);
@@ -6,28 +8,33 @@ function colorPickedHandler(color, which) {
   }
 }
 
-colorPickedHandler(window.initColor, "stroke");
+colorPickedHandler(hexToRgbA(window.initColor), "stroke");
 
-var currentShapeFillColorDiv = document.getElementById("currentShapeFillColor");
-var currentShapeFillColor = tinycolorpicker(currentShapeFillColorDiv);
-currentShapeFillColorDiv.onchange = function colorPickedHandlerFill() {
-  var color = currentShapeFillColor.colorHex;
-  colorPickedHandler(color, "fill");
+var shapeFillColor = document.getElementById("shapeFillColor");
+var shapeFillAlpha = document.getElementById("shapeFillAlpha");
+shapeFillAlpha.onchange = shapeFillColor.onchange = function colorPickedHandlerFill() {
+  colorPickedHandler(hexToRgbA(shapeFillColor.value, shapeFillAlpha.value), "fill");
+};
+shapeFillAlpha.oninput = function updateOpacity() {
+  shapeFillColor.style.opacity = shapeFillAlpha.value;
 };
 
-var currentShapeStrokeColorDiv = document.getElementById(
-  "currentShapeStrokeColor"
-);
-var currentShapeStrokeColor = tinycolorpicker(currentShapeStrokeColorDiv);
-currentShapeStrokeColorDiv.onchange = function colorPickedHandlerStroke() {
-  var color = currentShapeStrokeColor.colorHex;
-  colorPickedHandler(color, "stroke");
+var shapeStrokeColor = document.getElementById("shapeStrokeColor");
+var shapeStrokeAlpha = document.getElementById("shapeStrokeAlpha");
+shapeStrokeAlpha.onchange = shapeStrokeColor.onchange = function colorPickedHandlerStroke() {
+  colorPickedHandler(hexToRgbA(shapeStrokeColor.value, shapeStrokeAlpha.value), "stroke");
 };
-currentShapeStrokeColor.setColor(window.initColor);
+shapeStrokeAlpha.oninput = function updateOpacity() {
+  shapeStrokeColor.style.opacity = shapeStrokeAlpha.value;
+};
+shapeStrokeColor.value = window.initColor;
 
 var shapeStrokeWidth = document.getElementById("shapeStrokeWidth");
-shapeStrokeWidth.onchange = function() {
-  window.currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
+var shapeStrokeWidthValue = document.getElementById("shapeStrokeWidthValue");
+shapeStrokeWidth.oninput = function() {
+  var value = shapeStrokeWidth.value;
+  window.currentStrokeStyle.strokeWidth = value;
+  shapeStrokeWidthValue.textContent = value;
 };
 
 var shapes = document.getElementById("shapes");
@@ -39,12 +46,10 @@ shapes.querySelector(".toolHeader").onclick = function() {
 
   var currentStrokeStyle = window.currentStrokeStyle;
   currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
+  
+  currentStrokeStyle.fillColor = color ? new paper.Color(hexToRgbA(shapeFillColor.value, shapeFillAlpha.value)) : undefined;
 
-  var color = currentShapeFillColor.colorHex;
-  currentStrokeStyle.fillColor = color ? new paper.Color(color) : undefined;
-
-  color = currentShapeStrokeColor.colorHex;
-  currentStrokeStyle.strokeColor = color && new paper.Color(color);
+  currentStrokeStyle.strokeColor = shapeStrokeColor.value && new paper.Color(hexToRgbA(shapeStrokeColor.value, shapeStrokeAlpha.value));
 
   delete window.timestamp;
   window.timeAnimation();

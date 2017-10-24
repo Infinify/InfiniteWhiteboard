@@ -27,35 +27,76 @@ document.addEventListener("clearCanvas", function() {
   prevTime = 0;
 });
 
-/**
-     * Performs a binary search on the host array. This method can either be
-     * injected into Array.prototype or called with a specified scope like this:
-     * binaryIndexOf.call(someArray, searchElement);
-     *
-     * @param {*} searchElement The item to search for within the array.
-     * @return {Number} The index of the element which defaults to -1 when not found.
-     */
-function binaryIndexOf(searchElement) {
-  var minIndex = 0;
-  var maxIndex = this.length - 1;
-  var currentIndex;
-  var currentElement;
-  var resultIndex;
-
-  while (minIndex <= maxIndex) {
-    resultIndex = currentIndex = (minIndex + maxIndex) / 2 | 0;
-    currentElement = this[currentIndex];
-
-    if (currentElement < searchElement) {
-      minIndex = currentIndex + 1;
-    } else if (currentElement > searchElement) {
-      maxIndex = currentIndex - 1;
+/*O(log n)*/
+function sortedIndex(arr, value) {
+  var count = arr.length;
+  var first = 0;
+  
+  while (count > 0) {
+    var step = count >>> 1;
+    var it = first + step;
+    if (arr[it] < value) {
+      first = it + 1;
+      count -= step + 1;
     } else {
-      return currentIndex;
+      count = step;
     }
   }
 
-  return ~maxIndex;
+  return first;
+}
+
+/*O(log n)*/
+function sortedLastIndex(arr, value) {
+  var count = arr.length;
+  var first = 0;
+
+  while (count > 0) {
+    var step = count >>> 1;
+    var it = first + step;
+    if (!(value < arr[it])) {
+      first = it + 1;
+      count -= step + 1;
+    } else {
+      count = step;
+    }
+  }
+
+  return first;
+}
+
+/*O(log n)*/
+function sortedIndexOld(arr, value) {
+  var hi = arr.length;
+  var lo = 0;
+
+  while (lo < hi) {
+    var i = (lo + hi) >>> 1;
+    if (arr[i] < value) {
+      lo = i + 1;
+    } else {
+      hi = i;
+    }
+  }
+
+  return hi;
+}
+
+/*O(log n)*/
+function sortedLastIndexOld(arr, value) {
+  var hi = arr.length;
+  var lo = 0;
+
+  while (lo < hi) {
+    var i = (lo + hi) >>> 1;
+    if (arr[i] <= value) {
+      lo = i + 1;
+    } else {
+      hi = i;
+    }
+  }
+
+  return hi;
 }
 
 /**
@@ -166,7 +207,6 @@ document.addEventListener("html", function(event) {
   }));
 });
 
-Array.prototype.binaryIndexOf = binaryIndexOf;
 Path.prototype.valueOf = PointText.prototype.valueOf = Raster.prototype.valueOf = Html.prototype.valueOf = function() {
   return this.timestamp;
 };
@@ -215,7 +255,7 @@ window.drawObject = function(iwb, reRender) {
     }
     tmp.push(iwb);
     if (Math.abs(currRound - zoomRound) > zInterval) {
-      setVisibility(iwb, window.timestamp || +new Date());
+      setVisibility(iwb, window.timestamp || false);
       return;
     }
   }
@@ -289,12 +329,13 @@ window.drawObject = function(iwb, reRender) {
     paperItem.translate(offset);
   }
 
-  project.activeLayer.insertChild(
-    Math.abs(project.activeLayer.children.binaryIndexOf(paperItem)),
-    paperItem
-  );
+  var layer = project.activeLayer;
+  
+  var index = sortedLastIndex(layer.children, paperItem);
+  
+  layer.insertChild(index, paperItem);
 
-  setVisibility(iwb, window.timestamp || +new Date());
+  setVisibility(iwb, window.timestamp || false);
 };
 function debounce(func, wait, immediate) {
   var timeout, args, context, timestamp, result;
@@ -490,7 +531,7 @@ window.zoomChildren = function(scale, x, y, mfs) {
 
 function setVisibility(iwb, t) {
   var item = iwb.currentPaperItem;
-  var visible = iwb.timestamp <= t;
+  var visible = !t || iwb.timestamp <= t;
   var parent = iwb.parent;
   var next = iwb.next;
   if (visible) {
@@ -498,27 +539,27 @@ function setVisibility(iwb, t) {
       parent.currentPaperItem.visible = false;
     }
     if (next) {
-      while (next && next.next && next.next.timestamp <= t) {
+      while (next && next.next && (!t || next.next.timestamp <= t)) {
         if (next.currentPaperItem) {
           next.currentPaperItem.visible = false;
         }
         next = next.next;
       }
-      if (next.timestamp <= t) {
+      if (!t || next.timestamp <= t) {
         visible = false;
       }
       if (next.currentPaperItem) {
-        next.currentPaperItem.visible = !next.deleted && next.timestamp <= t;
+        next.currentPaperItem.visible = !next.deleted && (!t || next.timestamp <= t);
       }
     }
   } else if (parent) {
-    while (parent && parent.parent && parent.timestamp > t) {
+    while (parent && parent.parent && (!t || parent.timestamp > t)) {
       if (parent.currentPaperItem) {
         parent.currentPaperItem.visible = false;
       }
       parent = parent.parent;
     }
-    while (parent && parent.next && parent.next.timestamp <= t) {
+    while (parent && parent.next && (!t || parent.next.timestamp <= t)) {
       if (parent.currentPaperItem) {
         parent.currentPaperItem.visible = false;
       }
@@ -526,7 +567,7 @@ function setVisibility(iwb, t) {
     }
     if (parent.currentPaperItem) {
       parent.currentPaperItem.visible = !parent.deleted &&
-        parent.timestamp <= t;
+        (!t || parent.timestamp <= t);
     }
   }
   if (item) {
@@ -537,15 +578,25 @@ function setVisibility(iwb, t) {
 var prevTime = 0;
 window.timeAnimation = function(preserveUrl, skipTrigger) {
   var children = project.activeLayer.children;
-  var length = children.length;
-  var prev = prevTime ? Math.abs(children.binaryIndexOf(prevTime)) : length;
   var t = window.timestamp || +new Date();
-  var next = Math.abs(children.binaryIndexOf(t));
-  var min = Math.min(prev, next);
-  var max = Math.max(prev, next);
-  prevTime = t;
+  var length = children.length;
 
   if (length) {
+    var next = sortedIndex(children, t);
+    var prev = length;
+    
+    if (prevTime) {
+      if (prevTime <= t) {
+        prev = sortedIndex(children, prevTime);
+        next = sortedLastIndex(children, t);
+      } else {
+        prev = sortedLastIndex(children, prevTime);
+      }
+    }
+    
+    var min = Math.min(prev, next);
+    var max = Math.max(prev, next);
+    
     for (
       var i = Math.max(0, min - 1), l = Math.min(max + 1, length - 1);
       i <= l;
@@ -554,6 +605,8 @@ window.timeAnimation = function(preserveUrl, skipTrigger) {
       setVisibility(children[i].iwb, t);
     }
   }
+  
+  prevTime = t;
 
   if (!skipTrigger) {
     document.dispatchEvent(new CustomEvent("timeAnimation"));

@@ -1,3 +1,5 @@
+var hexToRgbA = require('./hexToRgbA.js');
+
 var textToolParams = window.textToolParams = {
   fillColor: "",
   bold: false,
@@ -30,16 +32,19 @@ textTool.querySelector(".toolHeader").onclick = function() {
   }
 };
 
-var textFillColorDiv = document.getElementById("textFillColor");
-var textFillColor = tinycolorpicker(textFillColorDiv);
-textFillColorDiv.onchange = function colorPickedHandlerFill() {
-  var color = textFillColor.colorHex;
+var textFillColor = document.getElementById("textFillColor");
+var textFillAlpha = document.getElementById("textFillAlpha");
+textFillAlpha.onchange = textFillColor.onchange = function colorPickedHandlerFill() {
+  var color = hexToRgbA(textFillColor.value, textFillAlpha.value);
   textToolParams.fillColor = new paper.Color(color);
 
   var newTextItem = window.newTextItem;
   if (newTextItem) {
     newTextItem.fillColor = new paper.Color(color);
   }
+};
+textFillAlpha.oninput = function updateOpacity() {
+  textFillColor.style.opacity = textFillAlpha.value;
 };
 
 var currentFontSizeDisplay = document.getElementById("currentFontSizeDisplay");

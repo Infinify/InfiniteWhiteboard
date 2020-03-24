@@ -46,8 +46,8 @@ shapes.querySelector(".toolHeader").onclick = function() {
 
   var currentStrokeStyle = window.currentStrokeStyle;
   currentStrokeStyle.strokeWidth = shapeStrokeWidth.value;
-  
-  currentStrokeStyle.fillColor = color ? new paper.Color(hexToRgbA(shapeFillColor.value, shapeFillAlpha.value)) : undefined;
+
+  currentStrokeStyle.fillColor = shapeFillColor ? new paper.Color(hexToRgbA(shapeFillColor.value, shapeFillAlpha.value)) : undefined;
 
   currentStrokeStyle.strokeColor = shapeStrokeColor.value && new paper.Color(hexToRgbA(shapeStrokeColor.value, shapeStrokeAlpha.value));
 

@@ -133,7 +133,8 @@
     font-size: 12px;
     font-weight: 400;
     margin: 5px 0 5px 5px;
-    word-wrap: break-word
+    word-wrap: break-word;
+    white-space: pre-line
 }
 
 #chat .target {

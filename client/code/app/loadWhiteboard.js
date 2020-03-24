@@ -238,6 +238,16 @@ function loadWhiteboard(whiteboard, resolve, reject) {
         if (length === count) {
           resolve();
           return;
+        } else if (count < length) {
+          localStorage.clear();
+          if (db) {
+            db.delete().then(function() {
+              location.reload(true);
+            });
+          } else {
+            location.reload(true);
+          }
+          return;
         }
 
         NProgress.set(count ? length / count : 1);

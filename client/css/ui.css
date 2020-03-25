@@ -5,6 +5,10 @@ body {
     outline: none
 }
 
+html, body {
+    touch-action: none;
+}
+
 #chat,#html,#map,#toolbarWrapper,#uiWrapper,.canvas,.htmlItem,svg.map {
     position: absolute
 }

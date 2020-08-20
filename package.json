@@ -14,7 +14,7 @@
     "prettier": "prettier --write ./*.js ./scripts/**/*.js ./server/**/*.js"
   },
   "dependencies": {
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^5.0.0",
     "chokidar": "^2.1.1",
     "chrome-remote-interface": "^0.27.1",
     "connect": "^3.6.6",

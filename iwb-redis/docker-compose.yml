@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  iwb-redis:
+    container_name: iwb-redis
+    image: 'bitnami/redis:latest'
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - iwb-network
+    ports:
+      - 6379:6379
+networks:
+  iwb-network:
+    driver: bridge

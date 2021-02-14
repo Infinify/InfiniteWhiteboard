@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  iwb-mongodb:
+    container_name: iwb-mongodb
+    image: 'bitnami/mongodb:latest'
+    restart: unless-stopped
+    environment:
+      - MONGODB_ROOT_PASSWORD=iwb
+    networks:
+      - iwb-network
+    ports:
+      - 27017:27017
+networks:
+  iwb-network:
+    driver: bridge

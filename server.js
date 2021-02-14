@@ -2,17 +2,9 @@ const ss = require("socketstream");
 const { generate } = require("shortid");
 const { Server } = require("http");
 
-const {
-  SS_PACK,
-  OPENSHIFT_REDIS_HOST,
-  OPENSHIFT_REDIS_PORT,
-  REDIS_PASSWORD,
-  PORT,
-  NODE_PORT,
-  NODE_IP
-} = process.env;
+const { SS_PACK, REDIS, PORT, NODE_PORT, NODE_IP } = process.env;
 
-module.exports = id => {
+module.exports = (id) => {
   if (ss.env === "production") {
     const opts = SS_PACK
       ? { all: true, keepOldFiles: true, id: generate() }
@@ -20,11 +12,9 @@ module.exports = id => {
     ss.client.packAssets(opts);
   }
 
-  if (OPENSHIFT_REDIS_HOST) {
+  if (REDIS) {
     const redisConf = {
-      host: OPENSHIFT_REDIS_HOST,
-      port: OPENSHIFT_REDIS_PORT,
-      pass: REDIS_PASSWORD
+      host: REDIS,
     };
     ss.session.store.use("redis", redisConf);
     ss.publish.transport.use("redis", redisConf);
@@ -61,9 +51,9 @@ module.exports = id => {
       "libs/classList.js",
       "libs/custom-event-polyfill.js",
       "libs/quickconnect.js",
-      "app"
+      "app",
     ],
-    tmpl: "*"
+    tmpl: "*",
   });
 
   ss.client.set({ liveReload: true });
@@ -104,14 +94,14 @@ Disallow:`
   var port = PORT || (NODE_PORT || 3000) + id * 10;
 
   // TCP/IP socket IO
-  server.listen(port, NODE_IP || "localhost");
+  server.listen(port, NODE_IP || "0.0.0.0");
 
   // Start SocketStream
   ss.start(server);
 
   const rtcServer = Server();
 
-  rtcServer.listen(port + 100, NODE_IP || "localhost");
+  rtcServer.listen(port + 100, NODE_IP || "0.0.0.0");
 
   require("./rtc")({ server: rtcServer, path: "/_rtc/" });
 };

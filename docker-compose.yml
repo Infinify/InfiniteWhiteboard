@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+  iwb-mongodb:
+    container_name: iwb-mongodb
+    image: 'bitnami/mongodb:latest'
+    restart: unless-stopped
+    environment:
+      - MONGODB_ROOT_PASSWORD=iwb
+    networks:
+      - iwb-network
+    ports:
+      - 27017:27017
+  iwb-redis:
+    container_name: iwb-redis
+    image: 'bitnami/redis:latest'
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - iwb-network
+    ports:
+      - 6379:6379
+  iwb:
+    container_name: iwb-dev
+    build: .
+    image: iwb/dev:latest
+    restart: unless-stopped
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - iwb-mongodb
+      - iwb-redis
+    environment:
+      - MONGODB=mongodb://root:iwb@iwb-mongodb:27017/iwb?authMechanism=DEFAULT&authSource=admin
+      - REDIS=iwb-redis
+    networks:
+      - iwb-network
+    ports:
+      - 3000:3000
+      - 3100:3100
+      - 9229:9229
+networks:
+  iwb-network:
+    driver: bridge

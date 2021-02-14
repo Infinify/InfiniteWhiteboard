@@ -1,23 +1,25 @@
 const { connect } = require("mongodb").MongoClient;
 
-const { NODE_ENV, MONGODB_URL } = process.env;
-const localDBConnectionString = `${MONGODB_URL ||
-  "mongodb://localhost:27017/"}InfiniteWhiteboard`;
+const { NODE_ENV, MONGODB } = process.env;
+
+const uri =
+  MONGODB ||
+  "mongodb://localhost:27017/iwb?authMechanism=DEFAULT&authSource=admin";
 
 module.exports = {
   db(work, res) {
     let db;
-    return connect(localDBConnectionString)
-      .then(dbRef => {
+    return connect(uri)
+      .then((dbRef) => {
         db = dbRef;
         return work(db);
       })
-      .then(result => {
+      .then((result) => {
         res && res(null, result);
         db && db.close();
         return result;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         db && db.close();
         if (res) {
@@ -26,7 +28,7 @@ module.exports = {
           throw err;
         }
       });
-  }
+  },
 };
 
 if (NODE_ENV === "production") {
@@ -39,7 +41,7 @@ if (NODE_ENV === "production") {
   }, 5000);
 } else {
   require("./scripts/enable_slave_debug");
-  process.on("uncaughtException", e => {
+  process.on("uncaughtException", (e) => {
     console.log(e);
   });
 }

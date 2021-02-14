@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  iwb:
+    container_name: iwb-prod
+    build:
+      context: .
+      target: prod
+    environment:
+      - SS_ENV=production
+      - NODE_ENV=production
+    image: iwb/prod:latest

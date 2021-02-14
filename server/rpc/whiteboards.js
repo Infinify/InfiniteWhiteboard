@@ -2,27 +2,36 @@ const { db } = require("../../config.js");
 const {
   createWhiteboard,
   boards,
-  needsToCheckAccessControl
+  needsToCheckAccessControl,
 } = require("../../boardCache.js");
 const { getAccessibleWhiteboardsForUser, isAllowed } = require("../auth.js");
 const { isWorker } = require("cluster");
 const redis = require("redis");
-const client = redis.createClient();
-const pubsub = redis.createClient();
 
-pubsub.psubscribe("*");
 const noop = () => {};
 
-pubsub.on("pmessage", function(pattern, channel, message) {
-  if (message.slice(0, 4) === "iwb|") {
-    const parts = message.split("|");
-    const [, whiteboard, user] = parts;
-    client.srem(`iwb|${whiteboard}`, user, noop);
-  }
-});
+const logErr = (err) => err && console.error(err);
 
-const logErr = err => err && console.error(err);
-client.config("set", "notify-keyspace-events", "Ex", logErr);
+const { REDIS, SS_PACK } = process.env;
+const redisConf = {
+  host: REDIS,
+};
+let client;
+let pubsub;
+
+if (!SS_PACK) {
+  client = redis.createClient(redisConf);
+  pubsub = redis.createClient(redisConf);
+  pubsub.psubscribe("*");
+  pubsub.on("pmessage", function (pattern, channel, message) {
+    if (message.slice(0, 4) === "iwb|") {
+      const parts = message.split("|");
+      const [, whiteboard, user] = parts;
+      client.srem(`iwb|${whiteboard}`, user, noop);
+    }
+  });
+  client.config("set", "notify-keyspace-events", "Ex", logErr);
+}
 
 const underscoreRegEx = /^_/;
 exports.actions = (req, res, ss) => {
@@ -48,7 +57,7 @@ exports.actions = (req, res, ss) => {
         getAccessibleWhiteboardsForUser("anyone"),
         getAccessibleWhiteboardsForUser(
           req.session.userData && req.session.userData.username
-        )
+        ),
       ])
         .then(([anyone, user]) => {
           res(null, { publicBoards, privateBoards, anyone, user });
@@ -74,16 +83,13 @@ exports.actions = (req, res, ss) => {
 
       const board = { name, owner };
 
-      db(db => {
+      db((db) => {
         return Promise.all([
           name in boards,
           db.listCollections({ name }).toArray(),
-          db
-            .collection("_whiteboards")
-            .find({ name })
-            .count()
+          db.collection("_whiteboards").find({ name }).count(),
         ])
-          .then(p => {
+          .then((p) => {
             if (p[0] || p[1].length || p[2]) {
               throw new Error("Whiteboard exists");
             }
@@ -91,7 +97,7 @@ exports.actions = (req, res, ss) => {
             return Promise.all([
               db.collection("_whiteboards").insertOne(board),
               db.createCollection(`chatlog_${name}`),
-              db.createCollection(name)
+              db.createCollection(name),
             ]);
           })
           .then(() => {
@@ -117,7 +123,7 @@ exports.actions = (req, res, ss) => {
         !needsToCheckAccessControl(whiteboard, req) ||
           isAllowed(whiteboard, req, "view")
       )
-        .then(allowed => {
+        .then((allowed) => {
           if (allowed) {
             whiteboard = encodeURIComponent(whiteboard);
             client.smembers(`iwb|${whiteboard}`, res);
@@ -125,7 +131,7 @@ exports.actions = (req, res, ss) => {
             res("Not allowed");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           res(err.message);
         });
     },
@@ -147,7 +153,7 @@ exports.actions = (req, res, ss) => {
         Promise.resolve(
           !needsToCheckAccessControl(to, req) || isAllowed(to, req, "view")
         )
-          .then(allowed => {
+          .then((allowed) => {
             if (allowed) {
               req.session.channel.subscribe(to);
               if (user) {
@@ -160,10 +166,10 @@ exports.actions = (req, res, ss) => {
             }
             res(null, allowed);
           })
-          .catch(err => {
+          .catch((err) => {
             res(err.message);
           });
       }
-    }
+    },
   };
 };

@@ -31,7 +31,7 @@ document.addEventListener("clearCanvas", function() {
 function sortedIndex(arr, value) {
   var count = arr.length;
   var first = 0;
-  
+
   while (count > 0) {
     var step = count >>> 1;
     var it = first + step;
@@ -330,9 +330,9 @@ window.drawObject = function(iwb, reRender) {
   }
 
   var layer = project.activeLayer;
-  
+
   var index = sortedLastIndex(layer.children, paperItem);
-  
+
   layer.insertChild(index, paperItem);
 
   setVisibility(iwb, window.timestamp || false);
@@ -389,7 +389,7 @@ var zProd = 1;
 var xSum = 0;
 var ySum = 0;
 window.translateChildren = function(x, y, mfs, offset) {
-  if (!mfs && propagatingEventsToOtherViews) {
+  if (!mfs && window.propagatingEventsToOtherViews) {
     localStorage.setItem(
       "storage-event-translate",
       JSON.stringify({ id: getId(), time: new Date(), x: x, y: y })
@@ -415,7 +415,7 @@ window.translateChildren = function(x, y, mfs, offset) {
 };
 
 window.zoomChildren = function(scale, x, y, mfs) {
-  if (!mfs && propagatingEventsToOtherViews) {
+  if (!mfs && window.propagatingEventsToOtherViews) {
     localStorage.setItem(
       "storage-event-zoom",
       JSON.stringify({
@@ -584,7 +584,7 @@ window.timeAnimation = function(preserveUrl, skipTrigger) {
   if (length) {
     var next = sortedIndex(children, t);
     var prev = length;
-    
+
     if (prevTime) {
       if (prevTime <= t) {
         prev = sortedIndex(children, prevTime);
@@ -593,10 +593,10 @@ window.timeAnimation = function(preserveUrl, skipTrigger) {
         prev = sortedLastIndex(children, prevTime);
       }
     }
-    
+
     var min = Math.min(prev, next);
     var max = Math.max(prev, next);
-    
+
     for (
       var i = Math.max(0, min - 1), l = Math.min(max + 1, length - 1);
       i <= l;
@@ -605,7 +605,7 @@ window.timeAnimation = function(preserveUrl, skipTrigger) {
       setVisibility(children[i].iwb, t);
     }
   }
-  
+
   prevTime = t;
 
   if (!skipTrigger) {

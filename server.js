@@ -4,7 +4,7 @@ const { Server } = require("http");
 
 const { SS_PACK, REDIS, PORT, NODE_PORT, NODE_IP } = process.env;
 
-module.exports = (id) => {
+module.exports = (id, override_port) => {
   if (ss.env === "production") {
     const opts = SS_PACK
       ? { all: true, keepOldFiles: true, id: generate() }
@@ -18,9 +18,6 @@ module.exports = (id) => {
     };
     ss.session.store.use("redis", redisConf);
     ss.publish.transport.use("redis", redisConf);
-  } else {
-    ss.session.store.use("redis");
-    ss.publish.transport.use("redis");
   }
 
   ss.client.define("ui", {
@@ -91,7 +88,7 @@ Disallow:`
   // Start web server
   const server = Server(ss.http.middleware);
 
-  var port = PORT || (NODE_PORT || 3000) + id * 10;
+  const port = override_port || PORT || (NODE_PORT || 3000) + id * 10;
 
   // TCP/IP socket IO
   server.listen(port, NODE_IP || "0.0.0.0");
@@ -104,4 +101,8 @@ Disallow:`
   rtcServer.listen(port + 100, NODE_IP || "0.0.0.0");
 
   require("./rtc")({ server: rtcServer, path: "/_rtc/" });
+
+  return new Promise((resolve) => {
+    server.addListener("listening", resolve);
+  });
 };

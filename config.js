@@ -1,27 +1,38 @@
 const { connect } = require("mongodb").MongoClient;
+const isElectron = process.versions["electron"];
 
 const { NODE_ENV, MONGODB } = process.env;
+const uri = MONGODB === "true" ? "mongodb://localhost:27017/iwb" : MONGODB;
 
-const uri =
-  MONGODB ||
-  "mongodb://localhost:27017/iwb?authMechanism=DEFAULT&authSource=admin";
+let tdb;
+if (!uri) {
+  const path = `${
+    isElectron ? require("electron").app.getAppPath("userData") : "."
+  }/data`;
+  try {
+    require("fs").mkdirSync(path);
+  } catch (e) {
+    console.log(e);
+  }
+  tdb = Promise.resolve(new (require("tingodb")().Db)(path, {}));
+}
 
 module.exports = {
   db(work, res) {
     let db;
-    return connect(uri)
+    return (uri ? connect(uri) : tdb)
       .then((dbRef) => {
         db = dbRef;
         return work(db);
       })
       .then((result) => {
         res && res(null, result);
-        db && db.close();
+        db && db.close && db.close();
         return result;
       })
       .catch((err) => {
         console.log(err);
-        db && db.close();
+        db && db.close && db.close();
         if (res) {
           res(err.message);
         } else {
@@ -40,7 +51,7 @@ if (NODE_ENV === "production") {
     buffer.flush();
   }, 5000);
 } else {
-  require("./scripts/enable_slave_debug");
+  //require("./scripts/enable_slave_debug");
   process.on("uncaughtException", (e) => {
     console.log(e);
   });

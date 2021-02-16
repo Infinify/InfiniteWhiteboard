@@ -7,26 +7,41 @@
     "type": "git",
     "url": "git@github.com:Infinify/InfiniteWhiteboard.git"
   },
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node app.js",
+    "app": "node app.js",
+    "start": "npm run electron",
+    "electron": "electron .",
+    "forge": "electron-forge start",
     "lints": "eslint -c ./server/.eslintrc.js ./*.js scripts server --fix",
-    "dev": "docker-compose up -d",
+    "dev": "docker-compose up -d --build",
     "prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d",
-    "prettier": "prettier --write ./*.js ./scripts/**/*.js ./server/**/*.js"
+    "prettier": "prettier --write ./*.js ./scripts/**/*.js ./server/**/*.js",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
-    "chokidar": "^3.5.1",
+    "chokidar": "^2.1.8",
     "chrome-remote-interface": "^0.29.0",
     "connect": "^3.6.6",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-window-manager": "^1.0.6",
+    "get-port": "^5.1.1",
     "log-buffer": "^0.0.3",
     "mongodb": "^2.2.36",
     "redis": "^3.0.2",
     "rtc-switch": "^1.3.0",
-    "socketstream": "github:msand/socketstream#fix-transport-bundling"
+    "socketstream": "github:msand/socketstream#fix-transport-bundling",
+    "tingodb": "^0.6.1"
   },
   "devDependencies": {
+    "electron": "^11.2.3",
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-config-standard": "^16.0.2",
@@ -35,5 +50,32 @@
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
     "prettier": "^2.2.1"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "infinitewhiteboard"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }

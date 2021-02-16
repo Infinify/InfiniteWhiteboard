@@ -24,7 +24,7 @@ module.exports = (req, res) => {
             });
 
             res.end(img);
-            let end = Date.now();
+            const end = Date.now();
             console.log("screenshot: " + (end - start) + "ms");
 
             return Promise.all([Chrome.Close(tab), chromeInstance.close()]);

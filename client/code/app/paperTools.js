@@ -65,7 +65,7 @@ var tool;
 
   var path;
   var onMouseDowns = window.onMouseDowns = function(event, mfs) {
-    if (!mfs && propagatingEventsToOtherViews) {
+    if (!mfs && window.propagatingEventsToOtherViews) {
       localStorage.setItem(
         "storage-event-down",
         JSON.stringify({
@@ -127,7 +127,7 @@ var tool;
     mfs,
     realTimeObject
   ) {
-    if (!mfs && propagatingEventsToOtherViews) {
+    if (!mfs && window.propagatingEventsToOtherViews) {
       localStorage.setItem(
         "storage-event-drag",
         JSON.stringify({
@@ -174,7 +174,7 @@ var tool;
     if (!paperItem) {
       return;
     }
-    if (!mfs && propagatingEventsToOtherViews) {
+    if (!mfs && window.propagatingEventsToOtherViews) {
       localStorage.setItem(
         "storage-event-up",
         JSON.stringify({

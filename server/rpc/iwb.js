@@ -18,9 +18,16 @@ exports.actions = (req, res, ss, stream) => {
 
       const whiteboard = stamp(iwb);
 
-      db(db => db.collection(whiteboard).insertOne(iwb), res).then(result => {
-        ss.publish.channel(whiteboard, "newObject", (result.ops || result)[0]);
-      });
+      db((db) =>
+        db.collection(whiteboard).insert(iwb, (err, result) => {
+          res(err, result);
+          ss.publish.channel(
+            whiteboard,
+            "newObject",
+            (result.ops || result)[0]
+          );
+        })
+      ).catch(res);
     },
     update(iwb) {
       if (!iwb) return res("No object");
@@ -30,27 +37,24 @@ exports.actions = (req, res, ss, stream) => {
       iwb._parent = new ObjectID(iwb._id);
       delete iwb._id;
 
-      db(db => db.collection(whiteboard).insertOne(iwb), res).then(result => {
-        ss.publish.channel(
-          whiteboard,
-          "updateObject",
-          (result.ops || result)[0]
-        );
-      });
+      db((db) =>
+        db.collection(whiteboard).insert(iwb, (err, result) => {
+          if (err) {
+            res(err);
+          } else {
+            let updated = (result.ops || result)[0];
+            res(null, updated);
+            ss.publish.channel(whiteboard, "updateObject", updated);
+          }
+        })
+      ).catch(res);
     },
     getNumObjects(whiteboard) {
-      db(
-        db =>
-          db
-            .collection(whiteboard)
-            .find()
-            .count(),
-        res
-      );
+      db((db) => db.collection(whiteboard).find().count(res)).catch(res);
     },
     streamObjects(whiteboard, begin) {
       db(
-        db =>
+        (db) =>
           new Promise((resolve, reject) => {
             const cursorStream = db
               .collection(whiteboard)
@@ -70,19 +74,19 @@ exports.actions = (req, res, ss, stream) => {
 
       ss.publish.channel(whiteboard, "newMessage", message);
 
-      db(db => db.collection(`chatlog_${whiteboard}`).insertOne(message), res);
+      db((db) =>
+        db.collection(`chatlog_${whiteboard}`).insert(message, res)
+      ).catch(res);
     },
     getChatlog(whiteboard, limit) {
-      db(
-        db =>
-          db
-            .collection(`chatlog_${whiteboard}`)
-            .find({})
-            .limit(limit)
-            .sort({ timeStamp: -1 })
-            .toArray(),
-        res
-      );
-    }
+      db((db) =>
+        db
+          .collection(`chatlog_${whiteboard}`)
+          .find({})
+          .limit(limit)
+          .sort({ timeStamp: -1 })
+          .toArray((err, result = []) => res(err, result))
+      ).catch(res);
+    },
   };
 };

@@ -14,8 +14,7 @@ module.exports = {
       db
         .collection("_whiteboards")
         .find()
-        .toArray()
-        .then(res => res.forEach(this.createWhiteboard))
+        .toArray((err, res) => res && res.forEach(this.createWhiteboard))
     );
   },
   createWhiteboard(whiteboard) {

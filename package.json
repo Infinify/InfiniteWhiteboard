@@ -36,12 +36,12 @@
     "tingodb": "^0.6.1"
   },
   "devDependencies": {
-    "electron": "^11.2.3",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "^11.2.3",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-config-standard": "^16.0.2",

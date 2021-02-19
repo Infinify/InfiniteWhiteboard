@@ -7,7 +7,7 @@ const uri = MONGODB === "true" ? "mongodb://localhost:27017/iwb" : MONGODB;
 let tdb;
 if (!uri) {
   const path = `${
-    isElectron ? require("electron").app.getAppPath("userData") : "."
+    isElectron ? require("electron").app.getPath("userData") : "."
   }/data`;
   try {
     require("fs").mkdirSync(path);

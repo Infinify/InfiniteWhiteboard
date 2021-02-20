@@ -10,7 +10,7 @@ module.exports = {
     if (SS_PACK) {
       return Promise.resolve();
     }
-    return db(db =>
+    return db((db) =>
       db
         .collection("_whiteboards")
         .find()
@@ -26,5 +26,5 @@ module.exports = {
       boards[whiteboard].owner &&
       boards[whiteboard].owner !== req.session.userId
     );
-  }
+  },
 };

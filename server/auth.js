@@ -36,7 +36,7 @@ module.exports = {
           .find({ username })
           .count((err, count) => {
             const isAnyone = username === "anyone";
-            if (err || !isAnyone && count === 0) {
+            if (err || (!isAnyone && count === 0)) {
               reject(err || `User does not exist ${username}`);
               return;
             }
@@ -57,7 +57,7 @@ module.exports = {
       .catch(res);
   },
   removeUserRoles(resource, username, res) {
-    db((db) => db.collection("_acl").deleteOne({ username, resource }), res);
+    db((db) => db.collection("_acl").remove({ username, resource }, res));
   },
   isAllowed(resource, req, role) {
     if (!Object.hasOwnProperty.call(allowedRoles, role)) {

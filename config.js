@@ -18,7 +18,7 @@ if (!uri) {
 }
 
 module.exports = {
-  db(work, res) {
+  db(work) {
     let db;
     return (uri ? connect(uri) : tdb)
       .then((dbRef) => {
@@ -26,18 +26,13 @@ module.exports = {
         return work(db);
       })
       .then((result) => {
-        res && res(null, result);
         db && db.close && db.close();
         return result;
       })
       .catch((err) => {
         console.log(err);
         db && db.close && db.close();
-        if (res) {
-          res(err.message);
-        } else {
-          throw err;
-        }
+        throw err;
       });
   },
 };

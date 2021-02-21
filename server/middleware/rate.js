@@ -12,7 +12,7 @@ setInterval(function resetWarned() {
 
 const msg = "Too Many Requests";
 
-const maxRequestsPerSecond = 100;
+const maxRequestsPerSecond = 1000;
 function check(id, res) {
   if (id) {
     if (!rps[id]) rps[id] = 0;

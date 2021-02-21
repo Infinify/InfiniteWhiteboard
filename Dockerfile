@@ -1,7 +1,7 @@
 FROM node:15-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache git python3 build-base
-COPY package*.json .
+COPY package*.json ./
 
 FROM base as prod_base
 RUN npm ci --production

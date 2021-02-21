@@ -227,7 +227,7 @@
     if (_global.define && define.amd) {
         // Publish as AMD module
         define(function() {return uuid;});
-    } else if (typeof(module) != 'undefined' && module.exports) {
+    } else if (typeof(module) != 'undefined' && module.exports && typeof window === 'undefined') {
         // Publish as node.js module
         module.exports = uuid;
     } else {

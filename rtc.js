@@ -1,11 +1,11 @@
 module.exports = function(opts) {
-  var WebSocketServer = require("ws").Server;
-  var wss = new WebSocketServer(opts);
-  var board = require("rtc-switch")();
-  var connections = [];
+  const WebSocketServer = require("ws").Server;
+  const wss = new WebSocketServer(opts);
+  const board = require("rtc-switch")();
+  let connections = [];
 
   wss.on("connection", function connection(ws) {
-    var peer = board.connect();
+    const peer = board.connect();
 
     // add the socket to the connection list
     connections.push(ws);

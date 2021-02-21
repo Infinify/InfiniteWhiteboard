@@ -31,7 +31,7 @@ var sharedBoardsListContainer = document.getElementById(
 var initChat = require("./chat");
 var populateAcl = require("./acl");
 var chatLogs = document.getElementById("chatLogs");
-var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:\/))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
+var re = /(@(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+(?:_))?((?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+)/;
 window.updateWhiteboardLists = function updateWhiteboardLists() {
   sharedBoardsListContainer.innerHTML = "";
   privateBoardsContainer.innerHTML = "";

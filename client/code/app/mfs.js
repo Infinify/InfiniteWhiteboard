@@ -122,7 +122,7 @@ window.toggleMFS = function(event) {
   var old = localStorage.mfs && JSON.parse(localStorage.mfs) ||
     { id: getId(), flag: false };
   old.flag = !old.flag;
-  var mfsActive = propagatingEventsToOtherViews = old.flag;
+  var mfsActive = window.propagatingEventsToOtherViews = old.flag;
 
   if (mfsActive) {
     old.mapCenter = map.center();
@@ -181,7 +181,7 @@ if (mfsb) {
 
   var mfsInit = localStorage.mfs && JSON.parse(localStorage.mfs);
 
-  var mfsActive = propagatingEventsToOtherViews = mfsInit && mfsInit.flag;
+  var mfsActive = window.propagatingEventsToOtherViews = mfsInit && mfsInit.flag;
 
   if (mfsActive) {
     mfsb.innerText = "MFS is on";
@@ -239,7 +239,7 @@ function handle_storage(e) {
   if (e.key === "mfs") {
     if (v) {
       window.mfs = v;
-      var mfsActive = propagatingEventsToOtherViews = v.flag;
+      var mfsActive = window.propagatingEventsToOtherViews = v.flag;
       if (mfsActive) {
         activateMfs(v);
         mfsb.innerText = "MFS is on";

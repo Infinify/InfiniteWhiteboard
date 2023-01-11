@@ -19,7 +19,7 @@
     "bcrypt": "^5.0.0",
     "chokidar": "^3.5.1",
     "chrome-remote-interface": "^0.29.0",
-    "connect": "^3.6.6",
+    "connect": "^3.7.0",
     "log-buffer": "^0.0.3",
     "mongodb": "^2.2.36",
     "redis": "^3.0.2",

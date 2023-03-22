@@ -29,16 +29,18 @@ function compare(credentials, user) {
 }
 
 function updateUserHash(credentials, user) {
-  return hash(credentials).then(hash => {
+  return hash(credentials).then((hash) => {
     user.hash = hash;
     user.bcrypt = true;
 
-    return db(db => db.collection("_users").updateOne({ _id: user._id }, user));
+    return db((db) =>
+      db.collection("_users").updateOne({ _id: user._id }, user)
+    );
   });
 }
 
 function checkHash(credentials, user) {
-  return compare(credentials, user).then(isMatch => {
+  return compare(credentials, user).then((isMatch) => {
     if (!isMatch && !user.bcrypt && credentials.hash === user.hash) {
       isMatch = Boolean(updateUserHash(credentials, user));
     }
@@ -55,7 +57,7 @@ exports.actions = (req, res) => {
     const session = req.session;
     session.authenticated = true;
     session.userData = user;
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       session.setUserId(user._id, () => resolve(true));
     });
   }
@@ -68,22 +70,22 @@ exports.actions = (req, res) => {
       session.anonymousUser = `user_${Math.random()
         .toString(36)
         .substring(12)}`;
-      session.setUserId(session.anonymousUser, function() {
+      session.setUserId(session.anonymousUser, function () {
         res();
       });
     },
     login(credentials) {
-      db(db => {
+      db((db) => {
         return db
           .collection("_users")
           .find({ username: credentials.username })
           .toArray()
-          .then(users => {
+          .then((users) => {
             if (users.length < 1) {
               throw new Error("No user found");
             }
             const user = users[0];
-            return checkHash(credentials, user).then(isMatch => {
+            return checkHash(credentials, user).then((isMatch) => {
               if (isMatch) {
                 return setUserData(user);
               }
@@ -94,7 +96,7 @@ exports.actions = (req, res) => {
     },
     getUserByName(username) {
       db(
-        db =>
+        (db) =>
           db
             .collection("_users")
             .find({ username }, { username: true })
@@ -111,24 +113,26 @@ exports.actions = (req, res) => {
         return res("userExists");
       }
 
-      db(db => {
+      db((db) => {
         return db
           .collection("_users")
           .find({ username })
           .count()
-          .then(count => {
+          .then(async (count) => {
             if (count > 0) {
               throw new Error("userExists");
             }
 
-            return hash(credentials)
-              .then(hash => {
-                return db
-                  .collection("_users")
-                  .insertOne({ username, hash, bcrypt: true });
-              })
-              .then(result => {
-                setUserData((result.ops || result)[0]);
+            const iwb = {
+              username,
+              hash: await hash(credentials),
+              bcrypt: true,
+            };
+            return db
+              .collection("_users")
+              .insertOne(iwb)
+              .then((result) => {
+                setUserData({ ...iwb, _id: result.insertedId.toString() });
               });
           });
       }, res);
@@ -140,7 +144,7 @@ exports.actions = (req, res) => {
           id: session.userId,
           username: session.userData.username,
           anonymous: session.anonymousUser,
-          sessionId: session.id
+          sessionId: session.id,
         });
       } else {
         if (!session.anonymousUser) {
@@ -150,16 +154,16 @@ exports.actions = (req, res) => {
           session.setUserId(session.anonymousUser, () => {
             res(null, {
               anonymous: session.anonymousUser,
-              sessionId: session.id
+              sessionId: session.id,
             });
           });
         } else {
           res(null, {
             anonymous: session.anonymousUser,
-            sessionId: session.id
+            sessionId: session.id,
           });
         }
       }
-    }
+    },
   };
 };

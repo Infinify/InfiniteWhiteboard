@@ -1,4 +1,4 @@
-FROM node:15-alpine AS base
+FROM node:16-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache git python3 build-base
 COPY package*.json .
@@ -8,7 +8,7 @@ RUN npm ci --production
 COPY . .
 RUN ./pack.sh
 
-FROM node:15-alpine as prod
+FROM node:16-alpine as prod
 WORKDIR /app
 COPY --from=prod_base /app .
 RUN chown -R node:node .

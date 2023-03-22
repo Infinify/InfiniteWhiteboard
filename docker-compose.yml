@@ -10,6 +10,8 @@ services:
       - iwb-network
     ports:
       - 27017:27017
+    volumes:
+      - 'mongodb_data:/bitnami/mongodb'
   iwb-redis:
     container_name: iwb-redis
     image: 'bitnami/redis:latest'
@@ -20,6 +22,8 @@ services:
       - iwb-network
     ports:
       - 6379:6379
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
   iwb:
     container_name: iwb-dev
     build: .
@@ -43,3 +47,9 @@ services:
 networks:
   iwb-network:
     driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local

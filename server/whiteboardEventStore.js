@@ -1,7 +1,7 @@
 const { db } = require("../config.js");
 const { boards, needsToCheckAccessControl } = require("../boardCache.js");
 const { isAllowed } = require("./auth.js");
-const { ObjectID } = require("mongodb");
+const { ObjectId } = require("mongodb");
 
 /* Get a JSON array of current ids for a whiteboard or fetch a object with specified id from event store
  * req.url = "((/@username)?/whiteboard)?(/id)?"
@@ -37,15 +37,15 @@ module.exports = (req, res) => {
     !needsToCheckAccessControl(whiteboard, req) ||
       isAllowed(whiteboard, req, "view")
   )
-    .then(allowed => {
+    .then((allowed) => {
       if (allowed) {
         if (id) {
-          return db(db =>
-            db.collection(whiteboard).findOne({ _id: new ObjectID(id) })
-          ).then(result => {
+          return db((db) =>
+            db.collection(whiteboard).findOne({ _id: new ObjectId(id) })
+          ).then((result) => {
             const json = JSON.stringify(result).replace(
               /[\u007f-\uffff]/g,
-              function(c) {
+              function (c) {
                 return (
                   "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4)
                 );
@@ -54,13 +54,13 @@ module.exports = (req, res) => {
             res.writeHead(200, {
               "Cache-Control": "public, max-age=31536000",
               "Content-type": "application/json",
-              "Content-Length": json.length
+              "Content-Length": json.length,
             });
             res.end(json);
           });
         } else {
           return db(
-            db =>
+            (db) =>
               new Promise((resolve, reject) => {
                 const cursorStream = db
                   .collection(whiteboard)
@@ -69,10 +69,10 @@ module.exports = (req, res) => {
 
                 res.writeHead(200);
                 cursorStream.on("error", reject);
-                cursorStream.on("data", function(data) {
+                cursorStream.on("data", function (data) {
                   res.write(`"${data._id}"\n`);
                 });
-                cursorStream.on("end", function() {
+                cursorStream.on("end", function () {
                   res.end();
                   resolve();
                 });
@@ -84,7 +84,7 @@ module.exports = (req, res) => {
         res.end();
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.writeHead(500);
       res.end();

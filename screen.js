@@ -8,7 +8,7 @@ module.exports = (req, res) => {
       console.log(err);
       return Chrome.Close(tab);
     }
-    Chrome(chromeInstance => {
+    Chrome((chromeInstance) => {
       const { Page, DOMStorage } = chromeInstance;
       const start = Date.now();
 
@@ -20,16 +20,16 @@ module.exports = (req, res) => {
 
             res.writeHead(200, {
               "Content-Type": "image/png",
-              "Content-Length": img.length
+              "Content-Length": img.length,
             });
 
             res.end(img);
-            let end = Date.now();
+            const end = Date.now();
             console.log("screenshot: " + (end - start) + "ms");
 
             return Promise.all([Chrome.Close(tab), chromeInstance.close()]);
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       });

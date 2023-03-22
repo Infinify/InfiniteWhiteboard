@@ -10,12 +10,12 @@ const role = {
   "iwb.getChatlog": "chat",
   "acl.setUserRole": "admin",
   "acl.removeUserRoles": "admin",
-  "acl.getUsersAndPermissions": "admin"
+  "acl.getUsersAndPermissions": "admin",
 };
 
 exports.check = () => (req, res, next) => {
   let whiteboard = req.params[0];
-  if (whiteboard && whiteboard.whiteboard) {
+  if (whiteboard?.whiteboard) {
     whiteboard = whiteboard.whiteboard;
   }
   if (!(whiteboard in boards)) {
@@ -26,7 +26,7 @@ exports.check = () => (req, res, next) => {
     !needsToCheckAccessControl(whiteboard, req) ||
       isAllowed(whiteboard, req, role[req.method])
   )
-    .then(allowed => {
+    .then((allowed) => {
       if (allowed) {
         next();
       } else {
@@ -34,7 +34,7 @@ exports.check = () => (req, res, next) => {
         res("403 Forbidden");
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res(err);
     });
 };

@@ -12,7 +12,7 @@ require("./boardCache.js")
         require("./master");
       }
     },
-    err => {
+    (err) => {
       console.log(err);
       process.exit(1);
     }

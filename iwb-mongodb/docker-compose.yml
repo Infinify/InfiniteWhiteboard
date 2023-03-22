@@ -10,6 +10,11 @@ services:
       - iwb-network
     ports:
       - 27017:27017
+    volumes:
+      - 'mongodb_data:/bitnami/mongodb'
 networks:
   iwb-network:
     driver: bridge
+volumes:
+  mongodb_data:
+    driver: local

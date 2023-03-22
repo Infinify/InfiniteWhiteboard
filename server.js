@@ -91,7 +91,7 @@ Disallow:`
   // Start web server
   const server = Server(ss.http.middleware);
 
-  var port = PORT || (NODE_PORT || 3000) + id * 10;
+  const port = PORT || (NODE_PORT || 3000) + id * 10;
 
   // TCP/IP socket IO
   server.listen(port, NODE_IP || "0.0.0.0");

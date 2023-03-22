@@ -1,5 +1,5 @@
 const { db } = require("../../config.js");
-const { ObjectID } = require("mongodb");
+const { ObjectId } = require("mongodb");
 
 exports.actions = (req, res, ss, stream) => {
   req.use("session");
@@ -18,39 +18,38 @@ exports.actions = (req, res, ss, stream) => {
 
       const whiteboard = stamp(iwb);
 
-      db(db => db.collection(whiteboard).insertOne(iwb), res).then(result => {
-        ss.publish.channel(whiteboard, "newObject", (result.ops || result)[0]);
-      });
+      db((db) => db.collection(whiteboard).insertOne(iwb), res).then(
+        (result) => {
+          ss.publish.channel(whiteboard, "newObject", {
+            ...iwb,
+            _id: result.insertedId.toString(),
+          });
+        }
+      );
     },
     update(iwb) {
       if (!iwb) return res("No object");
 
       const whiteboard = stamp(iwb);
 
-      iwb._parent = new ObjectID(iwb._id);
+      iwb._parent = new ObjectId(iwb._id);
       delete iwb._id;
 
-      db(db => db.collection(whiteboard).insertOne(iwb), res).then(result => {
-        ss.publish.channel(
-          whiteboard,
-          "updateObject",
-          (result.ops || result)[0]
-        );
-      });
+      db((db) => db.collection(whiteboard).insertOne(iwb), res).then(
+        (result) => {
+          ss.publish.channel(whiteboard, "updateObject", {
+            ...iwb,
+            _id: result.insertedId.toString(),
+          });
+        }
+      );
     },
     getNumObjects(whiteboard) {
-      db(
-        db =>
-          db
-            .collection(whiteboard)
-            .find()
-            .count(),
-        res
-      );
+      db((db) => db.collection(whiteboard).find().count(), res);
     },
     streamObjects(whiteboard, begin) {
       db(
-        db =>
+        (db) =>
           new Promise((resolve, reject) => {
             const cursorStream = db
               .collection(whiteboard)
@@ -70,11 +69,14 @@ exports.actions = (req, res, ss, stream) => {
 
       ss.publish.channel(whiteboard, "newMessage", message);
 
-      db(db => db.collection(`chatlog_${whiteboard}`).insertOne(message), res);
+      db(
+        (db) => db.collection(`chatlog_${whiteboard}`).insertOne(message),
+        res
+      );
     },
     getChatlog(whiteboard, limit) {
       db(
-        db =>
+        (db) =>
           db
             .collection(`chatlog_${whiteboard}`)
             .find({})
@@ -83,6 +85,6 @@ exports.actions = (req, res, ss, stream) => {
             .toArray(),
         res
       );
-    }
+    },
   };
 };

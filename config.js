@@ -1,27 +1,27 @@
-const { connect } = require("mongodb").MongoClient;
+const { MongoClient } = require("mongodb");
 
 const { NODE_ENV, MONGODB } = process.env;
 
 const uri =
   MONGODB ||
-  "mongodb://localhost:27017/iwb?authMechanism=DEFAULT&authSource=admin";
+  "mongodb://root:iwb@localhost:27017/?authMechanism=DEFAULT&authSource=admin";
 
 module.exports = {
   db(work, res) {
-    let db;
-    return connect(uri)
-      .then((dbRef) => {
-        db = dbRef;
+    const client = new MongoClient(uri);
+    const db = client.db("iwb");
+    return Promise.resolve()
+      .then(() => {
         return work(db);
       })
       .then((result) => {
-        res && res(null, result);
-        db && db.close();
+        res?.(null, result);
+        client.close();
         return result;
       })
       .catch((err) => {
         console.log(err);
-        db && db.close();
+        client.close();
         if (res) {
           res(err.message);
         } else {

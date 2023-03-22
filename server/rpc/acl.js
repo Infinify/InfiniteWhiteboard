@@ -1,7 +1,7 @@
 const {
   setUserRole,
   removeUserRoles,
-  getUsersAndPermissions
+  getUsersAndPermissions,
 } = require("../auth.js");
 
 exports.actions = (req, res) => {
@@ -18,6 +18,6 @@ exports.actions = (req, res) => {
     },
     getUsersAndPermissions(whiteboard) {
       getUsersAndPermissions(whiteboard, res);
-    }
+    },
   };
 };

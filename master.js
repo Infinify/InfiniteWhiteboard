@@ -17,9 +17,9 @@ if (production) {
     "SIGUSR1",
     "SIGSEGV",
     "SIGUSR2",
-    "SIGTERM"
+    "SIGTERM",
   ];
-  stopSignals.forEach(signal => {
+  stopSignals.forEach((signal) => {
     process.on(signal, () => {
       console.log(`Got ${signal}, stopping workers...`);
       cluster.disconnect(() => {

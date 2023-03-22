@@ -55,9 +55,7 @@ exports.actions = (req, res, ss) => {
 
       Promise.all([
         getAccessibleWhiteboardsForUser("anyone"),
-        getAccessibleWhiteboardsForUser(
-          req.session.userData && req.session.userData.username
-        ),
+        getAccessibleWhiteboardsForUser(req.session.userData?.username),
       ])
         .then(([anyone, user]) => {
           res(null, { publicBoards, privateBoards, anyone, user });
@@ -76,9 +74,10 @@ exports.actions = (req, res, ss) => {
 
       name = encodeURIComponent(name);
 
-      const owner = req.session.userId;
+      const { userData, userId } = req.session;
+      const owner = userData && userId;
       if (owner) {
-        name = `@${encodeURIComponent(req.session.userData.username)}/${name}`;
+        name = `@${encodeURIComponent(userData.username)}/${name}`;
       }
 
       const board = { name, owner };
@@ -111,9 +110,7 @@ exports.actions = (req, res, ss) => {
       }, res);
     },
     changePosition(whiteboard, url, offset) {
-      const user =
-        (req.session.userData && req.session.userData.username) ||
-        req.session.anonymousUser;
+      const user = req.session.userData?.username || req.session.anonymousUser;
       client.setex(`iwb|${whiteboard}|${user}`, 10 * 60, url, noop);
       ss.publish.channel(whiteboard, "newPos", { user, url, offset });
       res();
@@ -136,9 +133,7 @@ exports.actions = (req, res, ss) => {
         });
     },
     changeWhiteboard(from, to) {
-      let user =
-        (req.session.userData && req.session.userData.username) ||
-        req.session.anonymousUser;
+      let user = req.session.userData?.username || req.session.anonymousUser;
       if (from) {
         req.session.channel.unsubscribe(from);
         if (user) {
